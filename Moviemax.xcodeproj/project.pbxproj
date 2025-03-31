@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		607A6A162D9ACF8700A54DC9 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 607A6A152D9ACF8700A54DC9 /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		607A68E92D99A27900A54DC9 /* Moviemax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moviemax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -14,7 +18,7 @@
 		607A68FB2D99A27A00A54DC9 /* Exceptions for "Moviemax" folder in "Moviemax" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = 607A68E82D99A27900A54DC9 /* Moviemax */;
 		};
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				607A6A162D9ACF8700A54DC9 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Moviemax;
 			packageProductDependencies = (
+				607A6A152D9ACF8700A54DC9 /* SnapKit */,
 			);
 			productName = Moviemax;
 			productReference = 607A68E92D99A27900A54DC9 /* Moviemax.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 607A68E02D99A27900A54DC9;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				607A6A142D9ACF8700A54DC9 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 607A68EA2D99A27900A54DC9 /* Products */;
 			projectDirPath = "";
@@ -147,7 +156,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TVNB4R4JHD;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Moviemax/Info.plist;
+				INFOPLIST_FILE = Moviemax/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -179,7 +188,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TVNB4R4JHD;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Moviemax/Info.plist;
+				INFOPLIST_FILE = Moviemax/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -343,6 +352,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		607A6A142D9ACF8700A54DC9 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		607A6A152D9ACF8700A54DC9 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 607A6A142D9ACF8700A54DC9 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 607A68E12D99A27900A54DC9 /* Project object */;
 }

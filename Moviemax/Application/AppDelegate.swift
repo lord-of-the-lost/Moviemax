@@ -10,15 +10,18 @@ import UIKit
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-
+    private let dependency = DI()
+    
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = TabBarController()
-        window?.makeKeyAndVisible()
         
+        let appRouter = AppRouter(window: window, dependency: dependency)
+        appRouter.start()
+        
+        window?.makeKeyAndVisible()
         return true
     }
 }

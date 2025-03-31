@@ -1,29 +1,26 @@
 //
-//  TabBarController.swift
+//  TabBarPresenter.swift
 //  Moviemax
 //
-//  Created by Николай Игнатов on 30.03.2025.
+//  Created by Николай Игнатов on 31.03.2025.
 //
 
 import UIKit
 
-final class TabBarController: UITabBarController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureTabBar()
+final class TabBarPresenter {
+    weak var view: TabBarController?
+    private let router: TabBarRouter
+    private let dependency: DI
+    
+    init(router: TabBarRouter, dependency: DI) {
+        self.router = router
+        self.dependency = dependency
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tabBar.frame.size.height = 75
-        tabBar.frame.origin.y = view.frame.height - 75
-    }
-}
-
-// MARK: - Private Methods
-private extension TabBarController {
     func configureTabBar() {
-        tabBar.backgroundColor = UIColor(resource: .tabBarBG)
+        guard let view else { return }
+        
+        view.tabBar.backgroundColor = UIColor(resource: .tabBarBG)
         
         let homeItem = UITabBarItem(
             title: nil,
@@ -32,14 +29,14 @@ private extension TabBarController {
         )
         homeItem.imageInsets = UIEdgeInsets(top: 15, left: 0, bottom: -15, right: 0)
         
-        let recentItem =  UITabBarItem(
+        let recentItem = UITabBarItem(
             title: nil,
             image: UIImage(resource: .recent),
             selectedImage: UIImage(resource: .recent).withTintColor(UIColor(resource: .accent))
         )
         recentItem.imageInsets = UIEdgeInsets(top: 19, left: 0, bottom: -19, right: 0)
         
-        let searchItem =  UITabBarItem(
+        let searchItem = UITabBarItem(
             title: nil,
             image: UIImage(resource: .search),
             selectedImage: UIImage(resource: .search).withTintColor(UIColor(resource: .accent))
@@ -78,12 +75,12 @@ private extension TabBarController {
         favoritesViewController.tabBarItem = favoritesItem
         profileViewController.tabBarItem = profileItem
         
-        setViewControllers([
+        view.setViewControllers([
             searchNavigation,
             recentNavigation,
             mainNavigation,
             favoritesNavigation,
             profileNavigation
-        ], animated: true)
+        ], animated: false)
     }
 }
