@@ -11,7 +11,6 @@ enum AuthFactory {
         let presenter = AuthPresenter(router: router, dependency: dependency)
         let viewController = AuthViewController(presenter: presenter)
         
-        presenter.view = viewController
         router.viewController = viewController
         return viewController
     }

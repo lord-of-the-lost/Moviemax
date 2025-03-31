@@ -17,6 +17,13 @@ final class TabBarPresenter {
         self.dependency = dependency
     }
     
+    func viewDidLoad() {
+        configureTabBar()
+    }
+}
+
+// MARK: - Private Methods
+private extension TabBarPresenter {
     func configureTabBar() {
         guard let view else { return }
         
