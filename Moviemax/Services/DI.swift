@@ -5,6 +5,7 @@
 //  Created by Николай Игнатов on 31.03.2025.
 //
 
-struct DI {
+final class DI {
     lazy var networkService = NetworkService()
+    lazy var authorizationService = AuthorizationService()
 }
