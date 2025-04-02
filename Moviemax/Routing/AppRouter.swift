@@ -17,11 +17,12 @@ final class AppRouter {
     }
     
     func start() {
-        if dependency.authorizationService.isAuthorized {
-            showMainFlow()
-        } else {
-            showAuthFlow()
-        }
+        showMovieDetail()
+//        if dependency.authorizationService.isAuthorized {
+//            showMainFlow()
+//        } else {
+//            showAuthFlow()
+//        }
     }
 }
 
@@ -35,6 +36,12 @@ private extension AppRouter {
     func showAuthFlow() {
         let authViewController = AuthFactory.build(dependency)
         let navigationController = UINavigationController(rootViewController: authViewController)
+        window?.rootViewController = navigationController
+    }
+    
+    func showMovieDetail() {
+        let movieDetailController = MovieDetailFactory.build(dependency)
+        let navigationController = UINavigationController(rootViewController: movieDetailController)
         window?.rootViewController = navigationController
     }
 }
