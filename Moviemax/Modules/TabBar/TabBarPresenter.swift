@@ -67,7 +67,7 @@ private extension TabBarPresenter {
         let searchViewController = UIViewController()
         let recentViewController = UIViewController()
         let mainViewController = UIViewController()
-        let favoritesViewController = UIViewController()
+        let favoritesViewController = FavoritesFactory.build(dependency)
         let profileViewController = UIViewController()
         
         let searchNavigation = UINavigationController(rootViewController: searchViewController)

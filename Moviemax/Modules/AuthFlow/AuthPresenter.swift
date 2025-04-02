@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 final class AuthPresenter {
     weak var view: AuthViewController?
     private let router: AuthRouter
