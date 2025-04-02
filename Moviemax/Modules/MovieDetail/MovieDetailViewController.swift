@@ -11,6 +11,17 @@ import SnapKit
 final class MovieDetailViewController: UIViewController {
     let presenter: MovieDetailPresenter
     
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+    
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     private lazy var movieImageView: UIImageView = {
         let view = UIImageView(image: .movieDetail)
         view.backgroundColor = .green
@@ -186,37 +197,48 @@ final class MovieDetailViewController: UIViewController {
 private extension MovieDetailViewController {
     func setupUI() {
         view.backgroundColor = .systemBackground
-        view.addSubview(movieImageView)
-        view.addSubview(movieTitleLabel)
-        view.addSubview(movieDurationView)
-        view.addSubview(movieDateView)
-        view.addSubview(movieGenreView)
-        view.addSubview(movieRatingView)
-        view.addSubview(movieDescriptionTitle)
-        view.addSubview(movieDescriptionDetail)
-        view.addSubview(movieCastTitle)
-        view.addSubview(castCollectionView)
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(movieImageView)
+        contentView.addSubview(movieTitleLabel)
+        contentView.addSubview(movieDurationView)
+        contentView.addSubview(movieDateView)
+        contentView.addSubview(movieGenreView)
+        contentView.addSubview(movieRatingView)
+        contentView.addSubview(movieDescriptionTitle)
+        contentView.addSubview(movieDescriptionDetail)
+        contentView.addSubview(movieCastTitle)
+        contentView.addSubview(castCollectionView)
     }
     
-    
     func setupConstraints() {
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
+        }
+        
         movieImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(32)
-            $0.centerX.centerX.equalToSuperview()
+            $0.top.equalToSuperview().offset(32)
+            $0.centerX.equalToSuperview()
             $0.width.equalToSuperview().multipliedBy(0.6)
             $0.height.equalTo(movieImageView.snp.width).multipliedBy(1.35)
         }
         
         movieTitleLabel.snp.makeConstraints {
             $0.top.equalTo(movieImageView.snp.bottom).offset(24)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
+            $0.left.right.equalToSuperview()
             $0.height.equalTo(32)
         }
         
         movieDurationView.snp.makeConstraints {
             $0.top.equalTo(movieTitleLabel.snp.bottom).offset(16)
-            $0.centerX.centerX.equalToSuperview()
+            $0.centerX.equalToSuperview()
             $0.width.equalToSuperview().multipliedBy(0.25)
             $0.height.equalTo(16)
         }
@@ -237,15 +259,15 @@ private extension MovieDetailViewController {
         
         movieRatingView.snp.makeConstraints {
             $0.top.equalTo(movieDurationView.snp.bottom).offset(16)
-            $0.centerX.equalTo(view.snp.centerX)
+            $0.centerX.equalToSuperview()
             $0.height.equalTo(16)
             $0.width.equalTo(104)
         }
         
         movieDescriptionTitle.snp.makeConstraints {
             $0.top.equalTo(movieRatingView.snp.bottom).offset(24)
-            $0.left.equalTo(view.snp.left).offset(24)
-            $0.right.equalTo(view.snp.right)
+            $0.left.equalToSuperview().offset(24)
+            $0.right.equalToSuperview()
             $0.height.equalTo(24)
         }
         
@@ -256,16 +278,17 @@ private extension MovieDetailViewController {
         
         movieCastTitle.snp.makeConstraints {
             $0.top.equalTo(movieDescriptionDetail.snp.bottom).offset(24)
-            $0.left.equalTo(view.snp.left).offset(24)
-            $0.right.equalTo(view.snp.right)
+            $0.left.equalToSuperview().offset(24)
+            $0.right.equalToSuperview()
             $0.height.equalTo(24)
         }
         
         castCollectionView.snp.makeConstraints {
             $0.top.equalTo(movieCastTitle.snp.bottom).offset(24)
-            $0.left.equalTo(view.snp.left).offset(24)
-            $0.right.equalTo(view.snp.right).offset(-24)
+            $0.left.equalToSuperview().offset(24)
+            $0.right.equalToSuperview().offset(-24)
             $0.height.equalTo(104)
+            $0.bottom.equalToSuperview().offset(-32)
         }
     }
     
