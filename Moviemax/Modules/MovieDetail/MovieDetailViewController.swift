@@ -10,6 +10,7 @@ import SnapKit
 
 final class MovieDetailViewController: UIViewController {
     let presenter: MovieDetailPresenter
+    private let likeButton = LikeButton()
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -24,7 +25,6 @@ final class MovieDetailViewController: UIViewController {
     
     private lazy var movieImageView: UIImageView = {
         let view = UIImageView(image: .movieDetail)
-        view.backgroundColor = .green
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 20
         view.clipsToBounds = true
@@ -35,6 +35,7 @@ final class MovieDetailViewController: UIViewController {
         let label = UILabel()
         label.text = Constants.Text.movieTitle
         label.textAlignment = .center
+        label.textColor = .adaptiveTextMain
         label.font = AppFont.plusJakartaSemiBold.withSize(24)
         return label
     }()
@@ -134,7 +135,6 @@ final class MovieDetailViewController: UIViewController {
     
     private lazy var movieRatingView: RatingActionView = {
         let view = RatingActionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -143,6 +143,7 @@ final class MovieDetailViewController: UIViewController {
         label.text = Constants.Text.movieDescriptionTitle
         label.textAlignment = .left
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
+        label.textColor = .adaptiveTextMain
         return label
     }()
     
@@ -174,12 +175,29 @@ final class MovieDetailViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var watchButtonView: UIView = {
+        let view = UIView()
+        let button = CommonButton(title: Constants.Text.watchButtonTitle)
+        button.addTarget(self, action: #selector(watchNowButtonTapped), for: .touchUpInside)
+        
+        view.addSubview(button)
+        button.snp.makeConstraints {
+            $0.centerX.centerY.equalToSuperview()
+            $0.height.equalTo(56)
+            $0.width.equalToSuperview().multipliedBy(0.5)
+        }
+        
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.view = self
         setupUI()
         setupConstraints()
         setupNavigation()
+        
+        setRating(3.2)
     }
     
     init(presenter: MovieDetailPresenter) {
@@ -193,14 +211,20 @@ final class MovieDetailViewController: UIViewController {
     }
 }
 
+// MARK: - Public Methods
+extension MovieDetailViewController {
+    func setRating(_ rating: Double) {
+        movieRatingView.rating = rating
+    }
+}
+
 // MARK: - Private Methods
 private extension MovieDetailViewController {
     func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appBackground
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        
         contentView.addSubview(movieImageView)
         contentView.addSubview(movieTitleLabel)
         contentView.addSubview(movieDurationView)
@@ -211,11 +235,22 @@ private extension MovieDetailViewController {
         contentView.addSubview(movieDescriptionDetail)
         contentView.addSubview(movieCastTitle)
         contentView.addSubview(castCollectionView)
+        view.addSubview(watchButtonView)
+        
+        setupConstraints()
     }
     
     func setupConstraints() {
+        watchButtonView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(101)
+        }
+        
         scrollView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(watchButtonView.snp.top)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
         }
         
         contentView.snp.makeConstraints {
@@ -263,7 +298,7 @@ private extension MovieDetailViewController {
             $0.height.equalTo(16)
             $0.width.equalTo(104)
         }
-        
+                
         movieDescriptionTitle.snp.makeConstraints {
             $0.top.equalTo(movieRatingView.snp.bottom).offset(24)
             $0.left.equalToSuperview().offset(24)
@@ -292,37 +327,40 @@ private extension MovieDetailViewController {
         }
     }
     
-    func setupNavigation() {
+    private func setupNavigation() {
         self.title = Constants.Text.screenTitle
                 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(resource: .arrowBack),
-            style: .plain,
-            target: self,
-            action: #selector(backButtonTapped)
-        )
+        let backButton = UIButton()
+        backButton.setImage(UIImage(resource: .arrowBack), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        backButton.snp.makeConstraints {
+            $0.size.equalTo(40)
+        }
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(resource: .like),
-            style: .plain,
-            target: self,
-            action: #selector(likeButtonTapped)
-        )
+        likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
+        likeButton.snp.makeConstraints {
+            $0.size.equalTo(40)
+        }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: likeButton)
         
         navigationController?.navigationBar.titleTextAttributes = [
             .font: AppFont.montserratBold.withSize(18),
-            .foregroundColor: UIColor.black
+            .foregroundColor: UIColor.adaptiveTextMain
         ]
     }
     
     @objc func backButtonTapped() {
-        print("Нажата кнопка 'Назад'")
+        print("Нажата кнопка Назад")
     }
         
     @objc func likeButtonTapped() {
-        print("Нажата кнопка 'Like'")
+        likeButton.toggleLike()
     }
     
+    @objc func watchNowButtonTapped() {
+        print("Нажата кнопка Watch Now")
+    }
 }
 
 // MARK: - Constants
@@ -337,16 +375,11 @@ private extension MovieDetailViewController {
             static let movieDescriptionText: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book Show More"
             static let movieCastTitle: String = "Cast and Crew"
             static let screenTitle: String = "Movie Detail"
+            static let watchButtonTitle: String = "Watch now"
         }
     }
 }
 
-// MARK: - UICollectionViewDelegate
-extension MovieDetailViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Обработка нажатия на ячейку, если нужно
-    }
-}
 
 // MARK: - UICollectionViewDataSource
 extension MovieDetailViewController: UICollectionViewDataSource {

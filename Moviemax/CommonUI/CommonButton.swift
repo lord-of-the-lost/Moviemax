@@ -22,7 +22,7 @@ final class CommonButton: UIButton {
 // MARK: - Private Methods
 private extension CommonButton {
     func setupButton(title: String) {
-        setTitle("Авторизоваться", for: .normal)
+        setTitle("\(title)", for: .normal)
         titleLabel?.font = AppFont.plusJakartaSemiBold.withSize(16)
         backgroundColor = UIColor(resource: .accent)
         setTitleColor(UIColor(resource: .strictWhite), for: .normal)

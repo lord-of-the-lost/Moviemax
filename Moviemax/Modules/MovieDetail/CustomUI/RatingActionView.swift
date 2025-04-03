@@ -8,79 +8,54 @@
 import UIKit
 import SnapKit
 
-protocol RatingActionViewDelegate: AnyObject {
-    func ratingActionView(_ view: RatingActionView, didChangeRating rating: Int)
-}
-
 final class RatingActionView: UIView {
-        
-    weak var delegate: RatingActionViewDelegate?
+    private let maxRating: Int = 5
+    private var starViews: [UIImageView] = []
     
-    var rating: Int = 0 {
+    var rating: Double = 0 {
         didSet {
             updateStars()
-            delegate?.ratingActionView(self, didChangeRating: rating)
         }
     }
     
-    var maxRating: Int = 5 {
-        didSet {
-            setupStars()
-        }
-    }
-        
-    private var starButtons: [UIButton] = []
-    private let stackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 4
-        stack.distribution = .fillEqually
-        return stack
-    }()
-    
-    private let selectedStarColor: UIColor = .systemYellow
-    private let unselectedStarColor: UIColor = .systemGray
-        
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
+        setupStars()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupUI()
-    }
-        
-    private func setupUI() {
-        addSubview(stackView)
-        stackView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        
         setupStars()
     }
     
     private func setupStars() {
-        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        starButtons.removeAll()
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 8
+        addSubview(stackView)
         
-        guard let starImage = UIImage(named: "star") else { return }
+        stackView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         
-        for index in 1...maxRating {
-            let button = UIButton()
-            let templateImage = starImage.withRenderingMode(.alwaysTemplate)
-            button.setImage(templateImage, for: .normal)
-            button.tintColor = unselectedStarColor
-            starButtons.append(button)
-            stackView.addArrangedSubview(button)
+        for _ in 0..<maxRating {
+            let starView = UIImageView()
+            starView.contentMode = .scaleAspectFit
+            starView.tintColor = .systemGray4
+            starView.image = UIImage(named: "star")?.withRenderingMode(.alwaysTemplate)
+            starViews.append(starView)
+            stackView.addArrangedSubview(starView)
         }
         
         updateStars()
     }
     
     private func updateStars() {
-        starButtons.forEach { button in
-            button.tintColor = button.tag <= rating ? selectedStarColor : unselectedStarColor
+        let roundedRating = Int(round(rating))
+        
+        for (index, starView) in starViews.enumerated() {
+            starView.tintColor = index < roundedRating ? .systemYellow : .systemGray4
         }
     }
-}
+} 

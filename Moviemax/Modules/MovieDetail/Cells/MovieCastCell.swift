@@ -21,7 +21,7 @@ final class MovieCastCell: UICollectionViewCell {
     
     private lazy var castName: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .adaptiveTextMain
         label.font = AppFont.plusJakartaSemiBold.withSize(14)
         return label
     }()
@@ -29,7 +29,7 @@ final class MovieCastCell: UICollectionViewCell {
     private lazy var castDescription: UILabel = {
         let label = UILabel()
         label.font = AppFont.plusJakartaMedium.withSize(10)
-        label.textColor = .gray
+        label.textColor = .adaptiveTextMain
         return label
     }()
 
@@ -120,7 +120,7 @@ extension MovieCastCell {
 // MARK: - Private Methods
 private extension MovieCastCell {
     func setupUI() {
-        contentView.backgroundColor = .systemBackground
+        contentView.backgroundColor = .clear
         castImage.layer.cornerRadius = Constants.cornerRadius
         contentView.addSubviews(
             castImage,

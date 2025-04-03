@@ -14,7 +14,7 @@ final class DescriptionDetail: UIView {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 14)
-        label.textColor = .label
+        label.textColor = .adaptiveTextMain
         return label
     }()
         
