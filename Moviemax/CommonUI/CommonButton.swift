@@ -8,7 +8,7 @@
 import UIKit
 
 final class CommonButton: UIButton {
-    override public var isEnabled: Bool {
+    override var isEnabled: Bool {
         didSet {
             self.backgroundColor = self.backgroundColor?.withAlphaComponent(isEnabled ? 1.0 : 0.5)
         }

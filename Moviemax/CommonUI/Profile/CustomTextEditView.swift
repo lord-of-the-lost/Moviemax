@@ -23,7 +23,7 @@ enum TextEditVIewType {
 final class CustomTextEditView: UIView {
     
     // MARK: Properties
-    private let borderView = BorderView()
+    private lazy var borderView = BorderView()
 
     private lazy var label: UILabel = {
         let label = UILabel()
@@ -38,6 +38,7 @@ final class CustomTextEditView: UIView {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    
     private lazy var defaultTextField: UITextField = {
         let textField = UITextField()
         textField.textColor = .adaptiveTextMain
@@ -81,6 +82,7 @@ final class CustomTextEditView: UIView {
         }
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

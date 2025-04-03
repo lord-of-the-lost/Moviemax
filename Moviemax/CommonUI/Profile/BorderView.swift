@@ -17,14 +17,15 @@ final class BorderView: UIView {
         layer.cornerRadius = Constants.cornerRadius
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension BorderView {
+private extension BorderView {
     enum Constants {
-            static let borderWidth: CGFloat = 1
-            static let cornerRadius: CGFloat = 24
+        static let borderWidth: CGFloat = 1
+        static let cornerRadius: CGFloat = 24
     }
 }

@@ -9,14 +9,13 @@ import UIKit
 
 final class ProfileView: UIView {
 
+    // MARK: Properties
     private lazy var photoImageView: UIImageView = {
         let photoImageView = UIImageView(frame: .zero)
         photoImageView.contentMode = .scaleAspectFill
         photoImageView.clipsToBounds = true
-        photoImageView.layer.cornerRadius = Constants.cornerRadius
         return photoImageView
     }()
-    
     
     private lazy var pencilImageView: UIImageView = {
         let imageview = UIImageView(frame: .zero)
@@ -24,21 +23,26 @@ final class ProfileView: UIView {
         return imageview
     }()
     
-    init(photoImage: UIImage, isEditable: Bool) {
+    // MARK: Init
+    init(photoImage: UIImage?, isEditable: Bool) {
         super.init(frame: .zero)
         setupUI(photoImage: photoImage, isEditable: isEditable)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        photoImageView.layer.cornerRadius = photoImageView.bounds.width.half
+    }
 }
 
 //MARK: - Private methods
 private extension ProfileView {
-    
-    func setupUI(photoImage: UIImage, isEditable: Bool) {
+    func setupUI(photoImage: UIImage?, isEditable: Bool) {
         photoImageView.image = photoImage
         addSubview(photoImageView)
         
@@ -51,16 +55,9 @@ private extension ProfileView {
                 make.right.equalTo(photoImageView)
             }
         }
-                
-        self.snp.makeConstraints { make in
-            make.height.equalTo(Constants.photoWidth)
-        }
         
         photoImageView.snp.makeConstraints { make in
-            make.height.equalTo(Constants.photoHeight)
-            make.width.equalTo(Constants.photoWidth)
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.left.right.top.bottom.equalToSuperview()
         }
     }
 }
@@ -68,11 +65,8 @@ private extension ProfileView {
 //MARK: - Constants
 private extension ProfileView {
     enum Constants {
-        static let photoWidth: CGFloat = 100
-        static let photoHeight: CGFloat = 100
         static let pencilWidth: CGFloat = 32
         static let pencilHeight: CGFloat = 32
-        static let cornerRadius: CGFloat = photoWidth / 2
         static let pencilImageName: String = "pencil"
     }
 }

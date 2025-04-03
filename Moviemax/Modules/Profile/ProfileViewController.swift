@@ -11,62 +11,52 @@ import SnapKit
 final class ProfileViewController: UIViewController {
     
     // MARK: Properties
-    let presenter: ProfilePresenter
+    private let presenter: ProfilePresenter
     
-    private lazy var profilePhotoView: ProfileView = {
-        return ProfileView(
-            photoImage: UIImage(named: Constants.Text.profilePlaceholderImageName)!,
-            isEditable: true
-        )
-    }()
+    private lazy var scrollView = UIScrollView()
+    private lazy var contentView = UIView()
+    private lazy var profilePhotoContainerView = UIView()
     
-    private lazy var firstNameTextField: CustomTextEditView = {
-        return CustomTextEditView(
-            text: Constants.Text.firstName,
-            labelName: Constants.Text.firstNameLabel,
-            type: .textField
-        )
-    }()
+    private lazy var profilePhotoView = ProfileView(
+        photoImage: .posterPlaceholder,
+        isEditable: true
+    )
     
-    private lazy var lastNameTextField: CustomTextEditView = {
-        return CustomTextEditView(
-            text: Constants.Text.lastName,
-            labelName: Constants.Text.lastNameLabel,
-            type: .textField
-        )
-    }()
+    private lazy var firstNameTextField = CustomTextEditView(
+        text: Constants.Text.firstName,
+        labelName: Constants.Text.firstNameLabel,
+        type: .textField
+    )
     
-    private lazy var emailTextField: CustomTextEditView = {
-        return CustomTextEditView(
-            text: Constants.Text.email,
-            labelName: Constants.Text.emailLabel,
-            type: .textField
-        )
-    }()
+    private lazy var lastNameTextField = CustomTextEditView(
+        text: Constants.Text.lastName,
+        labelName: Constants.Text.lastNameLabel,
+        type: .textField
+    )
     
-    private lazy var dateOfBirthTextField: CustomTextEditView = {
-        return CustomTextEditView(
-            text: Constants.Text.dateOfBirth,
-            labelName: Constants.Text.dateOfBirthLabel,
-            type: .date
-        )
-    }()
+    private lazy var emailTextField = CustomTextEditView(
+        text: Constants.Text.email,
+        labelName: Constants.Text.emailLabel,
+        type: .textField
+    )
     
-    private lazy var locationTextView: CustomTextEditView = {
-        return CustomTextEditView(
-            text: Constants.Text.location,
-            labelName: Constants.Text.locationLabel,
-            type: .textView
-        )
-    }()
+    private lazy var dateOfBirthTextField = CustomTextEditView(
+        text: Constants.Text.dateOfBirth,
+        labelName: Constants.Text.dateOfBirthLabel,
+        type: .date
+    )
     
-    private lazy var genderCellView: UIView = {
-        return CustomTextEditView(
-            text: "",
-            labelName: Constants.Text.genderLabel,
-            type: .gender(.female)
-        )
-    }()
+    private lazy var locationTextView = CustomTextEditView(
+        text: Constants.Text.location,
+        labelName: Constants.Text.locationLabel,
+        type: .textView
+    )
+    
+    private lazy var genderCellView = CustomTextEditView(
+        text: "",
+        labelName: Constants.Text.genderLabel,
+        type: .gender(.female)
+    )
     
     private lazy var saveButton: CommonButton = {
         let button = CommonButton(title: Constants.Text.saveButtonTitle)
@@ -81,13 +71,6 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var scrollView: UIScrollView = {
-         UIScrollView()
-    }()
-    
-    private lazy var contentView: UIView = {
-        UIView()
-    }()
     
     //MARK: Init
     init(presenter: ProfilePresenter) {
@@ -114,21 +97,23 @@ private extension ProfileViewController {
     func setupUI() {
         navigationItem.title = Constants.Text.screenName
         view.backgroundColor = .appBackground
-
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(stackView)
+        profilePhotoContainerView.addSubview(profilePhotoView)
         
-        stackView.addArrangedSubview(profilePhotoView)
-        stackView.addArrangedSubview(firstNameTextField)
-        stackView.addArrangedSubview(lastNameTextField)
-        stackView.addArrangedSubview(emailTextField)
-        stackView.addArrangedSubview(dateOfBirthTextField)
-        stackView.addArrangedSubview(genderCellView)
-        stackView.addArrangedSubview(locationTextView)
-        stackView.addArrangedSubview(saveButton)
+        stackView.addArrangedSubviews(
+            profilePhotoContainerView,
+            firstNameTextField,
+            lastNameTextField,
+            emailTextField,
+            dateOfBirthTextField,
+            genderCellView,
+            locationTextView,
+            saveButton
+        )
         
-        // MARK: TODO
         saveButton.isEnabled = false
     }
     
@@ -146,6 +131,15 @@ private extension ProfileViewController {
             make.left.equalToSuperview().offset(Constants.Constraints.stackViewOffsetInset)
             make.right.equalToSuperview().inset(Constants.Constraints.stackViewOffsetInset)
             make.top.bottom.equalToSuperview()
+        }
+        
+        profilePhotoContainerView.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.photoSize)
+        }
+        
+        profilePhotoView.snp.makeConstraints { make in
+            make.size.equalTo(Constants.Constraints.photoSize)
+            make.center.equalToSuperview()
         }
         
         firstNameTextField.snp.makeConstraints { make in
@@ -178,7 +172,7 @@ private extension ProfileViewController {
     }
     
     @objc func saveButtonTapped() {
-        presenter.view?.showAlert(title: "Сохранение", message: "Изменения сохранены")
+        showAlert(title: "Сохранение", message: "Изменения сохранены")
     }
 }
 
@@ -187,7 +181,6 @@ private extension ProfileViewController {
     enum Constants {
         enum Text {
             static let saveButtonTitle: String = "Сохранить изменения"
-            static let profilePlaceholderImageName: String = "profile_placeholder"
             static let screenName: String = "Profile"
             
             static let firstNameLabel: String = "First Name"
@@ -210,6 +203,7 @@ private extension ProfileViewController {
             static let textFieldHeight: CGFloat = 82
             static let locationTextViewHeight: CGFloat = 162
             static let saveButtonHeight: CGFloat = 56
+            static let photoSize: CGFloat = 100
         }
     }
 }

@@ -10,22 +10,23 @@ import SnapKit
 
 final class GenderView: UIView {
     
-    private let label: UILabel = {
+    // MARK: Properties
+    private lazy var label: UILabel = {
         let label = UILabel()
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .label
         return label
     }()
     
-    private var checkmarkImageView: UIImageView = {
+    private lazy var checkmarkImageView: UIImageView = {
         let imageView = UIImageView(image: .checkmarkFill)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    private let borderView = BorderView()
+    private lazy var borderView = BorderView()
 
-    
+    // MARK: Init
     init(gender: Gender, isSelected: Bool) {
         super.init(frame: .zero)
         label.text = gender.rawValue
@@ -37,11 +38,13 @@ final class GenderView: UIView {
         setupUI()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
+//MARK: - Private methods
 private extension GenderView {
     func setupUI() {
         addSubviews(borderView, label, checkmarkImageView)
