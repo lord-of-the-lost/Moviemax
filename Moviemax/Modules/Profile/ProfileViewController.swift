@@ -1,0 +1,215 @@
+//
+//  ProfileViewController.swift
+//  Moviemax
+//
+//  Created by Volchanka on 01.04.2025.
+//
+
+import UIKit
+import SnapKit
+
+final class ProfileViewController: UIViewController {
+    
+    // MARK: Properties
+    let presenter: ProfilePresenter
+    
+    private lazy var profilePhotoView: ProfileView = {
+        return ProfileView(
+            photoImage: UIImage(named: Constants.Text.profilePlaceholderImageName)!,
+            isEditable: true
+        )
+    }()
+    
+    private lazy var firstNameTextField: CustomTextEditView = {
+        return CustomTextEditView(
+            text: Constants.Text.firstName,
+            labelName: Constants.Text.firstNameLabel,
+            type: .textField
+        )
+    }()
+    
+    private lazy var lastNameTextField: CustomTextEditView = {
+        return CustomTextEditView(
+            text: Constants.Text.lastName,
+            labelName: Constants.Text.lastNameLabel,
+            type: .textField
+        )
+    }()
+    
+    private lazy var emailTextField: CustomTextEditView = {
+        return CustomTextEditView(
+            text: Constants.Text.email,
+            labelName: Constants.Text.emailLabel,
+            type: .textField
+        )
+    }()
+    
+    private lazy var dateOfBirthTextField: CustomTextEditView = {
+        return CustomTextEditView(
+            text: Constants.Text.dateOfBirth,
+            labelName: Constants.Text.dateOfBirthLabel,
+            type: .date
+        )
+    }()
+    
+    private lazy var locationTextView: CustomTextEditView = {
+        return CustomTextEditView(
+            text: Constants.Text.location,
+            labelName: Constants.Text.locationLabel,
+            type: .textView
+        )
+    }()
+    
+    private lazy var genderCellView: UIView = {
+        return CustomTextEditView(
+            text: "",
+            labelName: Constants.Text.genderLabel,
+            type: .gender(.female)
+        )
+    }()
+    
+    private lazy var saveButton: CommonButton = {
+        let button = CommonButton(title: Constants.Text.saveButtonTitle)
+        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = Constants.Constraints.stackViewSpacing
+        return stackView
+    }()
+    
+    private lazy var scrollView: UIScrollView = {
+         UIScrollView()
+    }()
+    
+    private lazy var contentView: UIView = {
+        UIView()
+    }()
+    
+    //MARK: Init
+    init(presenter: ProfilePresenter) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        presenter.view = self
+        setupUI()
+        setupConstraints()
+    }
+}
+
+// MARK: - Private Methods
+private extension ProfileViewController {
+    
+    func setupUI() {
+        navigationItem.title = Constants.Text.screenName
+        view.backgroundColor = .appBackground
+
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(stackView)
+        
+        stackView.addArrangedSubview(profilePhotoView)
+        stackView.addArrangedSubview(firstNameTextField)
+        stackView.addArrangedSubview(lastNameTextField)
+        stackView.addArrangedSubview(emailTextField)
+        stackView.addArrangedSubview(dateOfBirthTextField)
+        stackView.addArrangedSubview(genderCellView)
+        stackView.addArrangedSubview(locationTextView)
+        stackView.addArrangedSubview(saveButton)
+        
+        // MARK: TODO
+        saveButton.isEnabled = false
+    }
+    
+    func setupConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+        
+        stackView.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(Constants.Constraints.stackViewOffsetInset)
+            make.right.equalToSuperview().inset(Constants.Constraints.stackViewOffsetInset)
+            make.top.bottom.equalToSuperview()
+        }
+        
+        firstNameTextField.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        }
+        
+        lastNameTextField.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        }
+        
+        emailTextField.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        }
+        
+        dateOfBirthTextField.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        }
+        
+        genderCellView.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        }
+        
+        locationTextView.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.locationTextViewHeight)
+        }
+        
+        saveButton.snp.makeConstraints { make in
+            make.height.equalTo(Constants.Constraints.saveButtonHeight)
+        }
+    }
+    
+    @objc func saveButtonTapped() {
+        presenter.view?.showAlert(title: "Сохранение", message: "Изменения сохранены")
+    }
+}
+
+// MARK: - Constants
+private extension ProfileViewController {
+    enum Constants {
+        enum Text {
+            static let saveButtonTitle: String = "Сохранить изменения"
+            static let profilePlaceholderImageName: String = "profile_placeholder"
+            static let screenName: String = "Profile"
+            
+            static let firstNameLabel: String = "First Name"
+            static let lastNameLabel: String = "Last Name"
+            static let emailLabel: String = "E-mail"
+            static let dateOfBirthLabel: String = "Date of Birth"
+            static let genderLabel: String = "Gender"
+            static let locationLabel: String = "Location"
+            
+            static let firstName: String = "Andy"
+            static let lastName: String = "Lexsian"
+            static let email: String = "Andylexian22@gmail.com"
+            static let dateOfBirth: String = "24 february 1996"
+            static let location: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        }
+        
+        enum Constraints {
+            static let stackViewSpacing: CGFloat = 16
+            static let stackViewOffsetInset: CGFloat = 24
+            static let textFieldHeight: CGFloat = 82
+            static let locationTextViewHeight: CGFloat = 162
+            static let saveButtonHeight: CGFloat = 56
+        }
+    }
+}
