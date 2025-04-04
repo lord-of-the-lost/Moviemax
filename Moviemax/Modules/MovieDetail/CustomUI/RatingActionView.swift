@@ -21,15 +21,14 @@ final class RatingView: UIView {
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        self.rating = 0
-        super.init(coder: coder)
-        setupStars()
+        fatalError()
     }
 } 
 
 // MARK: - Private Methods
+#warning("Стек создается отдельно выше, стар вью тоже, а уже в этом методе происходит настройка")
 private extension RatingView {
-    private func setupStars() {
+    func setupStars() {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
@@ -44,7 +43,7 @@ private extension RatingView {
             let starView = UIImageView()
             starView.contentMode = .scaleAspectFit
             starView.tintColor = .systemGray4
-            starView.image = UIImage(named: "star")?.withRenderingMode(.alwaysTemplate)
+            starView.image = UIImage(resource: .star).withRenderingMode(.alwaysTemplate)
             starViews.append(starView)
             stackView.addArrangedSubview(starView)
         }
@@ -52,7 +51,7 @@ private extension RatingView {
         updateStars()
     }
     
-    private func updateStars() {
+    func updateStars() {
         let roundedRating = Int(round(rating))
         
         for (index, starView) in starViews.enumerated() {

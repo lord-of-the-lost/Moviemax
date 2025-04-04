@@ -10,18 +10,20 @@ import SnapKit
 
 final class MovieDetailViewController: UIViewController {
     private let presenter: MovieDetailPresenter
+
     private lazy var likeButton = LikeButton()
+    private lazy var contentView: UIView = UIView()
+    private lazy var movieRatingView: RatingView = RatingView(rating: 3.5)
+    private lazy var movieDescriptionDetail: DescriptionDetail = DescriptionDetail(text: Constants.Text.movieDescriptionText)
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
-    
-    private lazy var contentView: UIView = UIView()
-    
+
     private lazy var movieImageView: UIImageView = {
-        let view = UIImageView(image: .movieDetail)
+        let view = UIImageView(image: UIImage(resource: .posterPlaceholder))
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 20
         view.clipsToBounds = true
@@ -37,6 +39,7 @@ final class MovieDetailViewController: UIViewController {
         return label
     }()
     
+    #warning("Слишком большая вложенность лучше создать отдельный компонент в CommonUI, в конмпоненте будет иконка и текст на вью, а эту вью ты уже будешь добавлять сюда")
     private lazy var movieDateView: UIView = {
         let view = UIView()
         
@@ -47,7 +50,7 @@ final class MovieDetailViewController: UIViewController {
 
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(resource: .calendar)
+        imageView.image = UIImage(resource: .calendar).withRenderingMode(.alwaysOriginal).withTintColor(.adaptiveTextSecondary)
         imageView.snp.makeConstraints {
             $0.height.equalTo(16)
             $0.width.equalTo(16)
@@ -70,6 +73,7 @@ final class MovieDetailViewController: UIViewController {
         return view
     }()
     
+#warning("Слишком большая вложенность лучше создать отдельный компонент в CommonUI, в конмпоненте будет иконка и текст на вью, а эту вью ты уже будешь добавлять сюда")
     private lazy var movieDurationView: UIView = {
         let view = UIView()
         
@@ -80,7 +84,7 @@ final class MovieDetailViewController: UIViewController {
 
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(resource: .clock)
+        imageView.image = UIImage(resource: .clock).withRenderingMode(.alwaysOriginal).withTintColor(.adaptiveTextSecondary)
         imageView.snp.makeConstraints {
             $0.height.equalTo(16)
             $0.width.equalTo(16)
@@ -103,6 +107,7 @@ final class MovieDetailViewController: UIViewController {
         return view
     }()
     
+#warning("Слишком большая вложенность лучше создать отдельный компонент в CommonUI, в конмпоненте будет иконка и текст на вью, а эту вью ты уже будешь добавлять сюда")
     private lazy var movieGenreView: UIView = {
         let view = UIView()
         
@@ -113,7 +118,7 @@ final class MovieDetailViewController: UIViewController {
 
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(resource: .film)
+        imageView.image = UIImage(resource: .movie).withRenderingMode(.alwaysOriginal).withTintColor(.adaptiveTextSecondary)
         imageView.snp.makeConstraints {
             $0.height.equalTo(16)
             $0.width.equalTo(16)
@@ -135,9 +140,7 @@ final class MovieDetailViewController: UIViewController {
         
         return view
     }()
-    
-    private lazy var movieRatingView: RatingView = RatingView(rating: 3.5)
-    
+        
     private lazy var movieDescriptionTitle: UILabel = {
         let label = UILabel()
         label.text = Constants.Text.movieDescriptionTitle
@@ -146,9 +149,7 @@ final class MovieDetailViewController: UIViewController {
         label.textColor = .adaptiveTextMain
         return label
     }()
-    
-    private lazy var movieDescriptionDetail: DescriptionDetail = DescriptionDetail(text: Constants.Text.movieDescriptionText)
-    
+        
     private lazy var movieCastTitle: UILabel = {
         let label = UILabel()
         label.text = Constants.Text.movieCastTitle
@@ -172,6 +173,8 @@ final class MovieDetailViewController: UIViewController {
         return collectionView
     }()
     
+    
+    #warning("либо раздели это на кнопку и подложку в рамках этого контроллера, либо также раздели и вынеси в отдельный компонент")
     private lazy var watchButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .tabBarBG
@@ -217,16 +220,18 @@ private extension MovieDetailViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        contentView.addSubviews(movieImageView,
-                                movieTitleLabel,
-                                movieDurationView,
-                                movieDateView,
-                                movieGenreView,
-                                movieRatingView,
-                                movieDescriptionTitle,
-                                movieDescriptionDetail,
-                                movieCastTitle,
-                                castCollectionView)
+        contentView.addSubviews(
+            movieImageView,
+            movieTitleLabel,
+            movieDurationView,
+            movieDateView,
+            movieGenreView,
+            movieRatingView,
+            movieDescriptionTitle,
+            movieDescriptionDetail,
+            movieCastTitle,
+            castCollectionView
+        )
         
         view.addSubview(watchButtonView)
         
@@ -320,6 +325,7 @@ private extension MovieDetailViewController {
         }
     }
     
+    #warning("Кнопки должны создаваться отдельно отдельно вне этого метода")
     func setupNavigation() {
         self.title = Constants.Text.screenTitle
                 
@@ -357,6 +363,7 @@ private extension MovieDetailViewController {
 }
 
 // MARK: - Constants
+#warning("У контроллера должна быть вью модель на основе которого отрисовываются данные, то есть все текста которые переменные, не должны лежать в константа, а должны браться из модели")
 private extension MovieDetailViewController {
     enum Constants {
         enum Text {
@@ -377,7 +384,7 @@ private extension MovieDetailViewController {
 // MARK: - UICollectionViewDataSource
 extension MovieDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return MovieCastCell.mockData.count
+        MovieCastCell.mockData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -397,14 +404,14 @@ extension MovieDetailViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MovieDetailViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 144, height: 40)
+        CGSize(width: 144, height: 40)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        0
     }
 }
