@@ -10,7 +10,7 @@ import SnapKit
 
 final class DescriptionDetail: UIView {
         
-    private let textLabel: UILabel = {
+    private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 14)
@@ -29,6 +29,7 @@ final class DescriptionDetail: UIView {
         setupUI()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
@@ -37,11 +38,14 @@ final class DescriptionDetail: UIView {
     func configure(with text: String) {
         textLabel.text = text
     }
-        
+}
+
+// MARK: - Private Methods
+private extension DescriptionDetail {
     private func setupUI() {
         addSubview(textLabel)
-        textLabel.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        textLabel.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
 }

@@ -13,8 +13,7 @@ final class MovieDetailRouter: RouterProtocol {
         self.dependency = dependency
     }
     
-    func navigateToMain() {
-        let tabBarController = TabBarFactory.build(dependency)
-        viewController?.view.window?.rootViewController = tabBarController
+    func closeMovieDetailScreen() {
+        viewController?.navigationController?.popViewController(animated: true)
     }
 }

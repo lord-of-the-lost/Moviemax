@@ -9,8 +9,8 @@ import UIKit
 import SnapKit
 
 final class MovieDetailViewController: UIViewController {
-    let presenter: MovieDetailPresenter
-    private let likeButton = LikeButton()
+    private let presenter: MovieDetailPresenter
+    private lazy var likeButton = LikeButton()
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -18,10 +18,7 @@ final class MovieDetailViewController: UIViewController {
         return scrollView
     }()
     
-    private lazy var contentView: UIView = {
-        let view = UIView()
-        return view
-    }()
+    private lazy var contentView: UIView = UIView()
     
     private lazy var movieImageView: UIImageView = {
         let view = UIImageView(image: .movieDetail)
@@ -47,17 +44,18 @@ final class MovieDetailViewController: UIViewController {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(resource: .calendar)
-        imageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        imageView.snp.makeConstraints {
+            $0.height.equalTo(16)
+            $0.width.equalTo(16)
+        }
 
         let label = UILabel()
         label.text = Constants.Text.movieDate
-        label.textColor = UIColor(red: 0.471, green: 0.51, blue: 0.541, alpha: 1)
+        label.textColor = .adaptiveTextSecondary
         label.font = AppFont.montserratMedium.withSize(12)
 
         stackView.addArrangedSubview(imageView)
@@ -65,8 +63,9 @@ final class MovieDetailViewController: UIViewController {
 
         view.addSubview(stackView)
         
-        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        stackView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
         
         return view
     }()
@@ -78,17 +77,18 @@ final class MovieDetailViewController: UIViewController {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(resource: .clock)
-        imageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        imageView.snp.makeConstraints {
+            $0.height.equalTo(16)
+            $0.width.equalTo(16)
+        }
 
         let label = UILabel()
         label.text = Constants.Text.movieDuration
-        label.textColor = UIColor(red: 0.471, green: 0.51, blue: 0.541, alpha: 1)
+        label.textColor = .adaptiveTextSecondary
         label.font = AppFont.montserratMedium.withSize(12)
 
         stackView.addArrangedSubview(imageView)
@@ -96,8 +96,9 @@ final class MovieDetailViewController: UIViewController {
 
         view.addSubview(stackView)
         
-        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        stackView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
 
         return view
     }()
@@ -109,17 +110,18 @@ final class MovieDetailViewController: UIViewController {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(resource: .film)
-        imageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        imageView.snp.makeConstraints {
+            $0.height.equalTo(16)
+            $0.width.equalTo(16)
+        }
 
         let label = UILabel()
         label.text = Constants.Text.movieGenre
-        label.textColor = UIColor(red: 0.471, green: 0.51, blue: 0.541, alpha: 1)
+        label.textColor = .adaptiveTextSecondary
         label.font = AppFont.montserratMedium.withSize(12)
 
         stackView.addArrangedSubview(imageView)
@@ -127,16 +129,14 @@ final class MovieDetailViewController: UIViewController {
 
         view.addSubview(stackView)
         
-        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        stackView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
         
         return view
     }()
     
-    private lazy var movieRatingView: RatingActionView = {
-        let view = RatingActionView()
-        return view
-    }()
+    private lazy var movieRatingView: RatingView = RatingView(rating: 3.5)
     
     private lazy var movieDescriptionTitle: UILabel = {
         let label = UILabel()
@@ -147,10 +147,7 @@ final class MovieDetailViewController: UIViewController {
         return label
     }()
     
-    private lazy var movieDescriptionDetail: DescriptionDetail = {
-        let view = DescriptionDetail(text: Constants.Text.movieDescriptionText)
-        return view
-    }()
+    private lazy var movieDescriptionDetail: DescriptionDetail = DescriptionDetail(text: Constants.Text.movieDescriptionText)
     
     private lazy var movieCastTitle: UILabel = {
         let label = UILabel()
@@ -177,6 +174,8 @@ final class MovieDetailViewController: UIViewController {
     
     private lazy var watchButtonView: UIView = {
         let view = UIView()
+        view.backgroundColor = .tabBarBG
+        
         let button = CommonButton(title: Constants.Text.watchButtonTitle)
         button.addTarget(self, action: #selector(watchNowButtonTapped), for: .touchUpInside)
         
@@ -187,6 +186,7 @@ final class MovieDetailViewController: UIViewController {
             $0.width.equalToSuperview().multipliedBy(0.5)
         }
         
+        view.addSubview(button)
         return view
     }()
     
@@ -196,8 +196,6 @@ final class MovieDetailViewController: UIViewController {
         setupUI()
         setupConstraints()
         setupNavigation()
-        
-        setRating(3.2)
     }
     
     init(presenter: MovieDetailPresenter) {
@@ -211,30 +209,25 @@ final class MovieDetailViewController: UIViewController {
     }
 }
 
-// MARK: - Public Methods
-extension MovieDetailViewController {
-    func setRating(_ rating: Double) {
-        movieRatingView.rating = rating
-    }
-}
-
 // MARK: - Private Methods
 private extension MovieDetailViewController {
     func setupUI() {
-        view.backgroundColor = .appBackground
+        view.backgroundColor = .systemBackground
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(movieImageView)
-        contentView.addSubview(movieTitleLabel)
-        contentView.addSubview(movieDurationView)
-        contentView.addSubview(movieDateView)
-        contentView.addSubview(movieGenreView)
-        contentView.addSubview(movieRatingView)
-        contentView.addSubview(movieDescriptionTitle)
-        contentView.addSubview(movieDescriptionDetail)
-        contentView.addSubview(movieCastTitle)
-        contentView.addSubview(castCollectionView)
+        
+        contentView.addSubviews(movieImageView,
+                                movieTitleLabel,
+                                movieDurationView,
+                                movieDateView,
+                                movieGenreView,
+                                movieRatingView,
+                                movieDescriptionTitle,
+                                movieDescriptionDetail,
+                                movieCastTitle,
+                                castCollectionView)
+        
         view.addSubview(watchButtonView)
         
         setupConstraints()
@@ -244,7 +237,7 @@ private extension MovieDetailViewController {
         watchButtonView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(101)
+            $0.height.equalTo(60)
         }
         
         scrollView.snp.makeConstraints {
@@ -327,7 +320,7 @@ private extension MovieDetailViewController {
         }
     }
     
-    private func setupNavigation() {
+    func setupNavigation() {
         self.title = Constants.Text.screenTitle
                 
         let backButton = UIButton()

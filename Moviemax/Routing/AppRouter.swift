@@ -17,12 +17,11 @@ final class AppRouter {
     }
     
     func start() {
-        showMovieDetail()
-//        if dependency.authorizationService.isAuthorized {
-//            showMainFlow()
-//        } else {
-//            showAuthFlow()
-//        }
+        if dependency.authorizationService.isAuthorized {
+            showMainFlow()
+        } else {
+            showAuthFlow()
+        }
     }
 }
 

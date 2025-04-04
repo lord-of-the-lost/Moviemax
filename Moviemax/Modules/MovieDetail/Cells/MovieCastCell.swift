@@ -15,7 +15,6 @@ final class MovieCastCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 10
         return imageView
     }()
     
@@ -140,14 +139,14 @@ private extension MovieCastCell {
             $0.left.equalTo(castImage.snp.right).offset(Constants.horizontalOffset)
             $0.right.equalToSuperview()
             $0.top.equalTo(castImage.snp.top)
-            $0.height.equalTo(Constants.imageSize/2)
+            $0.height.equalTo(castImage.snp.height).dividedBy(2)
         }
         
         castDescription.snp.makeConstraints {
             $0.left.equalTo(castImage.snp.right).offset(Constants.horizontalOffset)
             $0.right.equalToSuperview()
             $0.bottom.equalTo(castImage.snp.bottom)
-            $0.height.equalTo(Constants.imageSize/2)
+            $0.height.equalTo(castImage.snp.height).dividedBy(2)
         }
     }
 }

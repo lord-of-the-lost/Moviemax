@@ -8,26 +8,27 @@
 import UIKit
 import SnapKit
 
-final class RatingActionView: UIView {
+final class RatingView: UIView {
     private let maxRating: Int = 5
     private var starViews: [UIImageView] = []
+    private let rating: Double
     
-    var rating: Double = 0 {
-        didSet {
-            updateStars()
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(rating: Double = 0) {
+        self.rating = rating
+        super.init(frame: .zero)
         setupStars()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
+        self.rating = 0
         super.init(coder: coder)
         setupStars()
     }
-    
+} 
+
+// MARK: - Private Methods
+private extension RatingView {
     private func setupStars() {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -58,4 +59,4 @@ final class RatingActionView: UIView {
             starView.tintColor = index < roundedRating ? .systemYellow : .systemGray4
         }
     }
-} 
+}
