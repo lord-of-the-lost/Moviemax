@@ -8,9 +8,11 @@
 import UIKit
 import SnapKit
 
+#warning("Эта вьюха может быть более абстракной, то есть ее можно назвать CheckBoxView, на вход она будет принимать стрингу и значение isSelected. Но этому классу еще не хватает логики чтобы при нажатии чекбокс менялся. А уже потом поверх этой вью можно построить SelectorView или GenderSelectorView где будет логика того что если нажимается один, то отжимается другой чекбокс, таким образом соблюдается принцип атомарности и мы разгружаем контроллер от лишней логики")
 final class GenderView: UIView {
-    
     // MARK: Properties
+    private lazy var borderView = BorderView()
+
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
@@ -24,8 +26,6 @@ final class GenderView: UIView {
         return imageView
     }()
     
-    private lazy var borderView = BorderView()
-
     // MARK: Init
     init(gender: Gender, isSelected: Bool) {
         super.init(frame: .zero)

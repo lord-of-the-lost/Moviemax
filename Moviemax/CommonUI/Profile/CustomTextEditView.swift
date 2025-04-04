@@ -20,6 +20,7 @@ enum TextEditVIewType {
     case gender(Gender)
 }
 
+#warning("Нужен рефакторинг, можешь отсюда убрать гендер вью, но остальное тоже можно перепроектировать, если время останется, то сделаем, а пока важно вынести отдельно гендер вью и пометить тудушкой класс к рефакторингу")
 final class CustomTextEditView: UIView {
     
     // MARK: Properties

@@ -17,7 +17,7 @@ final class ProfileViewController: UIViewController {
     private lazy var contentView = UIView()
     private lazy var profilePhotoContainerView = UIView()
     
-    private lazy var profilePhotoView = ProfileView(
+    private lazy var profilePhotoView = AvatarView(
         photoImage: .posterPlaceholder,
         isEditable: true
     )
@@ -93,7 +93,6 @@ final class ProfileViewController: UIViewController {
 
 // MARK: - Private Methods
 private extension ProfileViewController {
-    
     func setupUI() {
         navigationItem.title = Constants.Text.screenName
         view.backgroundColor = .appBackground
