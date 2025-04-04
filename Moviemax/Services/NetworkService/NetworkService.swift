@@ -9,7 +9,8 @@ import Foundation
 
 // MARK: - NetworkServiceProtocol
 protocol NetworkServiceProtocol {
-    func fetchMovies(selectFields: [String]?, notNullFields: [String]?, completion: @escaping (Result<MovieList, NetworkError>) -> Void)
+    func fetchMovies(completion: @escaping (Result<MovieList, NetworkError>) -> Void)
+    func fetchMovies(for query: String, completion: @escaping (Result<MovieList, NetworkError>) -> Void)
     func fetchCrew(byMovieID id: String, completion: @escaping (Result<PersonList, NetworkError>) -> Void)
     func loadImage(from urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void)
 }
@@ -30,23 +31,15 @@ final class NetworkService: NetworkServiceProtocol {
     private let apiKey = "5QVH807-GAP49T6-QY0P863-EQW1F83"
 
     /// Получить список фильмов
-    func fetchMovies(
-        selectFields: [String]? = nil,
-        notNullFields: [String]? = nil,
-        completion: @escaping (Result<MovieList, NetworkError>) -> Void
-    ) {
-        var urlString = baseURL + "/movie"
+    func fetchMovies(completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
+        let urlString = baseURL + "/movie"
         
-        if let selectFields = selectFields {
-            let fields = selectFields.joined(separator: ",")
-            urlString += "&selectFields=\(fields)"
-        }
-        
-        if let notNullFields = notNullFields {
-            let fields = notNullFields.joined(separator: ",")
-            urlString += "&notNullFields=\(fields)"
-        }
-        
+        performRequest(urlString: urlString, completion: completion)
+    }
+    
+    /// Получить список фильмов через поиск
+    func fetchMovies(for query: String, completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
+        let urlString = baseURL + "/movie/search?query=\(query)"
         performRequest(urlString: urlString, completion: completion)
     }
     
