@@ -8,19 +8,14 @@
 import UIKit
 import SnapKit
 
-enum Gender: String {
-    case male = "Male"
-    case female = "Female"
-}
 
-enum TextEditVIewType {
+enum TextEditViewType {
     case textField
     case date
     case textView
-    case gender(Gender)
 }
 
-#warning("Нужен рефакторинг, можешь отсюда убрать гендер вью, но остальное тоже можно перепроектировать, если время останется, то сделаем, а пока важно вынести отдельно гендер вью и пометить тудушкой класс к рефакторингу")
+//TODO: Refactoring is needed
 final class CustomTextEditView: UIView {
     
     // MARK: Properties
@@ -57,16 +52,8 @@ final class CustomTextEditView: UIView {
         return textView
     }()
     
-    private lazy var genderStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.spacing = Constants.Constraints.defaultOffset
-        return stackView
-    }()
-    
     // MARK: Init
-    init(text: String, labelName: String, type: TextEditVIewType) {
+    init(text: String, labelName: String, type: TextEditViewType) {
         super.init(frame: .zero)
         
         label.text = labelName
@@ -78,8 +65,6 @@ final class CustomTextEditView: UIView {
             setupDateUI(with: text)
         case .textView:
             setupTextViewUI(with: text)
-        case .gender (let currentGender):
-            setupGenderUI(with: currentGender)
         }
     }
     
@@ -144,29 +129,6 @@ private extension CustomTextEditView {
             make.trailing.equalToSuperview().inset(Constants.Constraints.defaultOffset)
             make.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
             make.bottom.equalToSuperview()
-        }
-    }
-    
-    func setupGenderUI(with gender: Gender) {
-        addSubview(genderStackView)
-        addSubview(label)
-
-        let maleView = GenderView(gender: .male, isSelected: gender == .male)
-        genderStackView.addArrangedSubview(maleView)
-        
-        let femaleView = GenderView(gender: .female, isSelected: gender == .female)
-        genderStackView.addArrangedSubview(femaleView)
-        
-        genderStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
-            make.bottom.equalToSuperview()
-        }
-        
-        label.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(Constants.Constraints.labelHeight)
         }
     }
 }

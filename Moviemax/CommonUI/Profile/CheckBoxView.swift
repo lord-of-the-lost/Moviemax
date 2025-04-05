@@ -8,10 +8,21 @@
 import UIKit
 import SnapKit
 
-#warning("Эта вьюха может быть более абстракной, то есть ее можно назвать CheckBoxView, на вход она будет принимать стрингу и значение isSelected. Но этому классу еще не хватает логики чтобы при нажатии чекбокс менялся. А уже потом поверх этой вью можно построить SelectorView или GenderSelectorView где будет логика того что если нажимается один, то отжимается другой чекбокс, таким образом соблюдается принцип атомарности и мы разгружаем контроллер от лишней логики")
-final class GenderView: UIView {
+
+final class CheckBoxView: UIView {
+    
     // MARK: Properties
+    var onTap: (() -> Void)?
+    
     private lazy var borderView = BorderView()
+    private lazy var checkedImage: UIImage = .checkmarkFill
+    private lazy var uncheckedImage: UIImage = .checkmarkEmpty
+
+    private var isChecked = false {
+        didSet {
+            updateCheckbox()
+        }
+    }
 
     private lazy var label: UILabel = {
         let label = UILabel()
@@ -27,14 +38,16 @@ final class GenderView: UIView {
     }()
     
     // MARK: Init
-    init(gender: Gender, isSelected: Bool) {
+    init(text: String, isSelected: Bool) {
         super.init(frame: .zero)
-        label.text = gender.rawValue
-        if isSelected {
-            checkmarkImageView = .init(image: .checkmarkFill)
-        } else {
-            checkmarkImageView = .init(image: .checkmarkEmpty)
-        }
+        
+        label.text = text
+        checkmarkImageView.image = isSelected ? checkedImage : uncheckedImage
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(toggleCheckbox)
+        )
+        addGestureRecognizer(tapGesture)
         setupUI()
     }
     
@@ -42,10 +55,15 @@ final class GenderView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: Methods
+    func setChecked(_ checked: Bool) {
+        isChecked = checked
+    }
 }
 
 //MARK: - Private methods
-private extension GenderView {
+private extension CheckBoxView {
     func setupUI() {
         addSubviews(borderView, label, checkmarkImageView)
         setupConstraints()
@@ -58,21 +76,34 @@ private extension GenderView {
         }
         
         checkmarkImageView.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(Constants.Constraints.defaultOffset)
+            make.left
+                .equalToSuperview()
+                .offset(Constants.Constraints.defaultOffset)
             make.centerY.equalTo(borderView)
             make.width.height.equalTo(Constants.Constraints.labelHeight)
         }
         
         label.snp.makeConstraints { make in
-            make.left.equalTo(checkmarkImageView.snp.right).offset(Constants.Constraints.defaultOffset)
+            make.left
+                .equalTo(checkmarkImageView.snp.right)
+                .offset(Constants.Constraints.defaultOffset)
             make.centerY.equalTo(borderView)
             make.height.equalTo(Constants.Constraints.labelHeight)
         }
     }
+    
+    func updateCheckbox() {
+        checkmarkImageView.image = isChecked ? checkedImage : uncheckedImage
+    }
+    
+    @objc func toggleCheckbox() {
+        isChecked.toggle()
+        onTap?()
+    }
 }
 
 // MARK: - Constants
-private extension GenderView {
+private extension CheckBoxView {
     enum Constants {
         enum Constraints {
             static let viewHeight: CGFloat = 48

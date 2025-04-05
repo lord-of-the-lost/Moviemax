@@ -52,11 +52,8 @@ final class ProfileViewController: UIViewController {
         type: .textView
     )
     
-    private lazy var genderCellView = CustomTextEditView(
-        text: "",
-        labelName: Constants.Text.genderLabel,
-        type: .gender(.female)
-    )
+    // TODO: Get the gender from the model
+    private lazy var genderSelectorView = GenderSelectorView(selectedGender: .male)
     
     private lazy var saveButton: CommonButton = {
         let button = CommonButton(title: Constants.Text.saveButtonTitle)
@@ -108,7 +105,7 @@ private extension ProfileViewController {
             lastNameTextField,
             emailTextField,
             dateOfBirthTextField,
-            genderCellView,
+            genderSelectorView,
             locationTextView,
             saveButton
         )
@@ -157,7 +154,7 @@ private extension ProfileViewController {
             make.height.equalTo(Constants.Constraints.textFieldHeight)
         }
         
-        genderCellView.snp.makeConstraints { make in
+        genderSelectorView.snp.makeConstraints { make in
             make.height.equalTo(Constants.Constraints.textFieldHeight)
         }
         
@@ -186,9 +183,9 @@ private extension ProfileViewController {
             static let lastNameLabel: String = "Last Name"
             static let emailLabel: String = "E-mail"
             static let dateOfBirthLabel: String = "Date of Birth"
-            static let genderLabel: String = "Gender"
             static let locationLabel: String = "Location"
             
+            //TODO: Get it from the model:
             static let firstName: String = "Andy"
             static let lastName: String = "Lexsian"
             static let email: String = "Andylexian22@gmail.com"
