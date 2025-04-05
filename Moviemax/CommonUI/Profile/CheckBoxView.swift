@@ -9,21 +9,24 @@ import UIKit
 import SnapKit
 
 
+protocol CheckBoxViewDelegate: AnyObject {
+    func checkBoxViewDidToggle(_ view: CheckBoxView)
+}
+
 final class CheckBoxView: UIView {
     
     // MARK: Properties
-    var onTap: (() -> Void)?
+    weak var delegate: CheckBoxViewDelegate?
     
     private lazy var borderView = BorderView()
     private lazy var checkedImage: UIImage = .checkmarkFill
     private lazy var uncheckedImage: UIImage = .checkmarkEmpty
-
-    private var isChecked = false {
+    private lazy var isChecked = false {
         didSet {
-            updateCheckbox()
+            updateImage()
         }
     }
-
+    
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
@@ -40,15 +43,9 @@ final class CheckBoxView: UIView {
     // MARK: Init
     init(text: String, isSelected: Bool) {
         super.init(frame: .zero)
-        
-        label.text = text
-        checkmarkImageView.image = isSelected ? checkedImage : uncheckedImage
-        let tapGesture = UITapGestureRecognizer(
-            target: self,
-            action: #selector(toggleCheckbox)
-        )
-        addGestureRecognizer(tapGesture)
-        setupUI()
+        isChecked = isSelected
+        setupUI(text: text)
+        setupTap()
     }
     
     @available(*, unavailable)
@@ -64,9 +61,23 @@ final class CheckBoxView: UIView {
 
 //MARK: - Private methods
 private extension CheckBoxView {
-    func setupUI() {
+    func setupUI(text: String) {
+        label.text = text
         addSubviews(borderView, label, checkmarkImageView)
         setupConstraints()
+    }
+    
+    func setupTap() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        addGestureRecognizer(tap)
+    }
+    
+    @objc func didTap() {
+        delegate?.checkBoxViewDidToggle(self)
+    }
+    
+    func updateImage() {
+        checkmarkImageView.image = isChecked ? checkedImage : uncheckedImage
     }
     
     func setupConstraints() {
@@ -90,15 +101,6 @@ private extension CheckBoxView {
             make.centerY.equalTo(borderView)
             make.height.equalTo(Constants.Constraints.labelHeight)
         }
-    }
-    
-    func updateCheckbox() {
-        checkmarkImageView.image = isChecked ? checkedImage : uncheckedImage
-    }
-    
-    @objc func toggleCheckbox() {
-        isChecked.toggle()
-        onTap?()
     }
 }
 

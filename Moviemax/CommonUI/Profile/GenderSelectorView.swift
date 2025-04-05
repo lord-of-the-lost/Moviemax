@@ -14,9 +14,16 @@ enum Gender: String {
     case female = "Female"
 }
 
+protocol GenderSelectorViewDelegate: AnyObject {
+    func genderSelectorView(_ view: GenderSelectorView, didSelect gender: Gender)
+}
+
 final class GenderSelectorView: UIView {
     
     // MARK: Properties
+    
+    weak var delegate: GenderSelectorViewDelegate?
+
     private lazy var label: UILabel = {
         let label = UILabel()
         label.text = Constants.Text.labelText
@@ -47,7 +54,7 @@ final class GenderSelectorView: UIView {
     init(selectedGender: Gender) {
         super.init(frame: .zero)
         setupUI(selectedGender: selectedGender)
-        setupActions()
+        setupDelegates()
     }
     
     @available(*, unavailable)
@@ -78,24 +85,24 @@ private extension GenderSelectorView {
         }
     }
     
-    func setupActions() {
-        maleView.onTap = { [weak self] in
-            self?.updateSelection(selected: .male)
-        }
-        
-        femaleView.onTap = { [weak self] in
-            self?.updateSelection(selected: .female)
-        }
+    func setupDelegates() {
+        maleView.delegate = self
+        femaleView.delegate = self
     }
     
-    func updateSelection(selected gender: Gender) {
-        switch gender {
-        case .male:
-            maleView.setChecked(true)
-            femaleView.setChecked(false)
-        case .female:
-            maleView.setChecked(false)
-            femaleView.setChecked(true)
+    func selectGender(_ gender: Gender) {
+        maleView.setChecked(gender == .male)
+        femaleView.setChecked(gender == .female)
+        delegate?.genderSelectorView(self, didSelect: gender)
+    }
+}
+
+extension GenderSelectorView: CheckBoxViewDelegate {
+    func checkBoxViewDidToggle(_ view: CheckBoxView) {
+        if view == maleView {
+            selectGender(.male)
+        } else if view == femaleView {
+            selectGender(.female)
         }
     }
 }
