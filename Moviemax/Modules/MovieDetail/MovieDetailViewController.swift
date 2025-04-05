@@ -10,11 +10,11 @@ import SnapKit
 
 final class MovieDetailViewController: UIViewController {
     private let presenter: MovieDetailPresenter
-
-    private lazy var likeButton = LikeButton()
+    private let model: MovieDetailModel
+    
     private lazy var contentView: UIView = UIView()
     private lazy var movieRatingView: RatingView = RatingView(rating: 3.5)
-    private lazy var movieDescriptionDetail: DescriptionDetail = DescriptionDetail(text: Constants.Text.movieDescriptionText)
+    private lazy var movieDescriptionDetail: DescriptionDetail = DescriptionDetail(text: model.descriptionText)
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -32,118 +32,25 @@ final class MovieDetailViewController: UIViewController {
     
     private lazy var movieTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.movieTitle
+        label.text = model.title
         label.textAlignment = .center
         label.textColor = .adaptiveTextMain
         label.font = AppFont.plusJakartaSemiBold.withSize(24)
         return label
     }()
     
-    #warning("Слишком большая вложенность лучше создать отдельный компонент в CommonUI, в конмпоненте будет иконка и текст на вью, а эту вью ты уже будешь добавлять сюда")
-    private lazy var movieDateView: UIView = {
-        let view = UIView()
-        
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 8
-
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(resource: .calendar).withRenderingMode(.alwaysOriginal).withTintColor(.adaptiveTextSecondary)
-        imageView.snp.makeConstraints {
-            $0.height.equalTo(16)
-            $0.width.equalTo(16)
-        }
-
-        let label = UILabel()
-        label.text = Constants.Text.movieDate
-        label.textColor = .adaptiveTextSecondary
-        label.font = AppFont.montserratMedium.withSize(12)
-
-        stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(label)
-
-        view.addSubview(stackView)
-        
-        stackView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
-        
-        return view
-    }()
+    private lazy var movieDateView = MovieDetailView(text: model.date,
+                                                     image: UIImage(resource: .calendar))
     
-#warning("Слишком большая вложенность лучше создать отдельный компонент в CommonUI, в конмпоненте будет иконка и текст на вью, а эту вью ты уже будешь добавлять сюда")
-    private lazy var movieDurationView: UIView = {
-        let view = UIView()
-        
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 8
-
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(resource: .clock).withRenderingMode(.alwaysOriginal).withTintColor(.adaptiveTextSecondary)
-        imageView.snp.makeConstraints {
-            $0.height.equalTo(16)
-            $0.width.equalTo(16)
-        }
-
-        let label = UILabel()
-        label.text = Constants.Text.movieDuration
-        label.textColor = .adaptiveTextSecondary
-        label.font = AppFont.montserratMedium.withSize(12)
-
-        stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(label)
-
-        view.addSubview(stackView)
-        
-        stackView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
-
-        return view
-    }()
+    private lazy var movieDurationView = MovieDetailView(text: model.duration,
+                                                         image: UIImage(resource: .clock))
     
-#warning("Слишком большая вложенность лучше создать отдельный компонент в CommonUI, в конмпоненте будет иконка и текст на вью, а эту вью ты уже будешь добавлять сюда")
-    private lazy var movieGenreView: UIView = {
-        let view = UIView()
-        
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 8
+    private lazy var movieGenreView = MovieDetailView(text: model.genre,
+                                                      image: UIImage(resource: .clock))
 
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(resource: .movie).withRenderingMode(.alwaysOriginal).withTintColor(.adaptiveTextSecondary)
-        imageView.snp.makeConstraints {
-            $0.height.equalTo(16)
-            $0.width.equalTo(16)
-        }
-
-        let label = UILabel()
-        label.text = Constants.Text.movieGenre
-        label.textColor = .adaptiveTextSecondary
-        label.font = AppFont.montserratMedium.withSize(12)
-
-        stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(label)
-
-        view.addSubview(stackView)
-        
-        stackView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
-        
-        return view
-    }()
-        
     private lazy var movieDescriptionTitle: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.movieDescriptionTitle
+        label.text = model.descriptionTitle
         label.textAlignment = .left
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
@@ -172,27 +79,32 @@ final class MovieDetailViewController: UIViewController {
         collectionView.backgroundColor = .clear
         return collectionView
     }()
-    
-    
-    #warning("либо раздели это на кнопку и подложку в рамках этого контроллера, либо также раздели и вынеси в отдельный компонент")
+        
     private lazy var watchButtonView: UIView = {
         let view = UIView()
-        view.backgroundColor = .tabBarBG
-        
-        let button = CommonButton(title: Constants.Text.watchButtonTitle)
-        button.addTarget(self, action: #selector(watchNowButtonTapped), for: .touchUpInside)
-        
-        view.addSubview(button)
-        button.snp.makeConstraints {
-            $0.centerX.centerY.equalToSuperview()
-            $0.height.equalTo(56)
-            $0.width.equalToSuperview().multipliedBy(0.5)
-        }
-        
-        view.addSubview(button)
+        view.backgroundColor = .appBackground
         return view
     }()
     
+    private lazy var watchButton: CommonButton = {
+        let button = CommonButton(title: Constants.Text.watchButtonTitle)
+        button.addTarget(self, action: #selector(watchNowButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(resource: .arrowBack), for: .normal)
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var likeButton: LikeButton = {
+        let likeButton = LikeButton()
+        likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
+        return likeButton
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.view = self
@@ -201,8 +113,9 @@ final class MovieDetailViewController: UIViewController {
         setupNavigation()
     }
     
-    init(presenter: MovieDetailPresenter) {
+    init(presenter: MovieDetailPresenter, model: MovieDetailModel) {
         self.presenter = presenter
+        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -215,7 +128,7 @@ final class MovieDetailViewController: UIViewController {
 // MARK: - Private Methods
 private extension MovieDetailViewController {
     func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appBackground
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -234,7 +147,7 @@ private extension MovieDetailViewController {
         )
         
         view.addSubview(watchButtonView)
-        
+        watchButtonView.addSubview(watchButton)
         setupConstraints()
     }
     
@@ -242,7 +155,7 @@ private extension MovieDetailViewController {
         watchButtonView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(60)
+            $0.height.equalTo(101)
         }
         
         scrollView.snp.makeConstraints {
@@ -323,21 +236,22 @@ private extension MovieDetailViewController {
             $0.height.equalTo(104)
             $0.bottom.equalToSuperview().offset(-32)
         }
+        
+        watchButton.snp.makeConstraints {
+            $0.centerX.centerY.equalToSuperview()
+            $0.height.equalTo(56)
+            $0.width.equalToSuperview().multipliedBy(0.5)
+        }
     }
     
-    #warning("Кнопки должны создаваться отдельно отдельно вне этого метода")
     func setupNavigation() {
         self.title = Constants.Text.screenTitle
                 
-        let backButton = UIButton()
-        backButton.setImage(UIImage(resource: .arrowBack), for: .normal)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.snp.makeConstraints {
             $0.size.equalTo(40)
         }
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
-        likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         likeButton.snp.makeConstraints {
             $0.size.equalTo(40)
         }
@@ -363,16 +277,9 @@ private extension MovieDetailViewController {
 }
 
 // MARK: - Constants
-#warning("У контроллера должна быть вью модель на основе которого отрисовываются данные, то есть все текста которые переменные, не должны лежать в константа, а должны браться из модели")
 private extension MovieDetailViewController {
     enum Constants {
         enum Text {
-            static let movieTitle: String = "Luck"
-            static let movieDuration: String = "148 Minutes"
-            static let movieDate: String = "17 Sep 2021"
-            static let movieGenre: String = "Action"
-            static let movieDescriptionTitle: String = "Story Line"
-            static let movieDescriptionText: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book Show More"
             static let movieCastTitle: String = "Cast and Crew"
             static let screenTitle: String = "Movie Detail"
             static let watchButtonTitle: String = "Watch now"

@@ -12,6 +12,13 @@ final class RatingView: UIView {
     private let maxRating: Int = 5
     private var starViews: [UIImageView] = []
     private let rating: Double
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 8
+        return stackView
+    }()
     
     init(rating: Double = 0) {
         self.rating = rating
@@ -26,13 +33,8 @@ final class RatingView: UIView {
 } 
 
 // MARK: - Private Methods
-#warning("Стек создается отдельно выше, стар вью тоже, а уже в этом методе происходит настройка")
 private extension RatingView {
     func setupStars() {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.spacing = 8
         addSubview(stackView)
         
         stackView.snp.makeConstraints {
