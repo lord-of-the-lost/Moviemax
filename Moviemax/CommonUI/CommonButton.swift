@@ -8,6 +8,12 @@
 import UIKit
 
 final class CommonButton: UIButton {
+    override var isEnabled: Bool {
+        didSet {
+            self.backgroundColor = self.backgroundColor?.withAlphaComponent(isEnabled ? 1.0 : 0.5)
+        }
+    }
+    
     init(title: String) {
         super.init(frame: .zero)
         setupButton(title: title)
@@ -22,10 +28,10 @@ final class CommonButton: UIButton {
 // MARK: - Private Methods
 private extension CommonButton {
     func setupButton(title: String) {
-        setTitle("Авторизоваться", for: .normal)
+        setTitle(title, for: .normal)
         titleLabel?.font = AppFont.plusJakartaSemiBold.withSize(16)
         backgroundColor = UIColor(resource: .accent)
-        setTitleColor(UIColor(resource: .buttonTitle), for: .normal)
+        setTitleColor(UIColor(resource: .strictWhite), for: .normal)
         layer.cornerRadius = 24
     }
 }
