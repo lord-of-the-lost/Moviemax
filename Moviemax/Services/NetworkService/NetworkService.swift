@@ -7,13 +7,6 @@
 
 import Foundation
 
-// MARK: - NetworkServiceProtocol
-protocol NetworkServiceProtocol {
-    func fetchMovies(selectFields: [String]?, notNullFields: [String]?, completion: @escaping (Result<MovieList, NetworkError>) -> Void)
-    func fetchCrew(byMovieID id: String, completion: @escaping (Result<PersonList, NetworkError>) -> Void)
-    func loadImage(from urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void)
-}
-
 // MARK: - NetworkError
 enum NetworkError: Error {
     case badURL, requestFailed, invalidData, decodeError
@@ -25,28 +18,25 @@ enum HTTPMethods: String {
 }
 
 // MARK: - NetworkService
-final class NetworkService: NetworkServiceProtocol {
+final class NetworkService {
     private let baseURL = "https://api.kinopoisk.dev/v1.4"
     private let apiKey = "5QVH807-GAP49T6-QY0P863-EQW1F83"
-
+    private let imageCacheService: ImageCacheService
+    
+    init(imageCacheService: ImageCacheService) {
+        self.imageCacheService = imageCacheService
+    }
+    
     /// Получить список фильмов
-    func fetchMovies(
-        selectFields: [String]? = nil,
-        notNullFields: [String]? = nil,
-        completion: @escaping (Result<MovieList, NetworkError>) -> Void
-    ) {
-        var urlString = baseURL + "/movie"
+    func fetchMovies(completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
+        let urlString = baseURL + "/movie"
         
-        if let selectFields = selectFields {
-            let fields = selectFields.joined(separator: ",")
-            urlString += "&selectFields=\(fields)"
-        }
-        
-        if let notNullFields = notNullFields {
-            let fields = notNullFields.joined(separator: ",")
-            urlString += "&notNullFields=\(fields)"
-        }
-        
+        performRequest(urlString: urlString, completion: completion)
+    }
+    
+    /// Получить список фильмов через поиск
+    func fetchMovies(for query: String, completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
+        let urlString = baseURL + "/movie/search?query=\(query)"
         performRequest(urlString: urlString, completion: completion)
     }
     
@@ -61,9 +51,20 @@ final class NetworkService: NetworkServiceProtocol {
     
     /// Загрузка картинки
     func loadImage(from urlString: String, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        performDataRequest(urlString: urlString) { result in
+        guard let url = URL(string: urlString) else {
+            DispatchQueue.main.async { completion(.failure(.badURL)) }
+            return
+        }
+        
+        if let cachedData = imageCacheService.getImageFromCache(for: url) {
+            DispatchQueue.main.async { completion(.success(cachedData)) }
+            return
+        }
+        
+        performDataRequest(urlString: urlString) { [weak self] result in
             switch result {
             case .success(let data):
+                self?.imageCacheService.cacheImage(data, for: url)
                 completion(.success(data))
             case .failure(let error):
                 completion(.failure(error))
