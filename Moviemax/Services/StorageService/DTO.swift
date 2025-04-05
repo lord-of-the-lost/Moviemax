@@ -8,15 +8,15 @@
 import Foundation
 
 // MARK: - AppTheme
-enum AppTheme {
+enum AppTheme: String {
     case light
     case dark
 }
 
 // MARK: - AppLanguage
 enum AppLanguage: String {
-    case russian = "ru"
-    case english = "en"
+    case russian
+    case english
 }
 
 // MARK: - AppState

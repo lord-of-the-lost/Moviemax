@@ -11,15 +11,14 @@ import UIKit
 final class AuthPresenter {
     weak var view: AuthViewController?
     private let router: AuthRouter
-    private let authorizationService: AuthorizationService
+    private let authService: AuthenticationService
     
     init(router: AuthRouter, dependency: DI) {
         self.router = router
-        self.authorizationService = dependency.authorizationService
+        self.authService = dependency.authService
     }
     
     func loginButtonTapped() {
-        authorizationService.login()
         router.navigateToMain()
     }
 }
