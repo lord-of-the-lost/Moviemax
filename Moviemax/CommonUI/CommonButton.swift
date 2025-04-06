@@ -10,7 +10,15 @@ import UIKit
 final class CommonButton: UIButton {
     override var isEnabled: Bool {
         didSet {
-            self.backgroundColor = self.backgroundColor?.withAlphaComponent(isEnabled ? 1.0 : 0.5)
+            backgroundColor = backgroundColor?.withAlphaComponent(isEnabled ? 1.0 : 0.5)
+        }
+    }
+    
+    override var isHighlighted: Bool {
+        didSet {
+            UIView.animate(withDuration: 0.1) {
+                self.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.97, y: 0.97) : .identity
+            }
         }
     }
     
