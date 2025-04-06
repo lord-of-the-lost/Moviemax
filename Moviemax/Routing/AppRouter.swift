@@ -17,12 +17,11 @@ final class AppRouter {
     }
     
     func start() {
-        showSettings()
-//        if dependency.authService.isAuthorized {
-//            showMainFlow()
-//        } else {
-//            showAuthFlow()
-//        }
+        if dependency.authService.isAuthorized {
+            showMainFlow()
+        } else {
+            showAuthFlow()
+        }
     }
 }
 
