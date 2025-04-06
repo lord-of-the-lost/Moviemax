@@ -20,7 +20,9 @@ final class AppRouter {
         if dependency.authService.isAuthorized {
             showMainFlow()
         } else {
-            showAuthFlow()
+            #warning("для тестирования. Сейчас на авторизацию можно попасть после онбординга")
+            //showAuthFlow()
+            showOnboardingFlow()
         }
     }
 }
@@ -41,6 +43,12 @@ private extension AppRouter {
     func showMovieDetail() {
         let movieDetailController = MovieDetailFactory.build(dependency)
         let navigationController = UINavigationController(rootViewController: movieDetailController)
+        window?.rootViewController = navigationController
+    }
+    
+    func showOnboardingFlow() {
+        let authViewController = OnboardingFactory.build(dependency)
+        let navigationController = UINavigationController(rootViewController: authViewController)
         window?.rootViewController = navigationController
     }
 }
