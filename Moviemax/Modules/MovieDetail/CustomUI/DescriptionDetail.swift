@@ -8,7 +8,6 @@
 import UIKit
 import SnapKit
 
-#warning("Вот тут не вижу смысла выносить это в отельный компонент, так как у тебя тут только лейбл и он растянут на вью всью, то есть ты просто можешь использовать textLabel в контроллере, только можно его переименовать в descriptionLabel")
 // В задаче https://github.com/lord-of-the-lost/Moviemax/issues/8 тут будет более сложное view
 final class DescriptionDetail: UIView {
         

@@ -17,7 +17,7 @@ final class AppRouter {
     }
     
     func start() {
-        if dependency.authorizationService.isAuthorized {
+        if dependency.authService.isAuthorized {
             showMainFlow()
         } else {
             showAuthFlow()

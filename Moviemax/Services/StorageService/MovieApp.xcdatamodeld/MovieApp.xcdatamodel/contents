@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24B2082" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AppStateEntity" representedClassName="AppStateEntity">
+        <attribute name="currentLanguage" attributeType="String"/>
+        <attribute name="currentTheme" attributeType="String"/>
+        <relationship name="currentUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="appStateAsCurrentUser" inverseEntity="UserEntity"/>
+        <relationship name="users" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserEntity" inverseName="appState" inverseEntity="UserEntity"/>
+        <userInfo/>
+    </entity>
+    <entity name="GenreEntity" representedClassName="GenreEntity">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="genres" inverseEntity="MovieEntity"/>
+        <userInfo/>
+    </entity>
+    <entity name="MovieEntity" representedClassName="MovieEntity">
+        <attribute name="enName" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 64"/>
+        <attribute name="isFavorite" attributeType="Boolean"/>
+        <attribute name="isRecent" attributeType="Boolean"/>
+        <attribute name="movieDescription" attributeType="String"/>
+        <attribute name="movieLength" attributeType="Integer 64"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="posterPreviewUrl" attributeType="String"/>
+        <attribute name="posterUrl" attributeType="String"/>
+        <attribute name="premiereWorld" attributeType="String"/>
+        <attribute name="ratingValue" attributeType="Double"/>
+        <attribute name="ratingVotesCount" attributeType="Integer 64"/>
+        <attribute name="smallDescription" attributeType="String"/>
+        <attribute name="trailerURL" attributeType="String"/>
+        <attribute name="type" attributeType="String"/>
+        <relationship name="favoriteByUsers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="favorites" inverseEntity="UserEntity"/>
+        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity" inverseName="movies" inverseEntity="GenreEntity"/>
+        <relationship name="persons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersonEntity" inverseName="movies" inverseEntity="PersonEntity"/>
+        <relationship name="recentWatchByUsers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="recentWatch" inverseEntity="UserEntity"/>
+        <userInfo/>
+    </entity>
+    <entity name="PersonEntity" representedClassName="PersonEntity">
+        <attribute name="enName" attributeType="String"/>
+        <attribute name="enProfession" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 64"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="photo" attributeType="String"/>
+        <attribute name="profession" attributeType="String"/>
+        <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="persons" inverseEntity="MovieEntity"/>
+        <userInfo/>
+    </entity>
+    <entity name="UserEntity" representedClassName="UserEntity">
+        <attribute name="avatar" optional="YES" attributeType="Binary"/>
+        <attribute name="birthDate" attributeType="String"/>
+        <attribute name="email" attributeType="String"/>
+        <attribute name="firstName" attributeType="String"/>
+        <attribute name="gender" attributeType="String"/>
+        <attribute name="id" attributeType="UUID"/>
+        <attribute name="isOnboardingCompleted" attributeType="Boolean"/>
+        <attribute name="lastName" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="password" attributeType="String"/>
+        <relationship name="appState" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppStateEntity" inverseName="users" inverseEntity="AppStateEntity"/>
+        <relationship name="appStateAsCurrentUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppStateEntity" inverseName="currentUser" inverseEntity="AppStateEntity"/>
+        <relationship name="favorites" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="favoriteByUsers" inverseEntity="MovieEntity"/>
+        <relationship name="recentWatch" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="recentWatchByUsers" inverseEntity="MovieEntity"/>
+        <userInfo/>
+    </entity>
+</model>
