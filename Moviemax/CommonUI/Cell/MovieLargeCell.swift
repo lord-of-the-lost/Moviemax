@@ -34,7 +34,7 @@ final class MovieLargeCell: UITableViewCell {
     
     private lazy var timeIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(resource: .clock)
+        imageView.image = UIImage(resource: .clock).withRenderingMode(.alwaysTemplate).withTintColor(.adaptiveTextSecondary)
         return imageView
     }()
     
@@ -48,7 +48,7 @@ final class MovieLargeCell: UITableViewCell {
     
     private lazy var dateIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(resource: .calendar)
+        imageView.image = UIImage(resource: .calendar).withRenderingMode(.alwaysTemplate).withTintColor(.adaptiveTextSecondary)
         return imageView
     }()
     
@@ -62,7 +62,7 @@ final class MovieLargeCell: UITableViewCell {
     
     private lazy var movieIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(resource: .movie)
+        imageView.image = UIImage(resource: .movie).withRenderingMode(.alwaysTemplate).withTintColor(.adaptiveTextSecondary)
         return imageView
     }()
     
