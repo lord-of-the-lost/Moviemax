@@ -10,6 +10,7 @@ import SnapKit
 
 final class SettingsViewController: UIViewController {
     private let presenter: SettingsPresenter
+    private let model: SettingsModel
     
     private lazy var userImageView: UIImageView = {
         let view = UIImageView()
@@ -19,7 +20,7 @@ final class SettingsViewController: UIViewController {
     
     private lazy var nameUserLabel: UILabel = {
         let label = UILabel()
-        label.text = "Andy Lexsian"
+        label.text = model.name
         label.font = AppFont.plusJakartaSemiBold.withSize(18)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -29,7 +30,7 @@ final class SettingsViewController: UIViewController {
     
     private lazy var nicknameUserLabel: UILabel = {
         let label = UILabel()
-        label.text = "@Andy1999"
+        label.text = model.nickname
         label.font = AppFont.plusJakartaSemiBold.withSize(14)
         label.textColor = .adaptiveTextSecondary
         label.textAlignment = .left
@@ -39,7 +40,7 @@ final class SettingsViewController: UIViewController {
     
     private lazy var personalInfoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Personal Info"
+        label.text = Constants.Text.personalInfo
         label.font = AppFont.plusJakartaMedium.withSize(12)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -55,7 +56,7 @@ final class SettingsViewController: UIViewController {
     
     private lazy var profileLabel: UILabel = {
         let label = UILabel()
-        label.text = "Profile"
+        label.text = Constants.Text.profile
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -77,7 +78,7 @@ final class SettingsViewController: UIViewController {
     
     private lazy var securityInfoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Security Info"
+        label.text = Constants.Text.securityInfo
         label.font = AppFont.plusJakartaMedium.withSize(12)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -163,8 +164,9 @@ final class SettingsViewController: UIViewController {
         return button
     }()
     
-    init(presenter: SettingsPresenter) {
+    init(presenter: SettingsPresenter, model: SettingsModel) {
         self.presenter = presenter
+        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -354,6 +356,9 @@ private extension SettingsViewController {
     enum Constants {
         enum Text {
             static let screenTitle = "Settings"
+            static let personalInfo = "Personal Info"
+            static let profile = "Profile"
+            static let securityInfo = "Security Info"
             static let changePassword = "Change Password"
             static let forgotPassword = "Forgot Password"
             static let darkMode = "Dark Mode"

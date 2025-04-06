@@ -9,7 +9,8 @@ enum SettingsFactory {
     static func build(_ dependency: DI) -> SettingsViewController {
         let router = SettingsRouter(dependency: dependency)
         let presenter = SettingsPresenter(router: router, dependency: dependency)
-        let viewController = SettingsViewController(presenter: presenter)
+        let model: SettingsModel = .init(name: "Andy Lexsian", nickname: "@Andy1999", avatar: "")
+        let viewController = SettingsViewController(presenter: presenter, model: model)
         
         router.viewController = viewController
         return viewController
