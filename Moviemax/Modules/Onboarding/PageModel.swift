@@ -12,5 +12,5 @@ struct PageModel {
     let image: UIImage
     let largeTitle: String
     let text: String
-    let buttinTitle: String
+    let buttonTitle: String
 }

@@ -12,7 +12,6 @@ enum OnboardingFactory {
         let viewController = OnboardingViewController(presenter: presenter)
         
         router.viewController = viewController
-        presenter.view = viewController
         return viewController
     }
 }

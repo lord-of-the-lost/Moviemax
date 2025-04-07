@@ -79,6 +79,7 @@ final class OnboardingViewController: UIViewController {
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter.view = self
         setupUI()
         presenter.viewDidLoad()
     }
@@ -92,7 +93,7 @@ extension OnboardingViewController {
         backgroundImageView.image = model.image
         largeTitleLabel.text = model.largeTitle
         descriptionLabel.text = model.text
-        nextButton.setTitle(model.buttinTitle, for: .normal)
+        nextButton.setTitle(model.buttonTitle, for: .normal)
     }
 }
 

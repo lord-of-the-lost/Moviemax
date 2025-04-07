@@ -14,24 +14,27 @@ final class OnboardingPresenter {
 
     private var currentPageIndex: Int = 0
     private var pageModels: [PageModel] = [
-        PageModel(id: 0,
-                  image: .page1,
-                  largeTitle: Constants.Text.largeTitlePage1,
-                  text: Constants.Text.descriptionPage1,
-                  buttinTitle: Constants.Text.buttonTitlePage1
-                 ),
-        PageModel(id: 1,
-                  image: .page2,
-                  largeTitle: Constants.Text.largeTitlePage2,
-                  text: Constants.Text.descriptionPage2,
-                  buttinTitle: Constants.Text.buttonTitlePage2
-                 ),
-        PageModel(id: 2,
-                  image: .page3,
-                  largeTitle: Constants.Text.largeTitlePage3,
-                  text: Constants.Text.descriptionPage3,
-                  buttinTitle: Constants.Text.buttonTitlePage3
-                 )
+        PageModel(
+            id: 0,
+            image: .page1,
+            largeTitle: Constants.Text.FirstPage.largeTitle,
+            text: Constants.Text.FirstPage.description,
+            buttonTitle: Constants.Text.FirstPage.buttonTitle
+        ),
+        PageModel(
+            id: 1,
+            image: .page2,
+            largeTitle: Constants.Text.SecontPage.largeTitle,
+            text: Constants.Text.SecontPage.description,
+            buttonTitle: Constants.Text.SecontPage.buttonTitle
+        ),
+        PageModel(
+            id: 2,
+            image: .page3,
+            largeTitle: Constants.Text.ThirdPage.largeTitle,
+            text: Constants.Text.ThirdPage.description,
+            buttonTitle: Constants.Text.ThirdPage.buttonTitle
+        )
     ]
     
     init(router: OnboardingRouter, dependency: DI) {
@@ -48,17 +51,7 @@ final class OnboardingPresenter {
         currentPageIndex += 1
         guard let model = pageModels[safe: currentPageIndex] else {
             if currentPageIndex > 2 {
-                view?.showAlert(
-                    title: "Навигация",
-                    message: "Перейти на экран авторизации?",
-                    actionHandler: { [weak self] action in
-                        if action.style == .default {
-                            self?.router.navigateToAuth()
-                        } else if action.style == .cancel {
-                            self?.currentPageIndex = 0
-                            self?.view?.updateView(with: (self?.pageModels[0])!)
-                        }
-                    })
+                router.navigateToAuth()
             }
             return
         }
@@ -71,18 +64,23 @@ final class OnboardingPresenter {
 private extension OnboardingPresenter {
     enum Constants {
         enum Text {
-            static let largeTitlePage1: String = "Your Pocket Cinema"
-            static let largeTitlePage2: String = "Create Your Watchlist"
-            static let largeTitlePage3: String = "Watch your favorite movie easily"
-
-            static let descriptionPage1: String = "Stream movies, shows, cartoons, and documentaries anytime, anywhere — all eyes on the screen!"
-            static let descriptionPage2: String = "Save your favorites and get personalized recommendations to find your next favorite show."
-            static let descriptionPage3: String = "Browse a vast library of films and series from various genres and languages."
-           
-            static let buttonTitlePage1: String = "Continue"
-            static let buttonTitlePage2: String = "Continue"
-            static let buttonTitlePage3: String = "Start"
-
+            enum FirstPage {
+                static let largeTitle: String = "Your Pocket Cinema"
+                static let description: String = "Stream movies, shows, cartoons, and documentaries anytime, anywhere — all eyes on the screen!"
+                static let buttonTitle: String = "Continue"
+            }
+            
+            enum SecontPage {
+                static let largeTitle: String = "Create Your Watchlist"
+                static let description: String = "Save your favorites and get personalized recommendations to find your next favorite show."
+                static let buttonTitle: String = "Continue"
+            }
+            
+            enum ThirdPage {
+                static let largeTitle: String = "Watch your favorite movie easily"
+                static let description: String = "Browse a vast library of films and series from various genres and languages."
+                static let buttonTitle: String = "Start"
+            }
         }
     }
 }

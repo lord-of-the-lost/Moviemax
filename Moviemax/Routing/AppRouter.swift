@@ -20,8 +20,6 @@ final class AppRouter {
         if dependency.authService.isAuthorized {
             showMainFlow()
         } else {
-            #warning("для тестирования. Сейчас на авторизацию можно попасть после онбординга")
-            //showAuthFlow()
             showOnboardingFlow()
         }
     }
