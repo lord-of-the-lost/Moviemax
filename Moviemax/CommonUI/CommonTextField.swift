@@ -14,7 +14,14 @@ enum TextFieldType {
 final class CommonTextField: UIView {
     private var isPasswordVisible = false
     
-    private lazy var textField = UITextField()
+    private lazy var textField: UITextField = {
+        let textField = UITextField()
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
+        textField.spellCheckingType = .no
+        textField.textContentType = .oneTimeCode
+        return textField
+    }()
     
     private lazy var eyeButton: UIButton = {
         let button = UIButton(type: .custom)
