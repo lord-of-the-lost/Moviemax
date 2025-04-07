@@ -20,6 +20,7 @@ final class CommonTextField: UIView {
         textField.autocapitalizationType = .none
         textField.spellCheckingType = .no
         textField.textContentType = .oneTimeCode
+        textField.addTarget(self, action: #selector(returnTapped), for: .primaryActionTriggered)
         return textField
     }()
     
@@ -112,5 +113,9 @@ private extension CommonTextField {
         isPasswordVisible.toggle()
         textField.isSecureTextEntry = !isPasswordVisible
         eyeButton.setImage(UIImage(systemName: isPasswordVisible ? "eye" : "eye.slash"), for: .normal)
+    }
+    
+    @objc func returnTapped() {
+        textField.resignFirstResponder()
     }
 }

@@ -1,5 +1,5 @@
 //
-//  SingUpViewController.swift
+//  SignUpViewController.swift
 //  Moviemax
 //
 //  Created by Николай Игнатов on 06.04.2025.
@@ -8,19 +8,13 @@
 import UIKit
 import SnapKit
 
-final class SignUpViewController: UIViewController {
+final class SignUpViewController: BaseScrollViewController {
+    private let presenter: SignUpPresenter
     private lazy var firstNameField = TitledTextField()
     private lazy var lastNameField = TitledTextField()
     private lazy var emailField = TitledTextField()
     private lazy var passwordField = TitledTextField(isSecure: true)
     private lazy var confirmPasswordField = TitledTextField(isSecure: true)
-    private lazy var contentView = UIView()
-    
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.keyboardDismissMode = .interactive
-        return scrollView
-    }()
     
     private lazy var signUpButton: CommonButton = {
         let button = CommonButton(title: Constants.Text.singUpButtonTitle)
@@ -60,13 +54,22 @@ final class SignUpViewController: UIViewController {
         return stackView
     }()
     
+    init(presenter: SignUpPresenter) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter.view = self
         setupView()
         setupConstraints()
         configureTextFields()
-        setupKeyboardObservers()
-        addTapGesture()
     }
     
     deinit {
@@ -79,8 +82,6 @@ private extension SignUpViewController {
     func setupView() {
         navigationItem.title = Constants.Text.screenTitle
         view.backgroundColor = .appBackground
-        view.addSubviews(scrollView)
-        scrollView.addSubview(contentView)
         contentView.addSubviews(formStackView, signUpButton, loginStackView)
         loginStackView.addArrangedSubviews(accountLabel, loginButton)
         formStackView.addArrangedSubviews(
@@ -93,14 +94,6 @@ private extension SignUpViewController {
     }
     
     func setupConstraints() {
-        scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        
-        contentView.snp.makeConstraints {
-            $0.edges.width.equalToSuperview()
-        }
-        
         formStackView.snp.makeConstraints {
             $0.top.equalTo(contentView).inset(100)
             $0.leading.trailing.equalTo(contentView).inset(30)
@@ -117,27 +110,6 @@ private extension SignUpViewController {
             $0.centerX.equalTo(contentView)
             $0.bottom.equalTo(contentView).inset(40)
         }
-    }
-    
-    func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-    }
-    
-    func addTapGesture() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tap)
     }
     
     func configureTextFields() {
@@ -184,49 +156,13 @@ private extension SignUpViewController {
         )
     }
     
-    @objc func keyboardWillShow(_ notification: Notification) {
-        guard
-            let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
-        else { return }
-        
-        let keyboardHeight: CGFloat = keyboardFrame.height
-        let baseOffset: CGFloat = 30
-        let resultOffset: CGFloat = keyboardHeight + baseOffset
-        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: resultOffset, right: 0)
-        
-        UIView.animate(withDuration: duration) {
-            self.scrollView.contentInset = contentInsets
-            self.scrollView.scrollIndicatorInsets = contentInsets
-            
-            // Если есть активное текстовое поле, прокручиваем к нему
-            if let activeField = self.view.findFirstResponder() as? UITextField {
-                let activeRect = activeField.convert(activeField.bounds, to: self.scrollView)
-                let visibleRect = self.scrollView.bounds.inset(by: contentInsets)
-                
-                if !visibleRect.contains(activeRect) {
-                    self.scrollView.scrollRectToVisible(activeRect, animated: true)
-                }
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide() {
-        scrollView.contentInset = .zero
-        scrollView.verticalScrollIndicatorInsets = .zero
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    
     @objc func signUpButtonTapped() {
-        print("Sign Up button tapped")
+        presenter.singUpTapped()
 
     }
     
     @objc func loginButtonTapped() {
-        print("Login button tapped")
+        presenter.loginTapped()
     }
 }
 
