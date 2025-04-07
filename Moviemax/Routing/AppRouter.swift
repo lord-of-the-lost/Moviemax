@@ -33,7 +33,7 @@ private extension AppRouter {
     }
     
     func showAuthFlow() {
-        let authViewController = AuthFactory.build(dependency)
+        let authViewController = SignUpViewController()
         let navigationController = UINavigationController(rootViewController: authViewController)
         window?.rootViewController = navigationController
     }
