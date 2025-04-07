@@ -18,7 +18,7 @@ final class ProfileViewController: UIViewController {
     private lazy var profilePhotoContainerView = UIView()
     
     private lazy var profilePhotoView = AvatarView(
-        photoImage: .posterPlaceholder,
+        photoImage: .profilePlaceholder,
         isEditable: true
     )
     
