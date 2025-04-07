@@ -27,6 +27,10 @@ class BaseScrollViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    func setScrollState(isScrollEnabled: Bool) {
+        scrollView.isScrollEnabled = isScrollEnabled
+    }
 }
 
 // MARK: - Private Methods

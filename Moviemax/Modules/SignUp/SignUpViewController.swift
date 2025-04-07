@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class SignUpViewController: BaseScrollViewController {
     private let presenter: SignUpPresenter
@@ -71,10 +70,6 @@ final class SignUpViewController: BaseScrollViewController {
         setupConstraints()
         configureTextFields()
     }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 }
 
 // MARK: - Private Methods
@@ -106,7 +101,7 @@ private extension SignUpViewController {
         }
         
         loginStackView.snp.makeConstraints {
-            $0.top.equalTo(signUpButton.snp.bottom).offset(20)
+            $0.top.greaterThanOrEqualTo(signUpButton.snp.bottom).offset(20)
             $0.centerX.equalTo(contentView)
             $0.bottom.equalTo(contentView).inset(40)
         }
@@ -187,7 +182,7 @@ private extension SignUpViewController {
             
             enum Email {
                 static let title = "E-mail"
-                static let placeholder = "Enter your email"
+                static let placeholder = "Enter your email address"
             }
             
             enum Password {

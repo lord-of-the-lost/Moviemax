@@ -17,4 +17,9 @@ final class AuthRouter: RouterProtocol {
         let tabBarController = TabBarFactory.build(dependency)
         viewController?.view.window?.rootViewController = tabBarController
     }
+    
+    func showSignUpFlow() {
+        let signUpViewController = SignUpFactory.build(dependency)
+        viewController?.view.window?.rootViewController = signUpViewController
+    }
 }
