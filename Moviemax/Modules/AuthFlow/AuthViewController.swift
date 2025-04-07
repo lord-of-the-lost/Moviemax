@@ -74,7 +74,11 @@ final class AuthViewController: BaseScrollViewController {
         
         let googleIcon = UIImage(resource: .google).withRenderingMode(.alwaysOriginal)
         button.setImage(googleIcon, for: .normal)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+        
+        var configuration = UIButton.Configuration.plain()
+        configuration.imagePadding = 10
+        configuration.imagePlacement = .leading
+        button.configuration = configuration
         
         button.backgroundColor = .appBackground
         button.layer.cornerRadius = 24
