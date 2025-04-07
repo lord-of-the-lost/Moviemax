@@ -17,7 +17,19 @@ final class AuthPresenter {
         self.authService = dependency.authService
     }
     
-    func loginButtonTapped() {
+    func forgotPasswordTapped() {
+        print(#function)
+    }
+    
+    func googleSignInTapped() {
+        print(#function)
+    }
+    
+    func signUpTapped() {
+        router.showSignUpFlow()
+    }
+    
+    func signInTapped() {
         router.navigateToMain()
     }
 }

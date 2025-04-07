@@ -11,4 +11,16 @@ extension UIView {
     func addSubviews(_ views: UIView...) {
         views.forEach { addSubview($0) }
     }
+    
+    func findFirstResponder() -> UIView? {
+        guard !isFirstResponder else { return self }
+        
+        for subview in subviews {
+            if let firstResponder = subview.findFirstResponder() {
+                return firstResponder
+            }
+        }
+        
+        return nil
+    }
 }
