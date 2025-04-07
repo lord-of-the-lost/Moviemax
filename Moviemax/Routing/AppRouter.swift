@@ -45,8 +45,8 @@ private extension AppRouter {
     }
     
     func showOnboardingFlow() {
-        let authViewController = OnboardingFactory.build(dependency)
-        let navigationController = UINavigationController(rootViewController: authViewController)
+        let onboardingViewController = OnboardingFactory.build(dependency)
+        let navigationController = UINavigationController(rootViewController: onboardingViewController)
         window?.rootViewController = navigationController
     }
 }
