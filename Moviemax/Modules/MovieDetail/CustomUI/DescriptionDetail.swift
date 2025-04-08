@@ -8,17 +8,25 @@
 import UIKit
 import SnapKit
 
-// В задаче https://github.com/lord-of-the-lost/Moviemax/issues/8 тут будет более сложное view
 final class DescriptionDetail: UIView {
-        
+    private let maxLines: Int = 6
+    private var isExpanded: Bool = false
+    private var fullText: String = ""
+    
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = maxLines
         label.font = .systemFont(ofSize: 14)
         label.textColor = .adaptiveTextMain
+        label.isUserInteractionEnabled = true
         return label
     }()
-        
+    
+    private lazy var tapGesture: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        return gesture
+    }()
+    
     init(text: String) {
         super.init(frame: .zero)
         setupUI()
@@ -35,9 +43,63 @@ final class DescriptionDetail: UIView {
         super.init(coder: coder)
         setupUI()
     }
-        
+    
     func configure(with text: String) {
-        textLabel.text = text
+        fullText = text
+        textLabel.addGestureRecognizer(tapGesture)
+        updateText()
+    }
+    
+    @objc private func handleTap() {
+        isExpanded.toggle()
+        updateText()
+    }
+    
+    private func updateText() {
+        if isExpanded {
+            textLabel.numberOfLines = 0
+            textLabel.text = fullText
+        } else {
+            textLabel.numberOfLines = maxLines
+            let textWithShowMore = fullText + Constants.Text.showMoreText
+            
+            let tempLabel = UILabel()
+            tempLabel.font = textLabel.font
+            tempLabel.numberOfLines = maxLines
+            tempLabel.text = textWithShowMore
+            tempLabel.frame = CGRect(x: 0, y: 0, width: bounds.width, height: .greatestFiniteMagnitude)
+            tempLabel.sizeToFit()
+            
+            let textHeight = tempLabel.frame.height
+            let lineHeight = textLabel.font.lineHeight
+            let estimatedLines = Int(ceil(textHeight / lineHeight))
+            
+            if estimatedLines > maxLines {
+                var truncatedText = fullText
+                while truncatedText.count > 0 {
+                    let testText = truncatedText + "... " + Constants.Text.showMoreText
+                    tempLabel.text = testText
+                    tempLabel.sizeToFit()
+                    
+                    if Int(ceil(tempLabel.frame.height / lineHeight)) <= maxLines {
+                        let attributedString = NSMutableAttributedString(string: testText)
+                        let showMoreRange = NSRange(location: testText.count - Constants.Text.showMoreText.count, length: Constants.Text.showMoreText.count)
+                        attributedString.addAttribute(.foregroundColor, value: UIColor.accent, range: showMoreRange)
+                        textLabel.attributedText = attributedString
+                        break
+                    }
+                    
+                    truncatedText = String(truncatedText.prefix(truncatedText.count - 1))
+                }
+            } else {
+                textLabel.text = fullText
+            }
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateText()
     }
 }
 
@@ -47,6 +109,15 @@ private extension DescriptionDetail {
         addSubview(textLabel)
         textLabel.snp.makeConstraints {
             $0.edges.equalToSuperview()
+        }
+    }
+}
+
+// MARK: - Constants
+private extension DescriptionDetail {
+    enum Constants {
+        enum Text {
+            static let showMoreText: String = " Show More"
         }
     }
 }
