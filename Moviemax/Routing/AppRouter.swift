@@ -37,10 +37,4 @@ private extension AppRouter {
         let navigationController = UINavigationController(rootViewController: authViewController)
         window?.rootViewController = navigationController
     }
-    
-    func showSettings() {
-        let settingsViewController = SettingsFactory.build(dependency)
-        let navigationController = UINavigationController(rootViewController: settingsViewController)
-        window?.rootViewController = navigationController
-    }
 }

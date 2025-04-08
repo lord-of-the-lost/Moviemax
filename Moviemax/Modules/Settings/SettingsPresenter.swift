@@ -15,7 +15,7 @@ final class SettingsPresenter {
         self.authService = dependency.authService
     }
     
-//    func loginButtonTapped() {
-//        router.navigateToMain()
-//    }
+    func getModel() -> SettingsModel {
+        return .init(name: "Andy Lexsian", nickname: "@Andy1999", avatar: .avatar)
+    }
 }

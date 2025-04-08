@@ -10,7 +10,6 @@ import SnapKit
 
 final class SettingsViewController: UIViewController {
     private let presenter: SettingsPresenter
-    private let model: SettingsModel
     
     private lazy var userImageView: UIImageView = {
         let view = UIImageView()
@@ -20,7 +19,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var nameUserLabel: UILabel = {
         let label = UILabel()
-        label.text = model.name
         label.font = AppFont.plusJakartaSemiBold.withSize(18)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -30,7 +28,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var nicknameUserLabel: UILabel = {
         let label = UILabel()
-        label.text = model.nickname
         label.font = AppFont.plusJakartaSemiBold.withSize(14)
         label.textColor = .adaptiveTextSecondary
         label.textAlignment = .left
@@ -153,6 +150,29 @@ final class SettingsViewController: UIViewController {
         return darkModeSwitch
     }()
     
+    private lazy var languageImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = .darkMode.withRenderingMode(.alwaysOriginal).withTintColor(.adaptiveTextMain)
+        return view
+    }()
+    
+    private lazy var languageLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.Text.language
+        label.font = AppFont.plusJakartaSemiBold.withSize(16)
+        label.textColor = .adaptiveTextMain
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    private lazy var languagePicker: UIPickerView = {
+        let picker = UIPickerView()
+        picker.delegate = self
+        picker.dataSource = self
+        return picker
+    }()
+    
     private lazy var logOutButton: UIButton = {
         let button = UIButton()
         button.setTitle(Constants.Text.logOut, for: .normal)
@@ -164,9 +184,8 @@ final class SettingsViewController: UIViewController {
         return button
     }()
     
-    init(presenter: SettingsPresenter, model: SettingsModel) {
+    init(presenter: SettingsPresenter) {
         self.presenter = presenter
-        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -179,12 +198,19 @@ final class SettingsViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupConstraints()
+        configure(with: presenter.getModel())
     }
     
 }
 
 // MARK: - Private Methods
 private extension SettingsViewController {
+    func configure(with model: SettingsModel) {
+        nameUserLabel.text = model.name
+        nicknameUserLabel.text = model.nickname
+        
+    }
+    
     func setupUI() {
         navigationItem.title = Constants.Text.screenTitle
         view.backgroundColor = .appBackground
@@ -207,6 +233,9 @@ private extension SettingsViewController {
                          darkModeImageView,
                          darkModeLabel,
                          darkModeSwitch,
+                         languageImageView,
+                         languageLabel,
+                         languagePicker,
                          logOutButton)
     }
     
@@ -322,6 +351,25 @@ private extension SettingsViewController {
             $0.right.equalToSuperview().offset(-24)
         }
         
+        languageImageView.snp.makeConstraints {
+            $0.top.equalTo(darkModeLabel.snp.bottom).offset(32)
+            $0.left.equalToSuperview().offset(24)
+            $0.height.width.equalTo(24)
+        }
+        
+        languageLabel.snp.makeConstraints {
+            $0.top.equalTo(languageImageView.snp.top)
+            $0.left.equalTo(languageImageView.snp.right).offset(12)
+            $0.height.equalTo(24)
+        }
+        
+        languagePicker.snp.makeConstraints {
+            $0.centerY.equalTo(languageLabel.snp.centerY)
+            $0.right.equalToSuperview().offset(-24)
+            $0.width.equalTo(150)
+            $0.height.equalTo(100)
+        }
+        
         logOutButton.snp.makeConstraints {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-35)
             $0.left.equalToSuperview().offset(24)
@@ -362,7 +410,30 @@ private extension SettingsViewController {
             static let changePassword = "Change Password"
             static let forgotPassword = "Forgot Password"
             static let darkMode = "Dark Mode"
+            static let language = "Language"
+            static let system = "system"
+            static let russian = "russian"
+            static let english = "english"
             static let logOut = "Log Out"
+        }
+    }
+}
+
+extension SettingsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        3
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch row {
+        case 0: Constants.Text.system
+        case 1: Constants.Text.russian
+        case 2: Constants.Text.english
+        default: Constants.Text.system
         }
     }
 }
