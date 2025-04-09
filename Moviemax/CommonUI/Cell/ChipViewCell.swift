@@ -6,13 +6,12 @@
 //
 
 import UIKit
-import SnapKit
 
 
 final class ChipViewCell: UICollectionViewCell {
     static let identifier = ChipViewCell.description()
     
-    private let label: UILabel = {
+    private lazy var label: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
         label.textColor = .adaptiveTextMain

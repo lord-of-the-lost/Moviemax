@@ -6,19 +6,19 @@
 //
 
 import UIKit
-import SnapKit
+
 
 protocol ChipsViewDelegate: AnyObject {
     func chipsView(_ chipsView: ChipsView, didSelectItemAt index: Int, value: String)
 }
 
-class ChipsView: UIView {
+final class ChipsView: UIView {
     weak var delegate: ChipsViewDelegate?
     
     private let items: [String]
     private var selectedIndex: IndexPath = IndexPath(item: 0, section: 0)
     
-    private let collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 12
