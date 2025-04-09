@@ -6,22 +6,14 @@
 //
 
 import UIKit
-import SnapKit
-
-
-enum Gender: String {
-    case male = "Male"
-    case female = "Female"
-}
 
 protocol GenderSelectorViewDelegate: AnyObject {
-    func genderSelectorView(_ view: GenderSelectorView, didSelect gender: Gender)
+    func genderSelectorView(_ view: GenderSelectorView, didSelect gender: User.Gender)
 }
 
 final class GenderSelectorView: UIView {
     
-    // MARK: Properties
-    
+    // MARK: - Properties
     weak var delegate: GenderSelectorViewDelegate?
 
     private lazy var label: UILabel = {
@@ -33,12 +25,12 @@ final class GenderSelectorView: UIView {
     }()
     
     private lazy var maleView = CheckBoxView(
-        text: Gender.male.rawValue,
+        text: User.Gender.male.rawValue,
         isSelected: true
     )
     
     private lazy var femaleView = CheckBoxView(
-        text: Gender.female.rawValue,
+        text: User.Gender.female.rawValue,
         isSelected: false
     )
     
@@ -50,8 +42,8 @@ final class GenderSelectorView: UIView {
         return stackView
     }()
     
-    // MARK: Init
-    init(selectedGender: Gender) {
+    // MARK: - Init
+    init(selectedGender: User.Gender) {
         super.init(frame: .zero)
         setupUI(selectedGender: selectedGender)
         setupDelegates()
@@ -63,12 +55,28 @@ final class GenderSelectorView: UIView {
     }
 }
 
+// MARK: - Public methods
+extension GenderSelectorView {
+    func getSelectedGender() -> User.Gender {
+        maleView.isChecked ? .male : .female
+    }
+    
+    func selectGender(_ gender: User.Gender) {
+        maleView.setChecked(gender == .male)
+        femaleView.setChecked(gender == .female)
+        delegate?.genderSelectorView(self, didSelect: gender)
+    }
+}
+
 // MARK: - Private methods
 private extension GenderSelectorView {
-    func setupUI(selectedGender: Gender) {
+    func setupUI(selectedGender: User.Gender) {
         addSubviews(stackView, label)
         stackView.addArrangedSubviews(maleView, femaleView)
         setupConstraints()
+        
+        maleView.setChecked(selectedGender == .male)
+        femaleView.setChecked(selectedGender == .female)
     }
     
     func setupConstraints() {
@@ -88,12 +96,6 @@ private extension GenderSelectorView {
     func setupDelegates() {
         maleView.delegate = self
         femaleView.delegate = self
-    }
-    
-    func selectGender(_ gender: Gender) {
-        maleView.setChecked(gender == .male)
-        femaleView.setChecked(gender == .female)
-        delegate?.genderSelectorView(self, didSelect: gender)
     }
 }
 

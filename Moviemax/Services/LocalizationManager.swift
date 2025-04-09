@@ -30,4 +30,12 @@ final class LocalizationManager {
         currentLanguage = language
         NotificationCenter.default.post(name: .languageChanged, object: language)
     }
+    
+    func setLanguage(_ language: AppLanguage) {
+        changeLanguage(to: language)
+    }
+    
+    func getCurrentLanguage() -> AppLanguage {
+        currentLanguage
+    }
 }

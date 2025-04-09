@@ -13,7 +13,8 @@ final class SettingsViewController: UIViewController {
     
     private lazy var userImageView: UIImageView = {
         let view = UIImageView()
-        view.image = .profilePlaceholder
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 28
         return view
     }()
     
@@ -184,6 +185,8 @@ final class SettingsViewController: UIViewController {
         return button
     }()
     
+    private let languages = ["system", "russian", "english"]
+    
     init(presenter: SettingsPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -196,47 +199,48 @@ final class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter.view = self
         setupUI()
         setupConstraints()
-        configure(with: presenter.getModel())
+        setupObservers()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
 }
 
 // MARK: - Private Methods
 private extension SettingsViewController {
-    func configure(with model: SettingsModel) {
-        nameUserLabel.text = model.name
-        nicknameUserLabel.text = model.nickname
-        
-    }
-    
     func setupUI() {
         navigationItem.title = Constants.Text.screenTitle
         view.backgroundColor = .appBackground
         
-        view.addSubviews(userImageView,
-                         nameUserLabel,
-                         nicknameUserLabel,
-                         personalInfoLabel,
-                         profileImageView,
-                         profileLabel,
-                         profileButtonImageView,
-                         profileButton,
-                         securityInfoLabel,
-                         changePassImageView,
-                         changePassLabel,
-                         changePassButton,
-                         forgotPassImageView,
-                         forgotPassLabel,
-                         forgotPassButton,
-                         darkModeImageView,
-                         darkModeLabel,
-                         darkModeSwitch,
-                         languageImageView,
-                         languageLabel,
-                         languagePicker,
-                         logOutButton)
+        view.addSubviews(
+            userImageView,
+            nameUserLabel,
+            nicknameUserLabel,
+            personalInfoLabel,
+            profileImageView,
+            profileLabel,
+            profileButtonImageView,
+            profileButton,
+            securityInfoLabel,
+            changePassImageView,
+            changePassLabel,
+            changePassButton,
+            forgotPassImageView,
+            forgotPassLabel,
+            forgotPassButton,
+            darkModeImageView,
+            darkModeLabel,
+            darkModeSwitch,
+            languageImageView,
+            languageLabel,
+            languagePicker,
+            logOutButton
+        )
     }
     
     func setupConstraints() {
@@ -378,8 +382,24 @@ private extension SettingsViewController {
         }
     }
     
+    func setupObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(themeChanged),
+            name: .themeChanged,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(languageChanged),
+            name: .languageChanged,
+            object: nil
+        )
+    }
+    
     @objc func profileButtonTapped() {
-        print("Переход в раздел профиля")
+        presenter.showProfileTapped()
     }
     
     @objc func changePassButtonTapped() {
@@ -390,12 +410,23 @@ private extension SettingsViewController {
         print("Forgot Password")
     }
     
-    @objc func darkModeSwitchChanged(darkModeSwitch: UISwitch) {
-        print("Switch \(darkModeSwitch.isOn)")
+    @objc func darkModeSwitchChanged() {
+        presenter.toggleDarkMode(isEnabled: darkModeSwitch.isOn)
     }
     
     @objc func logOutButtonTapped() {
-        print("Log Out")
+        presenter.logOutTapped()
+    }
+    
+    @objc private func themeChanged(_ notification: Notification) {
+        guard let theme = notification.object as? AppTheme else { return }
+        darkModeSwitch.isOn = (theme == .dark)
+    }
+    
+    @objc private func languageChanged(_ notification: Notification) {
+        guard let language = notification.object as? AppLanguage else { return }
+        let languageIndex = languages.firstIndex(of: language.rawValue) ?? 0
+        languagePicker.selectRow(languageIndex, inComponent: 0, animated: true)
     }
 }
 
@@ -435,5 +466,30 @@ extension SettingsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         case 2: Constants.Text.english
         default: Constants.Text.system
         }
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let selectedLanguage = languages[row]
+        let appLanguage = AppLanguage(rawValue: selectedLanguage) ?? .english
+        presenter.setLanguage(language: appLanguage)
+    }
+}
+
+// MARK: - Public Methods
+extension SettingsViewController {
+    func updateUserInfo(name: String, nickname: String) {
+        nameUserLabel.text = name
+        nicknameUserLabel.text = nickname
+    }
+    
+    func updateUserAvatar(image: UIImage) {
+        userImageView.image = image
+    }
+    
+    func updateAppSettings(isDarkMode: Bool, language: AppLanguage) {
+        darkModeSwitch.isOn = isDarkMode
+        
+        let languageIndex = languages.firstIndex(of: language.rawValue) ?? 0
+        languagePicker.selectRow(languageIndex, inComponent: 0, animated: false)
     }
 }

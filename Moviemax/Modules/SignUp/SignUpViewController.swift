@@ -70,6 +70,27 @@ final class SignUpViewController: BaseScrollViewController {
         setupConstraints()
         configureTextFields()
     }
+    
+    // MARK: - Public Methods
+    func getFirstName() -> String? {
+        firstNameField.getText()
+    }
+    
+    func getLastName() -> String? {
+        lastNameField.getText()
+    }
+    
+    func getEmail() -> String? {
+        emailField.getText()
+    }
+    
+    func getPassword() -> String? {
+        passwordField.getText()
+    }
+    
+    func getConfirmedPassword() -> String? {
+        confirmPasswordField.getText()
+    }
 }
 
 // MARK: - Private Methods
@@ -153,7 +174,6 @@ private extension SignUpViewController {
     
     @objc func signUpButtonTapped() {
         presenter.singUpTapped()
-
     }
     
     @objc func loginButtonTapped() {

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class ProfileViewController: UIViewController {
     
@@ -23,31 +22,26 @@ final class ProfileViewController: UIViewController {
     )
     
     private lazy var firstNameTextField = CustomTextEditView(
-        text: Constants.Text.firstName,
         labelName: Constants.Text.firstNameLabel,
         type: .textField
     )
     
     private lazy var lastNameTextField = CustomTextEditView(
-        text: Constants.Text.lastName,
         labelName: Constants.Text.lastNameLabel,
         type: .textField
     )
     
     private lazy var emailTextField = CustomTextEditView(
-        text: Constants.Text.email,
         labelName: Constants.Text.emailLabel,
         type: .textField
     )
     
     private lazy var dateOfBirthTextField = CustomTextEditView(
-        text: Constants.Text.dateOfBirth,
         labelName: Constants.Text.dateOfBirthLabel,
         type: .date
     )
     
     private lazy var locationTextView = CustomTextEditView(
-        text: Constants.Text.location,
         labelName: Constants.Text.locationLabel,
         type: .textView
     )
@@ -85,6 +79,27 @@ final class ProfileViewController: UIViewController {
         presenter.view = self
         setupUI()
         setupConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.loadUserProfile()
+    }
+    
+    // MARK: - Public Methods
+    func updateUserData(firstName: String, lastName: String, email: String, birthDate: String, gender: User.Gender, notes: String) {
+        firstNameTextField.updateText(firstName)
+        lastNameTextField.updateText(lastName)
+        emailTextField.updateText(email)
+        dateOfBirthTextField.updateText(birthDate)
+        locationTextView.updateText(notes)
+        genderSelectorView.selectGender(gender)
+        saveButton.isEnabled = true
+    }
+    
+    func updateUserAvatar(data: Data) {
+        guard let image = UIImage(data: data) else { return }
+        profilePhotoView.updatePhoto(image: image)
     }
 }
 
@@ -168,7 +183,29 @@ private extension ProfileViewController {
     }
     
     @objc func saveButtonTapped() {
-        showAlert(title: "Сохранение", message: "Изменения сохранены")
+        guard
+            let firstName = firstNameTextField.getText(),
+            let lastName = lastNameTextField.getText(),
+            let email = emailTextField.getText(),
+            let birthDate = dateOfBirthTextField.getText(),
+            let notes = locationTextView.getText()
+        else {
+            showAlert(title: Constants.Text.errorTitle, message: Constants.Text.errorEmptyFields)
+            return
+        }
+        
+        let gender = genderSelectorView.getSelectedGender()
+        let avatarData = profilePhotoView.getPhotoData()
+        
+        presenter.saveUserProfile(
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            birthDate: birthDate,
+            gender: gender,
+            notes: notes,
+            avatarData: avatarData
+        )
     }
 }
 
@@ -185,12 +222,8 @@ private extension ProfileViewController {
             static let dateOfBirthLabel: String = "Date of Birth"
             static let locationLabel: String = "Location"
             
-            //TODO: Get it from the model:
-            static let firstName: String = "Andy"
-            static let lastName: String = "Lexsian"
-            static let email: String = "Andylexian22@gmail.com"
-            static let dateOfBirth: String = "24 february 1996"
-            static let location: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            static let errorTitle: String = "Ошибка"
+            static let errorEmptyFields: String = "Пожалуйста, заполните все поля"
         }
         
         enum Constraints {

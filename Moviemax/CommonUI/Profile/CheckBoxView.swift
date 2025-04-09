@@ -14,14 +14,13 @@ protocol CheckBoxViewDelegate: AnyObject {
 }
 
 final class CheckBoxView: UIView {
-    
-    // MARK: Properties
+    // MARK: - Properties
     weak var delegate: CheckBoxViewDelegate?
     
     private lazy var borderView = BorderView()
     private lazy var checkedImage: UIImage = .checkmarkFill
     private lazy var uncheckedImage: UIImage = .checkmarkEmpty
-    private lazy var isChecked = false {
+    private lazy var checkState = false {
         didSet {
             updateImage()
         }
@@ -40,10 +39,10 @@ final class CheckBoxView: UIView {
         return imageView
     }()
     
-    // MARK: Init
+    // MARK: - Init
     init(text: String, isSelected: Bool) {
         super.init(frame: .zero)
-        isChecked = isSelected
+        checkState = isSelected
         setupUI(text: text)
         setupTap()
     }
@@ -52,14 +51,20 @@ final class CheckBoxView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    //MARK: Methods
+}
+
+// MARK: - Public methods
+extension CheckBoxView {
     func setChecked(_ checked: Bool) {
-        isChecked = checked
+        checkState = checked
+    }
+    
+    var isChecked: Bool {
+        return checkState
     }
 }
 
-//MARK: - Private methods
+// MARK: - Private methods
 private extension CheckBoxView {
     func setupUI(text: String) {
         label.text = text
@@ -77,29 +82,29 @@ private extension CheckBoxView {
     }
     
     func updateImage() {
-        checkmarkImageView.image = isChecked ? checkedImage : uncheckedImage
+        checkmarkImageView.image = checkState ? checkedImage : uncheckedImage
     }
     
     func setupConstraints() {
-        borderView.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.viewHeight)
-            make.left.right.equalToSuperview()
+        borderView.snp.makeConstraints {
+            $0.height.equalTo(Constants.Constraints.viewHeight)
+            $0.left.right.equalToSuperview()
         }
         
-        checkmarkImageView.snp.makeConstraints { make in
-            make.left
+        checkmarkImageView.snp.makeConstraints {
+            $0.left
                 .equalToSuperview()
                 .offset(Constants.Constraints.defaultOffset)
-            make.centerY.equalTo(borderView)
-            make.width.height.equalTo(Constants.Constraints.labelHeight)
+            $0.centerY.equalTo(borderView)
+            $0.width.height.equalTo(Constants.Constraints.labelHeight)
         }
         
-        label.snp.makeConstraints { make in
-            make.left
+        label.snp.makeConstraints {
+            $0.left
                 .equalTo(checkmarkImageView.snp.right)
                 .offset(Constants.Constraints.defaultOffset)
-            make.centerY.equalTo(borderView)
-            make.height.equalTo(Constants.Constraints.labelHeight)
+            $0.centerY.equalTo(borderView)
+            $0.height.equalTo(Constants.Constraints.labelHeight)
         }
     }
 }

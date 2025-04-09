@@ -8,22 +8,19 @@
 import UIKit
 import SnapKit
 
-
 enum TextEditViewType {
     case textField
     case date
     case textView
 }
 
-//TODO: Refactoring is needed
 final class CustomTextEditView: UIView {
-    
-    // MARK: Properties
+    // MARK: - Properties
+    private var currentType: TextEditViewType = .textField
     private lazy var borderView = BorderView()
 
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.text = ""
         label.font = AppFont.plusJakartaMedium.withSize(Constants.FontSizes.label)
         label.textColor = .lightGray
         return label
@@ -52,19 +49,18 @@ final class CustomTextEditView: UIView {
         return textView
     }()
     
-    // MARK: Init
-    init(text: String, labelName: String, type: TextEditViewType) {
+    // MARK: - Init
+    init(labelName: String, type: TextEditViewType) {
         super.init(frame: .zero)
-        
         label.text = labelName
-       
-        switch type {
+        currentType = type
+        switch currentType {
         case .textField:
-            setupDefaultUI(with: text)
+            setupDefaultUI()
         case .date:
-            setupDateUI(with: text)
+            setupDateUI()
         case .textView:
-            setupTextViewUI(with: text)
+            setupTextViewUI()
         }
     }
     
@@ -74,61 +70,78 @@ final class CustomTextEditView: UIView {
     }
 }
 
+// MARK: - Public Methods
+extension CustomTextEditView {
+    func getText() -> String? {
+        switch currentType {
+        case .textView:
+            return textView.text
+        case .textField, .date:
+            return defaultTextField.text
+        }
+    }
+    
+    func updateText(_ text: String) {
+        switch currentType {
+        case .textView:
+            textView.text = text
+        case .textField, .date:
+            defaultTextField.text = text
+        }
+    }
+}
+
 // MARK: - Private Methods
 private extension CustomTextEditView {
-    
-    func setupDefaultUI(with text: String) {
-        defaultTextField.text = text
-        
+    func setupDefaultUI() {
         addSubviews(label, borderView, defaultTextField)
         
-        label.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(Constants.Constraints.labelHeight)
+        label.snp.makeConstraints {
+            $0.leading.trailing.top.equalToSuperview()
+            $0.height.equalTo(Constants.Constraints.labelHeight)
         }
         
-        borderView.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
+        borderView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
         }
         
-        defaultTextField.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Constants.Constraints.defaultOffset)
-            make.trailing.equalToSuperview().inset(Constants.Constraints.defaultOffset)
-            make.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
-            make.bottom.equalToSuperview()
+        defaultTextField.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(Constants.Constraints.defaultOffset)
+            $0.trailing.equalToSuperview().inset(Constants.Constraints.defaultOffset)
+            $0.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
+            $0.bottom.equalToSuperview()
         }
     }
     
-    func setupDateUI(with text: String) {
-        setupDefaultUI(with: text)
+    func setupDateUI() {
+        setupDefaultUI()
         addSubview(calendarIcon)
-        calendarIcon.snp.makeConstraints { make in
-            make.height.width.equalTo(Constants.Constraints.calendarIconSize)
-            make.centerY.equalTo(borderView)
-            make.right.equalToSuperview().inset(Constants.Constraints.smallOffset)
+        calendarIcon.snp.makeConstraints {
+            $0.height.width.equalTo(Constants.Constraints.calendarIconSize)
+            $0.centerY.equalTo(borderView)
+            $0.right.equalToSuperview().inset(Constants.Constraints.smallOffset)
         }
     }
     
-    func setupTextViewUI(with text: String) {
-        textView.text = text
+    func setupTextViewUI() {
         addSubviews(label, borderView, textView)
         
-        label.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(Constants.Constraints.labelHeight)
+        label.snp.makeConstraints {
+            $0.leading.trailing.top.equalToSuperview()
+            $0.height.equalTo(Constants.Constraints.labelHeight)
         }
         
-        borderView.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
+        borderView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
         }
         
-        textView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Constants.Constraints.defaultOffset)
-            make.trailing.equalToSuperview().inset(Constants.Constraints.defaultOffset)
-            make.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
-            make.bottom.equalToSuperview()
+        textView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(Constants.Constraints.defaultOffset)
+            $0.trailing.equalToSuperview().inset(Constants.Constraints.defaultOffset)
+            $0.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
+            $0.bottom.equalToSuperview()
         }
     }
 }
@@ -141,6 +154,7 @@ private extension CustomTextEditView {
             static let textField: CGFloat = 16
             static let textView: CGFloat = 16
         }
+        
         enum Constraints {
             static let labelHeight: CGFloat = 22
             static let smallOffset: CGFloat = 8

@@ -12,6 +12,8 @@ enum TextFieldType {
 }
 
 final class CommonTextField: UIView {
+    var text: String? { textField.text }
+    
     private var isPasswordVisible = false
     
     private lazy var textField: UITextField = {
