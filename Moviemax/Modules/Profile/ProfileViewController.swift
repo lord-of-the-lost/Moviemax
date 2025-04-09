@@ -9,7 +9,7 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
-    // MARK: Properties
+    // MARK: - Properties
     private let presenter: ProfilePresenter
     
     private lazy var scrollView = UIScrollView()
@@ -36,9 +36,8 @@ final class ProfileViewController: UIViewController {
         type: .textField
     )
     
-    private lazy var dateOfBirthTextField = CustomTextEditView(
-        labelName: Constants.Text.dateOfBirthLabel,
-        type: .date
+    private lazy var dateOfBirthPicker = DatePickerView(
+        labelName: Constants.Text.dateOfBirthLabel
     )
     
     private lazy var locationTextView = CustomTextEditView(
@@ -62,7 +61,53 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .wheels
+        return picker
+    }()
     
+    private lazy var datePickerContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .appBackground
+        view.isHidden = true
+        view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.3
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
+        return view
+    }()
+    
+    private lazy var datePickerToolbar: UIToolbar = {
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        
+        let cancelButton = UIBarButtonItem(
+            title: Constants.Text.cancelButtonTitle,
+            style: .plain,
+            target: self,
+            action: #selector(cancelButtonTapped)
+        )
+        
+        let flexSpace = UIBarButtonItem(
+            barButtonSystemItem: .flexibleSpace,
+            target: nil,
+            action: nil
+        )
+        
+        let doneButton = UIBarButtonItem(
+            title: Constants.Text.doneButtonTitle,
+            style: .done,
+            target: self,
+            action: #selector(doneButtonTapped)
+        )
+        
+        toolbar.items = [cancelButton, flexSpace, doneButton]
+        return toolbar
+    }()
+        
     //MARK: Init
     init(presenter: ProfilePresenter) {
         self.presenter = presenter
@@ -85,13 +130,22 @@ final class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
         presenter.loadUserProfile()
     }
-    
-    // MARK: - Public Methods
-    func updateUserData(firstName: String, lastName: String, email: String, birthDate: String, gender: User.Gender, notes: String) {
+}
+
+// MARK: - Public Methods
+extension ProfileViewController {
+    func updateUserData(
+        firstName: String,
+        lastName: String,
+        email: String,
+        birthDate: String,
+        gender: User.Gender,
+        notes: String
+    ) {
         firstNameTextField.updateText(firstName)
         lastNameTextField.updateText(lastName)
         emailTextField.updateText(email)
-        dateOfBirthTextField.updateText(birthDate)
+        dateOfBirthPicker.setDateString(birthDate)
         locationTextView.updateText(notes)
         genderSelectorView.selectGender(gender)
         saveButton.isEnabled = true
@@ -103,28 +157,37 @@ final class ProfileViewController: UIViewController {
     }
 }
 
+// MARK: - DatePickerViewDelegate
+extension ProfileViewController: DatePickerViewDelegate {
+    func didTapDatePickerView() {
+        datePickerContainer.isHidden = false
+    }
+}
+
 // MARK: - Private Methods
 private extension ProfileViewController {
     func setupUI() {
         navigationItem.title = Constants.Text.screenName
         view.backgroundColor = .appBackground
         
-        view.addSubview(scrollView)
+        view.addSubviews(scrollView, datePickerContainer)
         scrollView.addSubview(contentView)
         contentView.addSubview(stackView)
         profilePhotoContainerView.addSubview(profilePhotoView)
+        datePickerContainer.addSubviews(datePickerToolbar, datePicker)
         
         stackView.addArrangedSubviews(
             profilePhotoContainerView,
             firstNameTextField,
             lastNameTextField,
             emailTextField,
-            dateOfBirthTextField,
+            dateOfBirthPicker,
             genderSelectorView,
             locationTextView,
             saveButton
         )
         
+        dateOfBirthPicker.delegate = self
         saveButton.isEnabled = false
     }
     
@@ -165,7 +228,7 @@ private extension ProfileViewController {
             make.height.equalTo(Constants.Constraints.textFieldHeight)
         }
         
-        dateOfBirthTextField.snp.makeConstraints { make in
+        dateOfBirthPicker.snp.makeConstraints { make in
             make.height.equalTo(Constants.Constraints.textFieldHeight)
         }
         
@@ -180,22 +243,52 @@ private extension ProfileViewController {
         saveButton.snp.makeConstraints { make in
             make.height.equalTo(Constants.Constraints.saveButtonHeight)
         }
+        
+        datePickerContainer.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(300)
+        }
+        
+        datePickerToolbar.snp.makeConstraints { make in
+            make.left.top.right.equalToSuperview()
+            make.height.equalTo(44)
+        }
+        
+        datePicker.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(datePickerToolbar.snp.bottom)
+            make.bottom.equalToSuperview()
+        }
+    }
+    
+    @objc func cancelButtonTapped() {
+        datePickerContainer.isHidden = true
+    }
+    
+    @objc func doneButtonTapped() {
+        let selectedDate = datePicker.date
+        let formattedDate = presenter.formatDateForDisplay(selectedDate)
+        
+        dateOfBirthPicker.setDateString(formattedDate)
+        datePickerContainer.isHidden = true
     }
     
     @objc func saveButtonTapped() {
+        let avatarData = profilePhotoView.getPhotoData()
+        let birthDate = dateOfBirthPicker.getDateString()
+        let gender = genderSelectorView.getSelectedGender()
+        
         guard
             let firstName = firstNameTextField.getText(),
             let lastName = lastNameTextField.getText(),
             let email = emailTextField.getText(),
-            let birthDate = dateOfBirthTextField.getText(),
-            let notes = locationTextView.getText()
+            let notes = locationTextView.getText(),
+            !birthDate.isEmpty
         else {
             showAlert(title: Constants.Text.errorTitle, message: Constants.Text.errorEmptyFields)
             return
         }
-        
-        let gender = genderSelectorView.getSelectedGender()
-        let avatarData = profilePhotoView.getPhotoData()
         
         presenter.saveUserProfile(
             firstName: firstName,
@@ -224,6 +317,9 @@ private extension ProfileViewController {
             
             static let errorTitle: String = "Ошибка"
             static let errorEmptyFields: String = "Пожалуйста, заполните все поля"
+            
+            static let doneButtonTitle: String = "Готово"
+            static let cancelButtonTitle: String = "Отмена"
         }
         
         enum Constraints {
@@ -233,6 +329,7 @@ private extension ProfileViewController {
             static let locationTextViewHeight: CGFloat = 162
             static let saveButtonHeight: CGFloat = 56
             static let photoSize: CGFloat = 100
+            static let pickerHeight: CGFloat = 216
         }
     }
 }

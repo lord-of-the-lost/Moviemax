@@ -6,11 +6,9 @@
 //
 
 import UIKit
-import SnapKit
 
 enum TextEditViewType {
     case textField
-    case date
     case textView
 }
 
@@ -18,18 +16,12 @@ final class CustomTextEditView: UIView {
     // MARK: - Properties
     private var currentType: TextEditViewType = .textField
     private lazy var borderView = BorderView()
-
+    
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = AppFont.plusJakartaMedium.withSize(Constants.FontSizes.label)
         label.textColor = .lightGray
         return label
-    }()
-    
-    private let calendarIcon: UIImageView = {
-        let imageView = UIImageView(image: .calendarProfile)
-        imageView.contentMode = .scaleAspectFit
-        return imageView
     }()
     
     private lazy var defaultTextField: UITextField = {
@@ -46,22 +38,19 @@ final class CustomTextEditView: UIView {
         textView.font = AppFont.plusJakartaMedium.withSize(Constants.FontSizes.textView)
         textView.textColor = .adaptiveTextMain
         textView.backgroundColor = .clear
+        textView.isHidden = true
         return textView
     }()
     
     // MARK: - Init
     init(labelName: String, type: TextEditViewType) {
         super.init(frame: .zero)
-        label.text = labelName
         currentType = type
-        switch currentType {
-        case .textField:
-            setupDefaultUI()
-        case .date:
-            setupDateUI()
-        case .textView:
-            setupTextViewUI()
-        }
+        label.text = labelName
+        
+        setupUI()
+        setupConstraints()
+        configureForType()
     }
     
     @available(*, unavailable)
@@ -74,10 +63,8 @@ final class CustomTextEditView: UIView {
 extension CustomTextEditView {
     func getText() -> String? {
         switch currentType {
-        case .textView:
-            return textView.text
-        case .textField, .date:
-            return defaultTextField.text
+        case .textView: textView.text
+        case .textField: defaultTextField.text
         }
     }
     
@@ -85,7 +72,7 @@ extension CustomTextEditView {
         switch currentType {
         case .textView:
             textView.text = text
-        case .textField, .date:
+        case .textField:
             defaultTextField.text = text
         }
     }
@@ -93,9 +80,28 @@ extension CustomTextEditView {
 
 // MARK: - Private Methods
 private extension CustomTextEditView {
-    func setupDefaultUI() {
-        addSubviews(label, borderView, defaultTextField)
-        
+    func setupUI() {
+        addSubviews(
+            label,
+            borderView,
+            defaultTextField,
+            textView
+        )
+    }
+    
+    func configureForType() {
+        switch currentType {
+        case .textField:
+            textView.isHidden = true
+            defaultTextField.isHidden = false
+            
+        case .textView:
+            textView.isHidden = false
+            defaultTextField.isHidden = true
+        }
+    }
+    
+    func setupConstraints() {
         label.snp.makeConstraints {
             $0.leading.trailing.top.equalToSuperview()
             $0.height.equalTo(Constants.Constraints.labelHeight)
@@ -111,30 +117,6 @@ private extension CustomTextEditView {
             $0.trailing.equalToSuperview().inset(Constants.Constraints.defaultOffset)
             $0.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
             $0.bottom.equalToSuperview()
-        }
-    }
-    
-    func setupDateUI() {
-        setupDefaultUI()
-        addSubview(calendarIcon)
-        calendarIcon.snp.makeConstraints {
-            $0.height.width.equalTo(Constants.Constraints.calendarIconSize)
-            $0.centerY.equalTo(borderView)
-            $0.right.equalToSuperview().inset(Constants.Constraints.smallOffset)
-        }
-    }
-    
-    func setupTextViewUI() {
-        addSubviews(label, borderView, textView)
-        
-        label.snp.makeConstraints {
-            $0.leading.trailing.top.equalToSuperview()
-            $0.height.equalTo(Constants.Constraints.labelHeight)
-        }
-        
-        borderView.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalToSuperview()
-            $0.top.equalTo(label.snp.bottom).offset(Constants.Constraints.smallOffset)
         }
         
         textView.snp.makeConstraints {
@@ -159,8 +141,6 @@ private extension CustomTextEditView {
             static let labelHeight: CGFloat = 22
             static let smallOffset: CGFloat = 8
             static let defaultOffset: CGFloat = 16
-            static let genderViewHeight: CGFloat = 48
-            static let calendarIconSize: CGFloat = 24
         }
     }
 }

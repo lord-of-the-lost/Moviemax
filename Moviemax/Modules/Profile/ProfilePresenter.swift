@@ -12,9 +12,27 @@ final class ProfilePresenter {
     private let router: ProfileRouter
     private let userService: UserService
     
+    // Форматтеры дат
+    private lazy var displayFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM yyyy"
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
+    
+    private lazy var storageFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
     init(router: ProfileRouter, dependency: DI) {
         self.router = router
         self.userService = dependency.userService
+    }
+    
+    func formatDateForDisplay(_ date: Date) -> String {
+        displayFormatter.string(from: date)
     }
     
     func loadUserProfile() {
@@ -28,7 +46,7 @@ final class ProfilePresenter {
             firstName: currentUser.firstName,
             lastName: currentUser.lastName,
             email: currentUser.email,
-            birthDate: currentUser.birthDate,
+            birthDate: formatDateForDisplay(currentUser.birthDate),
             gender: currentUser.gender,
             notes: currentUser.notes ?? ""
         )
@@ -39,7 +57,15 @@ final class ProfilePresenter {
         }
     }
     
-    func saveUserProfile(firstName: String, lastName: String, email: String, birthDate: String, gender: User.Gender, notes: String, avatarData: Data?) {
+    func saveUserProfile(
+        firstName: String,
+        lastName: String,
+        email: String,
+        birthDate: String,
+        gender: User.Gender,
+        notes: String,
+        avatarData: Data?
+    ) {
         guard let currentUser = userService.getCurrentUser() else {
             view?.showAlert(title: Constants.errorTitle, message: Constants.userNotAuthenticatedError)
             return
@@ -50,7 +76,7 @@ final class ProfilePresenter {
         updatedUser.firstName = firstName
         updatedUser.lastName = lastName
         updatedUser.email = email
-        updatedUser.birthDate = birthDate
+        updatedUser.birthDate = formatDateForStorage(birthDate)
         updatedUser.gender = gender
         updatedUser.notes = notes.isEmpty ? nil : notes
         
@@ -68,6 +94,27 @@ final class ProfilePresenter {
         case .failure:
             view?.showAlert(title: Constants.errorTitle, message: Constants.profileUpdateError)
         }
+    }
+}
+
+// MARK: - Private Methods
+private extension ProfilePresenter {
+    func formatDateForStorage(_ displayDateString: String) -> String {
+        if let date = displayFormatter.date(from: displayDateString) {
+            return storageFormatter.string(from: date)
+        }
+        
+        return displayDateString
+    }
+    
+    func formatDateForDisplay(_ dateString: String) -> String {
+        if dateString.isEmpty { return "" }
+        
+        if let date = storageFormatter.date(from: dateString) {
+            return displayFormatter.string(from: date)
+        }
+        
+        return dateString
     }
 }
 
