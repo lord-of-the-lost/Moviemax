@@ -65,7 +65,7 @@ private extension TabBarPresenter {
         profileItem.imageInsets = UIEdgeInsets(top: 19, left: 0, bottom: -19, right: 0)
         
         let searchViewController = UIViewController()
-        let recentViewController = UIViewController()
+        let recentViewController = RecentWatchFactory.build(dependency)
         let mainViewController = UIViewController()
         let favoritesViewController = FavoritesFactory.build(dependency)
         let profileViewController = ProfileFactory.build(dependency)
