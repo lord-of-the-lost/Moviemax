@@ -57,37 +57,37 @@ private extension TabBarPresenter {
         )
         favoritesItem.imageInsets = UIEdgeInsets(top: 19, left: 0, bottom: -19, right: 0)
         
-        let profileItem = UITabBarItem(
+        let settingsItem = UITabBarItem(
             title: nil,
             image: UIImage(resource: .profile),
             selectedImage: UIImage(resource: .profile).withTintColor(UIColor(resource: .accent))
         )
-        profileItem.imageInsets = UIEdgeInsets(top: 19, left: 0, bottom: -19, right: 0)
+        settingsItem.imageInsets = UIEdgeInsets(top: 19, left: 0, bottom: -19, right: 0)
         
         let searchViewController = UIViewController()
         let recentViewController = UIViewController()
         let mainViewController = UIViewController()
         let favoritesViewController = FavoritesFactory.build(dependency)
-        let profileViewController = ProfileFactory.build(dependency)
+        let settingsViewController = SettingsFactory.build(dependency)
         
         let searchNavigation = UINavigationController(rootViewController: searchViewController)
         let recentNavigation = UINavigationController(rootViewController: recentViewController)
         let mainNavigation = UINavigationController(rootViewController: mainViewController)
         let favoritesNavigation = UINavigationController(rootViewController: favoritesViewController)
-        let profileNavigation = UINavigationController(rootViewController: profileViewController)
+        let settingsNavigation = UINavigationController(rootViewController: settingsViewController)
         
         searchViewController.tabBarItem = searchItem
         recentNavigation.tabBarItem = recentItem
         mainViewController.tabBarItem = homeItem
         favoritesViewController.tabBarItem = favoritesItem
-        profileViewController.tabBarItem = profileItem
+        settingsViewController.tabBarItem = settingsItem
         
         view.setViewControllers([
             searchNavigation,
             recentNavigation,
             mainNavigation,
             favoritesNavigation,
-            profileNavigation
+            settingsNavigation
         ], animated: false)
     }
 }

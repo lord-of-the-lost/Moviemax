@@ -5,7 +5,6 @@
 //  Created by Volchanka on 01.04.2025.
 //
 
-import UIKit
 
 final class ProfilePresenter {
     weak var view: ProfileViewController?

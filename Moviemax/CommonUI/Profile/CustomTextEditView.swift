@@ -104,7 +104,7 @@ private extension CustomTextEditView {
         setupDefaultUI(with: text)
         addSubview(calendarIcon)
         calendarIcon.snp.makeConstraints { make in
-            make.height.width.equalTo(Constants.Constraints.calndarIconSize)
+            make.height.width.equalTo(Constants.Constraints.calendarIconSize)
             make.centerY.equalTo(borderView)
             make.right.equalToSuperview().inset(Constants.Constraints.smallOffset)
         }
@@ -146,7 +146,7 @@ private extension CustomTextEditView {
             static let smallOffset: CGFloat = 8
             static let defaultOffset: CGFloat = 16
             static let genderViewHeight: CGFloat = 48
-            static let calndarIconSize: CGFloat = 24
+            static let calendarIconSize: CGFloat = 24
         }
     }
 }

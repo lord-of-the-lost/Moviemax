@@ -6,23 +6,120 @@
 //
 
 import UIKit
-import SnapKit
 
-final class AuthViewController: UIViewController {
-    let presenter: AuthPresenter
+final class AuthViewController: BaseScrollViewController {
+    private let presenter: AuthPresenter
+    private lazy var emailField = TitledTextField()
+    private lazy var passwordField = TitledTextField(isSecure: true)
     
-    private lazy var loginButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.buttonTitle)
-        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    private lazy var signInButton: CommonButton = {
+        let button = CommonButton(title: Constants.Text.singInButtonTitle)
+        button.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        presenter.view = self
-        setupUI()
-        setupConstraints()
-    }
+    private lazy var rememberMeCheckbox: UISwitch = {
+        let checkbox = UISwitch()
+        checkbox.onTintColor = UIColor(resource: .accent)
+        return checkbox
+    }()
+    
+    private lazy var rememberMeLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.Text.rememberMeLabel
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .adaptiveTextMain
+        return label
+    }()
+    
+    private lazy var rememberMeStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        return stackView
+    }()
+    
+    private lazy var forgotPasswordButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.Text.forgotPasswordButtonTitle, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        button.setTitleColor(UIColor(resource: .accent), for: .normal)
+        button.addTarget(self, action: #selector(forgotPasswordTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var passwordOptionsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        return stackView
+    }()
+    
+    private lazy var dividerLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.Text.dividerLabel
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .systemGray
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private lazy var googleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.Text.continueWithGoogleButtonTitle, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.setTitleColor(.adaptiveTextMain, for: .normal)
+        
+        let googleIcon = UIImage(resource: .google).withRenderingMode(.alwaysOriginal)
+        button.setImage(googleIcon, for: .normal)
+        
+        var configuration = UIButton.Configuration.plain()
+        configuration.imagePadding = 10
+        configuration.imagePlacement = .leading
+        button.configuration = configuration
+        
+        button.backgroundColor = .appBackground
+        button.layer.cornerRadius = 24
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.systemGray4.cgColor
+        
+        button.addTarget(self, action: #selector(googleSignInTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var accountLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.Text.accountLabel
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .adaptiveTextMain
+        return label
+    }()
+    
+    private lazy var signUpButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.Text.signUpButtonTitle, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        button.setTitleColor(UIColor(resource: .accent), for: .normal)
+        button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var signUpStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 5
+        stackView.alignment = .center
+        return stackView
+    }()
+    
+    private lazy var formStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        return stackView
+    }()
     
     init(presenter: AuthPresenter) {
         self.presenter = presenter
@@ -33,25 +130,108 @@ final class AuthViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        presenter.view = self
+        setupView()
+        setupConstraints()
+        configureTextFields()
+    }
 }
 
 // MARK: - Private Methods
 private extension AuthViewController {
-    func setupUI() {
-        view.backgroundColor = .systemBackground
-        view.addSubview(loginButton)
+    func setupView() {
+        navigationItem.title = Constants.Text.screenTitle
+        view.backgroundColor = .appBackground
+        setScrollState(isScrollEnabled: false)
+        
+        contentView.addSubviews(
+            formStackView,
+            passwordOptionsStackView,
+            signInButton,
+            dividerLabel,
+            googleButton,
+            signUpStackView
+        )
+        
+        rememberMeStackView.addArrangedSubviews(rememberMeCheckbox, rememberMeLabel)
+        passwordOptionsStackView.addArrangedSubviews(rememberMeStackView, forgotPasswordButton)
+        signUpStackView.addArrangedSubviews(accountLabel, signUpButton)
+        formStackView.addArrangedSubviews(emailField, passwordField)
     }
     
     func setupConstraints() {
-        loginButton.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.width.equalTo(Constants.Constraints.buttonWidth)
-            $0.height.equalTo(Constants.Constraints.buttonHeight)
+        formStackView.snp.makeConstraints {
+            $0.top.equalTo(contentView).inset(100)
+            $0.leading.trailing.equalTo(contentView).inset(30)
+        }
+        
+        passwordOptionsStackView.snp.makeConstraints {
+            $0.top.equalTo(formStackView.snp.bottom).offset(10)
+            $0.leading.trailing.equalTo(contentView).inset(30)
+        }
+        
+        signInButton.snp.makeConstraints {
+            $0.top.equalTo(passwordOptionsStackView.snp.bottom).offset(65)
+            $0.leading.trailing.equalTo(contentView).inset(30)
+            $0.height.equalTo(50)
+        }
+        
+        dividerLabel.snp.makeConstraints {
+            $0.top.equalTo(signInButton.snp.bottom).offset(12)
+            $0.height.equalTo(22)
+            $0.leading.trailing.equalTo(contentView).inset(30)
+        }
+        
+        googleButton.snp.makeConstraints {
+            $0.top.equalTo(dividerLabel.snp.bottom).offset(16)
+            $0.leading.trailing.equalTo(contentView).inset(30)
+            $0.height.equalTo(50)
+        }
+        
+        signUpStackView.snp.makeConstraints {
+            $0.top.greaterThanOrEqualTo(googleButton.snp.bottom).offset(20)
+            $0.centerX.equalTo(contentView)
+            $0.bottom.equalTo(contentView).inset(40)
         }
     }
     
-    @objc func loginButtonTapped() {
-        presenter.loginButtonTapped()
+    func configureTextFields() {
+        typealias ViewModel = TitledTextField.TextFieldViewModel
+        
+        emailField.configure(
+            with: ViewModel(
+                title: Constants.Text.Email.title,
+                placeholder: Constants.Text.Email.placeholder,
+                type: .email
+            )
+        )
+        
+        passwordField.configure(
+            with: ViewModel(
+                title: Constants.Text.Password.title,
+                placeholder: Constants.Text.Password.placeholder,
+                type: .password
+            )
+        )
+    }
+    
+    @objc func forgotPasswordTapped() {
+        presenter.forgotPasswordTapped()
+    }
+    
+    @objc func googleSignInTapped() {
+        presenter.googleSignInTapped()
+    }
+    
+    @objc func signInButtonTapped() {
+        presenter.signInTapped()
+    }
+    
+    @objc func signUpButtonTapped() {
+        presenter.signUpTapped()
     }
 }
 
@@ -59,12 +239,24 @@ private extension AuthViewController {
 private extension AuthViewController {
     enum Constants {
         enum Text {
-            static let buttonTitle: String = "Авторизоваться"
-        }
-       
-        enum Constraints {
-            static let buttonWidth: CGFloat = 200
-            static let buttonHeight: CGFloat = 50
+            static let screenTitle = "Login"
+            static let singInButtonTitle = "Sign In"
+            static let forgotPasswordButtonTitle = "Forgot Password?"
+            static let continueWithGoogleButtonTitle = "Continue with Google"
+            static let rememberMeLabel = "Remember Me"
+            static let dividerLabel = "———  Or continue with  ———"
+            static let accountLabel = "Don’t have an account?"
+            static let signUpButtonTitle = "Sign up"
+            
+            enum Email {
+                static let title = "E-mail"
+                static let placeholder = "Enter your email address"
+            }
+            
+            enum Password {
+                static let title = "Password"
+                static let placeholder = "Enter your password"
+            }
         }
     }
 }
