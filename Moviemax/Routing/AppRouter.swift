@@ -38,12 +38,6 @@ private extension AppRouter {
         window?.rootViewController = navigationController
     }
     
-    func showMovieDetail() {
-        let movieDetailController = MovieDetailFactory.build(dependency)
-        let navigationController = UINavigationController(rootViewController: movieDetailController)
-        window?.rootViewController = navigationController
-    }
-    
     func showOnboardingFlow() {
         let onboardingViewController = OnboardingFactory.build(dependency)
         let navigationController = UINavigationController(rootViewController: onboardingViewController)
