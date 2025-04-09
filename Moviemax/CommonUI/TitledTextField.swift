@@ -38,6 +38,10 @@ final class TitledTextField: UIView {
         let model = CommonTextField.TextFieldViewModel(placeholder: viewModel.placeholder, type: viewModel.type)
         textField.configure(with: model)
     }
+    
+    func getText() -> String? {
+        textField.text
+    }
 }
 
 // MARK: - Helper Entities

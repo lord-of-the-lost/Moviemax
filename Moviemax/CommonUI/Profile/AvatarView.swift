@@ -67,3 +67,15 @@ private extension AvatarView {
         static let pencilSize: CGFloat = 32
     }
 }
+
+// MARK: - Public methods
+extension AvatarView {
+    func updatePhoto(image: UIImage) {
+        photoImageView.image = image
+    }
+    
+    func getPhotoData() -> Data? {
+        guard let image = photoImageView.image else { return nil }
+        return image.jpegData(compressionQuality: 0.8)
+    }
+}

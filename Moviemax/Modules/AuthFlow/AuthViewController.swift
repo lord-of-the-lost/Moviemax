@@ -138,6 +138,15 @@ final class AuthViewController: BaseScrollViewController {
         setupConstraints()
         configureTextFields()
     }
+    
+    // MARK: - Public Methods
+    func getEmail() -> String? {
+        emailField.getText()
+    }
+    
+    func getPassword() -> String? {
+        passwordField.getText()
+    }
 }
 
 // MARK: - Private Methods
@@ -245,7 +254,7 @@ private extension AuthViewController {
             static let continueWithGoogleButtonTitle = "Continue with Google"
             static let rememberMeLabel = "Remember Me"
             static let dividerLabel = "———  Or continue with  ———"
-            static let accountLabel = "Don’t have an account?"
+            static let accountLabel = "Don't have an account?"
             static let signUpButtonTitle = "Sign up"
             
             enum Email {

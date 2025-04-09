@@ -6,11 +6,10 @@
 //
 
 import UIKit
-import SnapKit
 
 final class ProfileViewController: UIViewController {
     
-    // MARK: Properties
+    // MARK: - Properties
     private let presenter: ProfilePresenter
     
     private lazy var scrollView = UIScrollView()
@@ -23,31 +22,25 @@ final class ProfileViewController: UIViewController {
     )
     
     private lazy var firstNameTextField = CustomTextEditView(
-        text: Constants.Text.firstName,
         labelName: Constants.Text.firstNameLabel,
         type: .textField
     )
     
     private lazy var lastNameTextField = CustomTextEditView(
-        text: Constants.Text.lastName,
         labelName: Constants.Text.lastNameLabel,
         type: .textField
     )
     
     private lazy var emailTextField = CustomTextEditView(
-        text: Constants.Text.email,
         labelName: Constants.Text.emailLabel,
         type: .textField
     )
     
-    private lazy var dateOfBirthTextField = CustomTextEditView(
-        text: Constants.Text.dateOfBirth,
-        labelName: Constants.Text.dateOfBirthLabel,
-        type: .date
+    private lazy var dateOfBirthPicker = DatePickerView(
+        labelName: Constants.Text.dateOfBirthLabel
     )
     
     private lazy var locationTextView = CustomTextEditView(
-        text: Constants.Text.location,
         labelName: Constants.Text.locationLabel,
         type: .textView
     )
@@ -68,7 +61,53 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .wheels
+        return picker
+    }()
     
+    private lazy var datePickerContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .appBackground
+        view.isHidden = true
+        view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.3
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
+        return view
+    }()
+    
+    private lazy var datePickerToolbar: UIToolbar = {
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        
+        let cancelButton = UIBarButtonItem(
+            title: Constants.Text.cancelButtonTitle,
+            style: .plain,
+            target: self,
+            action: #selector(cancelButtonTapped)
+        )
+        
+        let flexSpace = UIBarButtonItem(
+            barButtonSystemItem: .flexibleSpace,
+            target: nil,
+            action: nil
+        )
+        
+        let doneButton = UIBarButtonItem(
+            title: Constants.Text.doneButtonTitle,
+            style: .done,
+            target: self,
+            action: #selector(doneButtonTapped)
+        )
+        
+        toolbar.items = [cancelButton, flexSpace, doneButton]
+        return toolbar
+    }()
+        
     //MARK: Init
     init(presenter: ProfilePresenter) {
         self.presenter = presenter
@@ -86,6 +125,43 @@ final class ProfileViewController: UIViewController {
         setupUI()
         setupConstraints()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.loadUserProfile()
+    }
+}
+
+// MARK: - Public Methods
+extension ProfileViewController {
+    func updateUserData(
+        firstName: String,
+        lastName: String,
+        email: String,
+        birthDate: String,
+        gender: User.Gender,
+        notes: String
+    ) {
+        firstNameTextField.updateText(firstName)
+        lastNameTextField.updateText(lastName)
+        emailTextField.updateText(email)
+        dateOfBirthPicker.setDateString(birthDate)
+        locationTextView.updateText(notes)
+        genderSelectorView.selectGender(gender)
+        saveButton.isEnabled = true
+    }
+    
+    func updateUserAvatar(data: Data) {
+        guard let image = UIImage(data: data) else { return }
+        profilePhotoView.updatePhoto(image: image)
+    }
+}
+
+// MARK: - DatePickerViewDelegate
+extension ProfileViewController: DatePickerViewDelegate {
+    func didTapDatePickerView() {
+        datePickerContainer.isHidden = false
+    }
 }
 
 // MARK: - Private Methods
@@ -94,22 +170,24 @@ private extension ProfileViewController {
         navigationItem.title = Constants.Text.screenName
         view.backgroundColor = .appBackground
         
-        view.addSubview(scrollView)
+        view.addSubviews(scrollView, datePickerContainer)
         scrollView.addSubview(contentView)
         contentView.addSubview(stackView)
         profilePhotoContainerView.addSubview(profilePhotoView)
+        datePickerContainer.addSubviews(datePickerToolbar, datePicker)
         
         stackView.addArrangedSubviews(
             profilePhotoContainerView,
             firstNameTextField,
             lastNameTextField,
             emailTextField,
-            dateOfBirthTextField,
+            dateOfBirthPicker,
             genderSelectorView,
             locationTextView,
             saveButton
         )
         
+        dateOfBirthPicker.delegate = self
         saveButton.isEnabled = false
     }
     
@@ -150,7 +228,7 @@ private extension ProfileViewController {
             make.height.equalTo(Constants.Constraints.textFieldHeight)
         }
         
-        dateOfBirthTextField.snp.makeConstraints { make in
+        dateOfBirthPicker.snp.makeConstraints { make in
             make.height.equalTo(Constants.Constraints.textFieldHeight)
         }
         
@@ -165,10 +243,62 @@ private extension ProfileViewController {
         saveButton.snp.makeConstraints { make in
             make.height.equalTo(Constants.Constraints.saveButtonHeight)
         }
+        
+        datePickerContainer.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(300)
+        }
+        
+        datePickerToolbar.snp.makeConstraints { make in
+            make.left.top.right.equalToSuperview()
+            make.height.equalTo(44)
+        }
+        
+        datePicker.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(datePickerToolbar.snp.bottom)
+            make.bottom.equalToSuperview()
+        }
+    }
+    
+    @objc func cancelButtonTapped() {
+        datePickerContainer.isHidden = true
+    }
+    
+    @objc func doneButtonTapped() {
+        let selectedDate = datePicker.date
+        let formattedDate = presenter.formatDateForDisplay(selectedDate)
+        
+        dateOfBirthPicker.setDateString(formattedDate)
+        datePickerContainer.isHidden = true
     }
     
     @objc func saveButtonTapped() {
-        showAlert(title: "Сохранение", message: "Изменения сохранены")
+        let avatarData = profilePhotoView.getPhotoData()
+        let birthDate = dateOfBirthPicker.getDateString()
+        let gender = genderSelectorView.getSelectedGender()
+        
+        guard
+            let firstName = firstNameTextField.getText(),
+            let lastName = lastNameTextField.getText(),
+            let email = emailTextField.getText(),
+            let notes = locationTextView.getText(),
+            !birthDate.isEmpty
+        else {
+            showAlert(title: Constants.Text.errorTitle, message: Constants.Text.errorEmptyFields)
+            return
+        }
+        
+        presenter.saveUserProfile(
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            birthDate: birthDate,
+            gender: gender,
+            notes: notes,
+            avatarData: avatarData
+        )
     }
 }
 
@@ -185,12 +315,11 @@ private extension ProfileViewController {
             static let dateOfBirthLabel: String = "Date of Birth"
             static let locationLabel: String = "Location"
             
-            //TODO: Get it from the model:
-            static let firstName: String = "Andy"
-            static let lastName: String = "Lexsian"
-            static let email: String = "Andylexian22@gmail.com"
-            static let dateOfBirth: String = "24 february 1996"
-            static let location: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            static let errorTitle: String = "Ошибка"
+            static let errorEmptyFields: String = "Пожалуйста, заполните все поля"
+            
+            static let doneButtonTitle: String = "Готово"
+            static let cancelButtonTitle: String = "Отмена"
         }
         
         enum Constraints {
@@ -200,6 +329,7 @@ private extension ProfileViewController {
             static let locationTextViewHeight: CGFloat = 162
             static let saveButtonHeight: CGFloat = 56
             static let photoSize: CGFloat = 100
+            static let pickerHeight: CGFloat = 216
         }
     }
 }

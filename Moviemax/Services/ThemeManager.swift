@@ -35,4 +35,12 @@ final class ThemeManager {
         let newTheme: AppTheme = currentTheme == .light ? .dark : .light
         applyTheme(newTheme)
     }
+    
+    func setTheme(_ theme: AppTheme) {
+        applyTheme(theme)
+    }
+    
+    func getCurrentTheme() -> AppTheme {
+        currentTheme
+    }
 }
