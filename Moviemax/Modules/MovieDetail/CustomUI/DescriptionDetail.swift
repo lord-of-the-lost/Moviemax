@@ -50,12 +50,27 @@ final class DescriptionDetail: UIView {
         updateText()
     }
     
-    @objc private func handleTap() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateText()
+    }
+}
+
+// MARK: - Private Methods
+private extension DescriptionDetail {
+    func setupUI() {
+        addSubview(textLabel)
+        textLabel.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    @objc func handleTap() {
         isExpanded.toggle()
         updateText()
     }
     
-    private func updateText() {
+    func updateText() {
         if isExpanded {
             textLabel.numberOfLines = 0
             textLabel.text = fullText
@@ -94,21 +109,6 @@ final class DescriptionDetail: UIView {
             } else {
                 textLabel.text = fullText
             }
-        }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        updateText()
-    }
-}
-
-// MARK: - Private Methods
-private extension DescriptionDetail {
-    private func setupUI() {
-        addSubview(textLabel)
-        textLabel.snp.makeConstraints {
-            $0.edges.equalToSuperview()
         }
     }
 }
