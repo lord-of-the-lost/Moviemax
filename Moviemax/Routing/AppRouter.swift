@@ -20,7 +20,8 @@ final class AppRouter {
         if dependency.authService.isAuthorized {
             showMainFlow()
         } else {
-            showOnboardingFlow()
+            showLaunchFlow()
+           // showOnboardingFlow()
         }
     }
 }
@@ -38,9 +39,15 @@ private extension AppRouter {
         window?.rootViewController = navigationController
     }
     
-    func showOnboardingFlow() {
-        let onboardingViewController = OnboardingFactory.build(dependency)
-        let navigationController = UINavigationController(rootViewController: onboardingViewController)
+//    func showOnboardingFlow() {
+//        let onboardingViewController = OnboardingFactory.build(dependency)
+//        let navigationController = UINavigationController(rootViewController: onboardingViewController)
+//        window?.rootViewController = navigationController
+//    }
+    
+    func showLaunchFlow() {
+        let launchViewController = LaunchFactory.build(dependency)
+        let navigationController = UINavigationController(rootViewController: launchViewController)
         window?.rootViewController = navigationController
     }
 }
