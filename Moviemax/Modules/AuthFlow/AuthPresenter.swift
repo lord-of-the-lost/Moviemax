@@ -18,7 +18,7 @@ final class AuthPresenter {
     }
     
     func forgotPasswordTapped() {
-        print(#function)
+        router.showForgotPassFlow()
     }
     
     func googleSignInTapped() {
