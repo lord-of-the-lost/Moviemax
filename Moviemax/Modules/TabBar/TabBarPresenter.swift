@@ -64,7 +64,7 @@ private extension TabBarPresenter {
         )
         settingsItem.imageInsets = UIEdgeInsets(top: 19, left: 0, bottom: -19, right: 0)
         
-        let searchViewController = UIViewController()
+        let searchViewController = SearchFactory.build(dependency)
         let recentViewController = RecentWatchFactory.build(dependency)
         let mainViewController = UIViewController()
         let favoritesViewController = FavoritesFactory.build(dependency)
