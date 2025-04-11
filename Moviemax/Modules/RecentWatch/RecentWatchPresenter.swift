@@ -19,7 +19,7 @@ final class RecentWatchPresenter {
         }
     }
     
-    let genres: [String] =  ["All", "Action", "Adventure", "Animation", "Biography", "Comedy", "Drama", "Fantasy", "History", "Horror", "Music", "Romance", "Science Fiction", "Thriller", "War", "Western"]
+    let genres: [String] = ["All", "Action", "Adventure", "Animation", "Biography", "Comedy", "Drama", "Fantasy", "History", "Horror", "Music", "Romance", "Science Fiction", "Thriller", "War", "Western"]
     
     
     init(router: RecentWatchRouter, dependency: DI) {

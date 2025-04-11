@@ -18,10 +18,7 @@ final class RecentWatchViewController: UIViewController {
     // MARK: Properties
     private let presenter: RecentWatchPresenter
     
-    private lazy var chipsView: ChipsView = {
-        let view = ChipsView(items: presenter.genres)
-        return view
-    }()
+    private lazy var chipsView = ChipsView()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -76,6 +73,7 @@ final class RecentWatchViewController: UIViewController {
         setupUI()
         presenter.viewDidLoad()
         chipsView.delegate = self
+        chipsView.configure(with: presenter.genres)
     }
 
     func show(_ state: RecentWatchState) {
