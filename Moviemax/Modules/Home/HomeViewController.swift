@@ -77,12 +77,7 @@ final class HomeViewController: BaseScrollViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        boxOfficeTableView.snp.remakeConstraints {
-            $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(60)
-            $0.height.equalTo((viewModel?.boxOfficeMovies.count ?? 0) * 96 + 20)
-        }
+        updateTableViewHeight()
     }
     
     override func viewDidLoad() {
@@ -194,7 +189,15 @@ private extension HomeViewController {
         )
         categoryChipsView.delegate = self
     }
-
+    
+    func updateTableViewHeight() {
+        boxOfficeTableView.snp.remakeConstraints {
+            $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(60)
+            $0.height.equalTo((viewModel?.boxOfficeMovies.count ?? 0) * 96 + 20)
+        }
+    }
     
     func setupConstraints() {
         userHeaderView.snp.makeConstraints { 
