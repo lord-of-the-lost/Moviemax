@@ -129,7 +129,8 @@ final class MovieDetailViewController: UIViewController {
 private extension MovieDetailViewController {
     func setupUI() {
         view.backgroundColor = .appBackground
-        
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.tabBarController?.tabBar.isHidden = true
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
@@ -264,7 +265,7 @@ private extension MovieDetailViewController {
     }
     
     @objc func backButtonTapped() {
-        print("Нажата кнопка Назад")
+        presenter.backButtonTapped()
     }
         
     @objc func likeButtonTapped() {

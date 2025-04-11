@@ -117,7 +117,7 @@ extension MovieSmallCell {
         let genre: String
         let rating: String
         let voiceCount: String
-        let isLiked: Bool
+        var isLiked: Bool
     }
     
     // TODO: выпилить

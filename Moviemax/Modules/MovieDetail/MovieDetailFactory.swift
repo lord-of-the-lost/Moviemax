@@ -6,9 +6,9 @@
 //
 
 enum MovieDetailFactory {
-    static func build(_ dependency: DI) -> MovieDetailViewController {
+    static func build(model: Movie, dependency: DI) -> MovieDetailViewController {
         let router = MovieDetailRouter(dependency: dependency)
-        let presenter = MovieDetailPresenter(router: router, dependency: dependency)
+        let presenter = MovieDetailPresenter(router: router, dependency: dependency, model: model)
         let model: MovieDetailModel = .init(
             title: "Luck",
             image: "",

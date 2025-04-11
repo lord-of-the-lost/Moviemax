@@ -16,8 +16,9 @@ final class HomeRouter: RouterProtocol {
     }
     
     // MARK: - HomeRouterProtocol
-    func showMovieDetails(movieId: Int) {
-
+    func showMovieDetails(movie: Movie) {
+        let detailsVC = MovieDetailFactory.build(model: movie, dependency: dependency)
+        viewController?.navigationController?.pushViewController(detailsVC, animated: true)
     }
     
     func showBoxOfficeMovies() {

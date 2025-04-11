@@ -80,41 +80,17 @@ final class HomeViewController: BaseScrollViewController {
         updateTableViewHeight()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.view = self
         setupView()
         setupConstraints()
         presenter.viewDidLoad()
-        
-        //MOCK
-        userHeaderView.configure(
-            with: UserHeaderView.UserHeaderViewModel(
-                greeting: "Hi, Andy",
-                status: "only streaming movie lovers",
-                avatar: .avatar
-            )
-        )
-        categoryChipsView.configure(
-            with: [
-                "All",
-                "Action",
-                "Adventure",
-                "Animation",
-                "Biography",
-                "Comedy",
-                "Drama",
-                "Fantasy",
-                "History",
-                "Horror",
-                "Music",
-                "Romance",
-                "Science Fiction",
-                "Thriller",
-                "War",
-                "Western"
-            ]
-        )
     }
 }
 
@@ -153,7 +129,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.didTapMovie(at: indexPath.row)
 
     }
 }
@@ -162,7 +138,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension HomeViewController: MovieSmallCellDelegate {
     func likeTapped(_ cell: MovieSmallCell) {
-        
+        guard let index = boxOfficeTableView.indexPath(for: cell)?.row else { return }
+        presenter.likeButtonTapped(at: index)
     }
 }
 
