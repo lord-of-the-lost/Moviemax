@@ -56,7 +56,7 @@ extension PosterCell {
     struct PosterCellViewModel {
         let title: String
         let category: String
-        let image: UIImage
+        var image: UIImage
     }
 }
 

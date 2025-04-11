@@ -75,6 +75,16 @@ final class HomeViewController: BaseScrollViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        boxOfficeTableView.snp.remakeConstraints {
+            $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(60)
+            $0.height.equalTo((viewModel?.boxOfficeMovies.count ?? 0) * 96 + 20)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.view = self
@@ -125,13 +135,13 @@ extension HomeViewController {
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        MovieSmallCell.mockData.count
+        viewModel?.boxOfficeMovies.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard 
             let cell = tableView.dequeueReusableCell(withIdentifier: MovieSmallCell.identifier, for: indexPath) as? MovieSmallCell,
-            let model = MovieSmallCell.mockData[safe: indexPath.row]
+            let model = viewModel?.boxOfficeMovies[safe: indexPath.row]
         else {
             return UITableViewCell()
         }
@@ -222,13 +232,6 @@ private extension HomeViewController {
         seeAllButton.snp.makeConstraints {
             $0.top.equalTo(categoryChipsView.snp.bottom).offset(24)
             $0.trailing.equalToSuperview().inset(24)
-        }
-        
-        boxOfficeTableView.snp.makeConstraints { 
-            $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(60)
-            $0.height.equalTo(MovieSmallCell.mockData.count * 96 + 20)
         }
         
         contentView.snp.makeConstraints {

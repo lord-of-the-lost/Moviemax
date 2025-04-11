@@ -10,7 +10,7 @@ import UIKit
 enum HomeFactory {
     static func build(_ dependency: DI) -> HomeViewController {
         let router = HomeRouter(dependency: dependency)
-        let presenter = HomePresenter(router: router)
+        let presenter = HomePresenter(router: router, dependency: dependency)
         let viewController = HomeViewController(presenter: presenter)
         
         router.viewController = viewController

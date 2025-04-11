@@ -9,14 +9,14 @@ import UIKit
 
 struct HomeViewModel {
     // Модель данных для заголовка с приветствием пользователя
-    let userHeader: UserHeaderView.UserHeaderViewModel
+    var userHeader: UserHeaderView.UserHeaderViewModel
     
     // Модель данных для карусели фильмов
-    let sliderMovies: [PosterCell.PosterCellViewModel]
+    var sliderMovies: [PosterCell.PosterCellViewModel]
     
     // Категории фильмов (жанры)
-    let categories: [String]
+    var categories: [String]
     
     // Фильмы для раздела Box Office
-    let boxOfficeMovies: [MovieSmallCell.MovieSmallCellViewModel]
+    var boxOfficeMovies: [MovieSmallCell.MovieSmallCellViewModel]
 } 

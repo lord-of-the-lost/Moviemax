@@ -112,7 +112,7 @@ final class MovieSmallCell: UITableViewCell {
 extension MovieSmallCell {
     struct MovieSmallCellViewModel {
         let title: String
-        let poster: UIImage
+        var poster: UIImage
         let filmLength: String
         let genre: String
         let rating: String
