@@ -6,11 +6,9 @@
 //
 
 import UIKit
-import SnapKit
 
 // В задаче https://github.com/lord-of-the-lost/Moviemax/issues/8 тут будет более сложное view
 final class DescriptionDetail: UIView {
-        
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -19,12 +17,6 @@ final class DescriptionDetail: UIView {
         return label
     }()
         
-    init(text: String) {
-        super.init(frame: .zero)
-        setupUI()
-        configure(with: text)
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()

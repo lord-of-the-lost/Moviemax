@@ -10,11 +10,13 @@ import SnapKit
 
 final class MovieDetailViewController: UIViewController {
     private let presenter: MovieDetailPresenter
-    private let model: MovieDetailModel
     
-    private lazy var contentView: UIView = UIView()
-    private lazy var movieRatingView: RatingView = RatingView(rating: 3.5)
-    private lazy var movieDescriptionDetail: DescriptionDetail = DescriptionDetail(text: model.descriptionText)
+    private lazy var contentView = UIView()
+    private lazy var movieRatingView = RatingView()
+    private lazy var movieDescriptionDetail = DescriptionDetail()
+    private lazy var movieDateView = MovieDetailView()
+    private lazy var movieDurationView = MovieDetailView()
+    private lazy var movieGenreView = MovieDetailView()
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -23,7 +25,7 @@ final class MovieDetailViewController: UIViewController {
     }()
 
     private lazy var movieImageView: UIImageView = {
-        let view = UIImageView(image: UIImage(resource: .posterPlaceholder))
+        let view = UIImageView()
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 20
         view.clipsToBounds = true
@@ -32,25 +34,15 @@ final class MovieDetailViewController: UIViewController {
     
     private lazy var movieTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = model.title
         label.textAlignment = .center
         label.textColor = .adaptiveTextMain
         label.font = AppFont.plusJakartaSemiBold.withSize(24)
         return label
     }()
     
-    private lazy var movieDateView = MovieDetailView(text: model.date,
-                                                     image: UIImage(resource: .calendar))
-    
-    private lazy var movieDurationView = MovieDetailView(text: model.duration,
-                                                         image: UIImage(resource: .clock))
-    
-    private lazy var movieGenreView = MovieDetailView(text: model.genre,
-                                                      image: UIImage(resource: .clock))
-
     private lazy var movieDescriptionTitle: UILabel = {
         let label = UILabel()
-        label.text = model.descriptionTitle
+        label.text = Constants.Text.movieDescriptionTitle
         label.textAlignment = .left
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
@@ -111,17 +103,28 @@ final class MovieDetailViewController: UIViewController {
         setupUI()
         setupConstraints()
         setupNavigation()
+        presenter.viewDidLoad()
     }
     
-    init(presenter: MovieDetailPresenter, model: MovieDetailModel) {
+    init(presenter: MovieDetailPresenter) {
         self.presenter = presenter
-        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(with model: MovieDetailModel) {
+        movieImageView.image = model.image
+        movieTitleLabel.text = model.title
+        movieRatingView.configure(with: model.rating)
+        movieDescriptionDetail.configure(with: model.descriptionText)
+        movieDateView.configure(with: model.date, image: UIImage(resource: .calendar))
+        movieDurationView.configure(with: model.duration, image: UIImage(resource: .clock))
+        movieGenreView.configure(with: model.genre, image: UIImage(resource: .movie))
+        likeButton.setLiked(model.isFavorite)
     }
 }
 
@@ -270,10 +273,11 @@ private extension MovieDetailViewController {
         
     @objc func likeButtonTapped() {
         likeButton.toggleLike()
+        presenter.likeButtonTapped()
     }
     
     @objc func watchNowButtonTapped() {
-        print("Нажата кнопка Watch Now")
+        presenter.openURLTapped()
     }
 }
 
@@ -283,6 +287,7 @@ private extension MovieDetailViewController {
         enum Text {
             static let movieCastTitle: String = "Cast and Crew"
             static let screenTitle: String = "Movie Detail"
+            static let movieDescriptionTitle: String = "Story Line"
             static let watchButtonTitle: String = "Watch now"
         }
     }

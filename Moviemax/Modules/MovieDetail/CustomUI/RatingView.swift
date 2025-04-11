@@ -8,7 +8,7 @@
 import UIKit
 
 final class RatingView: UIView {
-    private let rating: Double
+    private var rating: Double = 0
     private let maxRating: Int = 5
     private var backgroundStars: [UIImageView] = []
     private var foregroundStars: [UIImageView] = []
@@ -17,17 +17,6 @@ final class RatingView: UIView {
     private lazy var contentView = UIView()
     private lazy var filledStar: UIImage = UIImage(resource: .star).withRenderingMode(.alwaysTemplate)
     private lazy var emptyStar: UIImage = UIImage(resource: .star).withRenderingMode(.alwaysTemplate)
-  
-    init(rating: Double = 0) {
-        self.rating = rating
-        super.init(frame: .zero)
-        setupStars()
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -53,6 +42,11 @@ final class RatingView: UIView {
                 foregroundStars[safe: index]?.isHidden = true
             }
         }
+    }
+    
+    func configure(with rating: Double) {
+        self.rating = rating
+        setupStars()
     }
 }
 

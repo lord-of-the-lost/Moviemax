@@ -6,10 +6,8 @@
 //
 
 import UIKit
-import SnapKit
 
 final class MovieDetailView: UIView {
-    
     private lazy var detailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -32,12 +30,6 @@ final class MovieDetailView: UIView {
         return stackView
     }()
         
-    init(text: String, image: UIImage) {
-        super.init(frame: .zero)
-        setupUI()
-        configure(with: text, image: image)
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()

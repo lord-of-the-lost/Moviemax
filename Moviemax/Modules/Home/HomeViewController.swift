@@ -82,6 +82,8 @@ final class HomeViewController: BaseScrollViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.tabBarController?.tabBar.isHidden = false
         presenter.viewWillAppear()
     }
     
@@ -154,7 +156,6 @@ extension HomeViewController: ChipsViewDelegate {
 private extension HomeViewController {
     func setupView() {
         view.backgroundColor = .appBackground
-        navigationController?.navigationBar.isHidden = true
         contentView.addSubviews(
             userHeaderView,
             filmCellView,
