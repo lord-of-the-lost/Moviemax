@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class HomeViewController: UIViewController {
+final class HomeViewController: BaseScrollViewController {
     // MARK: - Properties
     private let presenter: HomePresenter
     private var viewModel: HomeViewModel?
@@ -60,6 +60,12 @@ final class HomeViewController: UIViewController {
         return label
     }()
     
+    private lazy var filmCellView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
+    }()
+
     init(presenter: HomePresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -167,8 +173,9 @@ private extension HomeViewController {
     func setupView() {
         view.backgroundColor = .appBackground
         navigationController?.navigationBar.isHidden = true
-        view.addSubviews(
+        contentView.addSubviews(
             userHeaderView,
+            filmCellView,
             categoryLabel,
             seeAllButton,
             categoryChipsView,
@@ -181,14 +188,20 @@ private extension HomeViewController {
     
     func setupConstraints() {
         userHeaderView.snp.makeConstraints { 
-            $0.top.equalToSuperview().offset(65)
+            $0.top.equalToSuperview()
             $0.leading.equalToSuperview().offset(24)
             $0.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(40)
         }
         
+        filmCellView.snp.makeConstraints {
+            $0.top.equalTo(userHeaderView.snp.bottom).offset(43)
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(290)
+        }
+        
         categoryLabel.snp.makeConstraints {
-            $0.top.equalTo(userHeaderView.snp.bottom).offset(24)
+            $0.top.equalTo(filmCellView.snp.bottom).offset(60)
             $0.leading.equalToSuperview().offset(24)
         }
   
@@ -215,6 +228,11 @@ private extension HomeViewController {
             $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview().inset(60)
+            $0.height.equalTo(MovieSmallCell.mockData.count * 96 + 20)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.width.equalTo(view.snp.width)
         }
     }
     

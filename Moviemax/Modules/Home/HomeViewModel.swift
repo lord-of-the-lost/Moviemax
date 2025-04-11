@@ -12,7 +12,7 @@ struct HomeViewModel {
     let userHeader: UserHeaderView.UserHeaderViewModel
     
     // Модель данных для карусели фильмов
-    let sliderMovies: [MovieSliderView.MovieViewModel]
+    let sliderMovies: [PosterCell.PosterCellViewModel]
     
     // Категории фильмов (жанры)
     let categories: [String]
