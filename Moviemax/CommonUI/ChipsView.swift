@@ -15,7 +15,7 @@ protocol ChipsViewDelegate: AnyObject {
 final class ChipsView: UIView {
     weak var delegate: ChipsViewDelegate?
     
-    private let items: [String]
+    private var items: [String] = []
     private var selectedIndex: IndexPath = IndexPath(item: 0, section: 0)
     
     private lazy var collectionView: UICollectionView = {
@@ -30,33 +30,37 @@ final class ChipsView: UIView {
             ChipViewCell.self,
             forCellWithReuseIdentifier: ChipViewCell.identifier
         )
+        collectionView.delegate = self
+        collectionView.dataSource = self
         return collectionView
     }()
     
-    init(items: [String]) {
-        self.items = items
+    init() {
         super.init(frame: .zero)
-        setupUI()
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        setupView()
+        setupConstraints()
     }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func configure(with items: [String]) {
+        self.items = items
+        collectionView.reloadData()
+    }
 }
 
 // MARK: - Private methods
 private extension ChipsView {
-    func setupUI() {
+    func setupView() {
         addSubview(collectionView)
-        setupConstraints()
     }
     
     func setupConstraints() {
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        collectionView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
 }
@@ -76,7 +80,7 @@ extension ChipsView: UICollectionViewDataSource {
         
         let isSelected = (indexPath == selectedIndex)
         cell.configure(with: text, selected: isSelected)
-
+        
         return cell
     }
 }

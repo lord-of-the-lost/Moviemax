@@ -14,14 +14,10 @@ enum RecentWatchState {
 }
 
 final class RecentWatchViewController: UIViewController {
-    
     // MARK: Properties
     private let presenter: RecentWatchPresenter
     
-    private lazy var chipsView: ChipsView = {
-        let view = ChipsView(items: presenter.genres)
-        return view
-    }()
+    private lazy var chipsView = ChipsView()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -76,6 +72,14 @@ final class RecentWatchViewController: UIViewController {
         setupUI()
         presenter.viewDidLoad()
         chipsView.delegate = self
+        chipsView.configure(with: presenter.genres)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.tabBarController?.tabBar.isHidden = false
+        presenter.viewWillAppear()
     }
 
     func show(_ state: RecentWatchState) {
@@ -128,6 +132,15 @@ extension RecentWatchViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         presenter.didSelectMovie(at: indexPath.row)
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { [weak self] (_, _, completionHandler) in
+            self?.presenter.removeFromRecentWatch(at: indexPath.row)
+            completionHandler(true)
+        }
+        deleteAction.backgroundColor = .systemRed
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
 }
 
 // MARK: - MovieLargeCellDelegate
@@ -149,11 +162,10 @@ private extension RecentWatchViewController {
     }
     
     func setupConstraints() {
-        
         chipsView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Constraints.smallOffset)
             $0.leading.equalTo(Constants.Constraints.contentInset)
-            $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
+            $0.trailing.equalToSuperview()
             $0.height.equalTo(Constants.Constraints.chipsViewHeight)
         }
         

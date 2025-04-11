@@ -238,7 +238,7 @@ final class MovieRepository {
         let semaphore = DispatchSemaphore(value: 0)
         
         networkService.fetchMovies { [weak self] networkResult in
-            guard let self = self else {
+            guard let self else {
                 semaphore.signal()
                 return
             }
@@ -288,13 +288,13 @@ final class MovieRepository {
             ),
             movieLength: model.movieLength ?? 0,
             premiere: Movie.Premiere(
-                world: model.premiere?.world ?? ""
+                world: model.premiere?.world ?? "01.04.2000"
             ),
             genres: model.genres?.compactMap { Movie.Genre(name: $0.name ?? "") } ?? [],
             type: model.type ?? "",
             rating: Movie.Rating(
-                value: model.rating?.kp ?? 0.0,
-                votesCount: model.votes?.kp ?? 0
+                value: model.rating?.kp ?? Double.random(in: 1...5),
+                votesCount: model.votes?.kp ?? Int.random(in: 20...999)
             ),
             description: model.description ?? "",
             shortDescription: model.shortDescription ?? "",
@@ -310,7 +310,7 @@ final class MovieRepository {
                     enProfession: $0.enProfession ?? ""
                 )
             } ?? [],
-            trailerURL: model.videos?.trailers?.first?.url ?? "",
+            trailerURL: model.videos?.trailers?.first?.url ?? "https://yandex.ru/video/preview/10510689359700548639",
             isFavorite: false,
             isRecent: false
         )

@@ -66,7 +66,7 @@ private extension SettingsPresenter {
             let data,
             let avatarImage = UIImage(data: data)
         else {
-            view?.updateUserAvatar(image: UIImage(resource: .avatar))
+            view?.updateUserAvatar(image: UIImage(resource: .profilePlaceholder))
             return
         }
         view?.updateUserAvatar(image: avatarImage)

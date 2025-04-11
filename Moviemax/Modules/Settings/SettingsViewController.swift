@@ -11,12 +11,7 @@ import SnapKit
 final class SettingsViewController: UIViewController {
     private let presenter: SettingsPresenter
     
-    private lazy var userImageView: UIImageView = {
-        let view = UIImageView()
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 28
-        return view
-    }()
+    private lazy var userImageView = AvatarView(photoImage: UIImage(), isEditable: false)
     
     private lazy var nameUserLabel: UILabel = {
         let label = UILabel()
@@ -483,7 +478,7 @@ extension SettingsViewController {
     }
     
     func updateUserAvatar(image: UIImage) {
-        userImageView.image = image
+        userImageView.updatePhoto(image: image)
     }
     
     func updateAppSettings(isDarkMode: Bool, language: AppLanguage) {

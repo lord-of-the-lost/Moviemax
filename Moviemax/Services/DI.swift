@@ -6,12 +6,9 @@
 //
 
 final class DI {
-    // Core Services
     lazy var coreDataManager = CoreDataManager()
     lazy var imageCacheService = ImageCacheService()
     lazy var networkService = NetworkService(imageCacheService: imageCacheService)
-    
-    // Application Services
     lazy var localizationManager = LocalizationManager(coreDataManager: coreDataManager)
     lazy var themeManager = ThemeManager(coreDataManager: coreDataManager)
     lazy var authService = AuthenticationService(coreDataManager: coreDataManager)
@@ -19,8 +16,6 @@ final class DI {
         coreDataManager: coreDataManager,
         authService: authService
     )
-    
-    // Repositories
     lazy var movieRepository = MovieRepository(
         coreDataManager: coreDataManager,
         networkService: networkService,

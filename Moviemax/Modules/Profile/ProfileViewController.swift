@@ -15,6 +15,7 @@ final class ProfileViewController: UIViewController {
     private lazy var scrollView = UIScrollView()
     private lazy var contentView = UIView()
     private lazy var profilePhotoContainerView = UIView()
+    private lazy var editPhotoView = EditPhotoView()
     
     private lazy var profilePhotoView = AvatarView(
         photoImage: .profilePlaceholder,
@@ -112,6 +113,8 @@ final class ProfileViewController: UIViewController {
     init(presenter: ProfilePresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        profilePhotoView.delegate = self
+        editPhotoView.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -124,10 +127,6 @@ final class ProfileViewController: UIViewController {
         presenter.view = self
         setupUI()
         setupConstraints()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         presenter.loadUserProfile()
     }
 }
@@ -151,9 +150,13 @@ extension ProfileViewController {
         saveButton.isEnabled = true
     }
     
-    func updateUserAvatar(data: Data) {
+    func setupUserAvatar(data: Data) {
         guard let image = UIImage(data: data) else { return }
         profilePhotoView.updatePhoto(image: image)
+    }
+    
+    func showEditPhotoView() {
+        setupEditPhotoView()
     }
 }
 
@@ -161,6 +164,72 @@ extension ProfileViewController {
 extension ProfileViewController: DatePickerViewDelegate {
     func didTapDatePickerView() {
         datePickerContainer.isHidden = false
+    }
+}
+
+// MARK: - AvatarViewDelegate
+extension ProfileViewController: AvatarViewDelegate {
+    func avatarViewDidTapOnPhoto(_ avatarView: AvatarView) {
+        presenter.showEditPhotoView()
+    }
+}
+
+// MARK: - EditPhotoViewDelegate
+extension ProfileViewController: EditPhotoViewDelegate {
+    func editPhotoViewDidTapTakePhoto(_ view: EditPhotoView) {
+        openCamera()
+    }
+    
+    func editPhotoViewDidTapChoosePhoto(_ view: EditPhotoView) {
+        choosePhotoFromLibrary()
+    }
+    
+    func editPhotoViewDidTapDeletePhoto(_ view: EditPhotoView) {
+        deletePhoto()
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+   
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage {
+            profilePhotoView.updatePhoto(image: selectedImage)
+            removeEditPhotoView()
+        }
+        picker.dismiss(animated: true)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+    
+    func openCamera() {
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            presentPhotoLibraryFallback()
+            return
+        }
+        
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .camera
+        present(picker, animated: true)
+    }
+    
+    func choosePhotoFromLibrary() {
+        presentPhotoLibraryFallback()
+    }
+    
+    func deletePhoto() {
+        profilePhotoView.updatePhoto(image: .profilePlaceholder)
+        removeEditPhotoView()
+    }
+    
+    func presentPhotoLibraryFallback() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .photoLibrary
+        present(picker, animated: true)
     }
 }
 
@@ -189,6 +258,17 @@ private extension ProfileViewController {
         
         dateOfBirthPicker.delegate = self
         saveButton.isEnabled = false
+    }
+    
+    func setupEditPhotoView() {
+        view.addSubview(editPhotoView)
+        editPhotoView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    
+    func removeEditPhotoView() {
+        editPhotoView.removeFromSuperview()
     }
     
     func setupConstraints() {
@@ -247,12 +327,12 @@ private extension ProfileViewController {
         datePickerContainer.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
             make.bottom.equalToSuperview()
-            make.height.equalTo(300)
+            make.height.equalTo(Constants.Constraints.datePickerContainerHeight)
         }
         
         datePickerToolbar.snp.makeConstraints { make in
             make.left.top.right.equalToSuperview()
-            make.height.equalTo(44)
+            make.height.equalTo(Constants.Constraints.datePickerToolbarHeight)
         }
         
         datePicker.snp.makeConstraints { make in
@@ -330,6 +410,8 @@ private extension ProfileViewController {
             static let saveButtonHeight: CGFloat = 56
             static let photoSize: CGFloat = 100
             static let pickerHeight: CGFloat = 216
+            static let datePickerContainerHeight: CGFloat = 300
+            static let datePickerToolbarHeight: CGFloat = 44
         }
     }
 }

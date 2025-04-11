@@ -53,7 +53,7 @@ final class ProfilePresenter {
         
         // Устанавливаем аватар пользователя если есть
         if let avatarData = currentUser.avatar {
-            view?.updateUserAvatar(data: avatarData)
+            view?.setupUserAvatar(data: avatarData)
         }
     }
     
@@ -94,6 +94,10 @@ final class ProfilePresenter {
         case .failure:
             view?.showAlert(title: Constants.errorTitle, message: Constants.profileUpdateError)
         }
+    }
+    
+    func showEditPhotoView() {
+        view?.showEditPhotoView()
     }
 }
 

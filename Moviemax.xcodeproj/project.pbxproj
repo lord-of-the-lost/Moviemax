@@ -155,9 +155,11 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MVZ2D7626T;
+				DEVELOPMENT_TEAM = TVNB4R4JHD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Moviemax/Resources/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Для съёмки фото и видео";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Для выбора фото из библиотеки";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -189,9 +191,11 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MVZ2D7626T;
+				DEVELOPMENT_TEAM = TVNB4R4JHD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Moviemax/Resources/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Для съёмки фото и видео";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Для выбора фото из библиотеки";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
