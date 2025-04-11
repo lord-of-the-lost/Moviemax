@@ -21,10 +21,11 @@ final class SearchViewController: UIViewController {
     private lazy var searhView = SearchFieldView()
     
     private lazy var chipsView: ChipsView = {
-        let view = ChipsView(items: presenter.genres)
+        let view = ChipsView()
+        view.configure(with: presenter.genres)
         return view
     }()
-    
+        
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
