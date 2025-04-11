@@ -12,4 +12,11 @@ final class SearchRouter: RouterProtocol {
     init(dependency: DI) {
         self.dependency = dependency
     }
+    
+    func navigateToFilter() {
+        let filterViewController = FilterFactory.build(dependency)
+        filterViewController.modalPresentationStyle = .overFullScreen
+        filterViewController.modalTransitionStyle = .crossDissolve
+        viewController?.present(filterViewController, animated: true)
+    }
 }

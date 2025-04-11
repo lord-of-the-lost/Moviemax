@@ -41,5 +41,6 @@ final class SearchPresenter {
     
     func filterButtonTapped() {
         print(#function)
+        router.navigateToFilter()
     }
 }
