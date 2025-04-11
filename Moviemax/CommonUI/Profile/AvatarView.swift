@@ -7,8 +7,15 @@
 
 import UIKit
 
+
+protocol AvatarViewDelegate: AnyObject {
+    func avatarViewDidTapOnPhoto(_ avatarView: AvatarView)
+}
 final class AvatarView: UIView {
+    
     // MARK: Properties
+    weak var delegate: AvatarViewDelegate?
+    
     private lazy var pencilImageView = UIImageView(image: UIImage(resource: .pencil))
     
     private lazy var photoImageView: UIImageView = {
@@ -47,6 +54,7 @@ private extension AvatarView {
     func setupPhotoImageView(with image: UIImage) {
         photoImageView.image = image
         addSubview(photoImageView)
+        
         photoImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -54,10 +62,18 @@ private extension AvatarView {
     
     func setupPencilImageView() {
         addSubview(pencilImageView)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapPhoto))
+        photoImageView.addGestureRecognizer(tap)
+        photoImageView.isUserInteractionEnabled = true
         pencilImageView.snp.makeConstraints {
             $0.size.equalTo(Constants.pencilSize)
             $0.bottom.right.equalTo(photoImageView)
         }
+    }
+    
+    @objc
+    func didTapPhoto() {
+        delegate?.avatarViewDidTapOnPhoto(self)
     }
 }
 
