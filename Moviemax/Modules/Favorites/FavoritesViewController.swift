@@ -70,6 +70,11 @@ final class FavoritesViewController: UIViewController {
         presenter.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
+    
     func show(_ state: FavoritesState) {
         switch state {
         case .empty:

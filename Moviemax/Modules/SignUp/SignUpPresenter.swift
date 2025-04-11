@@ -62,7 +62,7 @@ final class SignUpPresenter {
         
         switch result {
         case .success:
-            router.navigateToMain()
+        router.navigateToMain()
         case .failure(.emailAlreadyExists):
             view.showAlert(title: Constants.errorTitle, message: Constants.emailExistsError)
         case .failure:

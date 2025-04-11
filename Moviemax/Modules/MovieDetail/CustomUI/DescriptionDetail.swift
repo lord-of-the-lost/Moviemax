@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class DescriptionDetail: UIView {
     private let maxLines: Int = 6

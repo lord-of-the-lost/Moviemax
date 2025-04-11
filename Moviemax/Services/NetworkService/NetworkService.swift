@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - NetworkError
 enum NetworkError: Error {
-    case badURL, requestFailed, invalidData, decodeError
+    case badURL, requestFailed, invalidData, invalidToken, decodeError
 }
 
 // MARK: - HTTPMethods
@@ -20,7 +20,11 @@ enum HTTPMethods: String {
 // MARK: - NetworkService
 final class NetworkService {
     private let baseURL = "https://api.kinopoisk.dev/v1.4"
-    private let apiKey = "5QVH807-GAP49T6-QY0P863-EQW1F83"
+    private let apiKey = "KNWPBBJ-ZE1MWWK-P1P35CB-DSXZDQJ"
+    //220FRRR-ZF0M9VE-JTNC41C-FSB7ATX
+    //5QVH807-GAP49T6-QY0P863-EQW1F83
+    //F6QX0P1-FQTMPFY-PWNT126-KXFHWZK
+    //KNWPBBJ-ZE1MWWK-P1P35CB-DSXZDQJ
     private let imageCacheService: ImageCacheService
     
     init(imageCacheService: ImageCacheService) {
@@ -29,7 +33,24 @@ final class NetworkService {
     
     /// Получить список фильмов
     func fetchMovies(completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
-        let urlString = baseURL + "/movie"
+        var urlComponents = URLComponents(string: baseURL + "/movie")
+        
+        // Добавляем параметры запроса
+        let queryItems = [
+            URLQueryItem(name: "limit", value: "10"),
+            URLQueryItem(name: "notNullFields", value: "id"),
+            URLQueryItem(name: "notNullFields", value: "name"),
+            URLQueryItem(name: "notNullFields", value: "poster.url"),
+            URLQueryItem(name: "notNullFields", value: "description"),
+            URLQueryItem(name: "notNullFields", value: "movieLength"),
+        ]
+        
+        urlComponents?.queryItems = queryItems
+        
+        guard let urlString = urlComponents?.url?.absoluteString else {
+            completion(.failure(.badURL))
+            return
+        }
         
         performRequest(urlString: urlString, completion: completion)
     }
@@ -91,12 +112,19 @@ private extension NetworkService {
         request.setValue(apiKey, forHTTPHeaderField: "X-API-KEY")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
-            if error != nil {
+            guard error == nil else {
                 DispatchQueue.main.async { completion(.failure(.requestFailed)) }
                 return
             }
             
-            guard let data = data else {
+            guard
+                let response = response as? HTTPURLResponse,
+                response.statusCode != 401 else {
+                DispatchQueue.main.async { completion(.failure(.invalidToken)) }
+                return
+            }
+            
+            guard let data else {
                 DispatchQueue.main.async { completion(.failure(.invalidData)) }
                 return
             }

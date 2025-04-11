@@ -75,41 +75,24 @@ final class HomeViewController: BaseScrollViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateTableViewHeight()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.tabBarController?.tabBar.isHidden = false
+        presenter.viewWillAppear()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.view = self
         setupView()
         setupConstraints()
         presenter.viewDidLoad()
-        
-        //MOCK
-        userHeaderView.configure(
-            with: UserHeaderView.UserHeaderViewModel(
-                greeting: "Hi, Andy",
-                status: "only streaming movie lovers",
-                avatar: .avatar
-            )
-        )
-        categoryChipsView.configure(
-            with: [
-                "All",
-                "Action",
-                "Adventure",
-                "Animation",
-                "Biography",
-                "Comedy",
-                "Drama",
-                "Fantasy",
-                "History",
-                "Horror",
-                "Music",
-                "Romance",
-                "Science Fiction",
-                "Thriller",
-                "War",
-                "Western"
-            ]
-        )
     }
 }
 
@@ -125,13 +108,13 @@ extension HomeViewController {
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        MovieSmallCell.mockData.count
+        viewModel?.boxOfficeMovies.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard 
             let cell = tableView.dequeueReusableCell(withIdentifier: MovieSmallCell.identifier, for: indexPath) as? MovieSmallCell,
-            let model = MovieSmallCell.mockData[safe: indexPath.row]
+            let model = viewModel?.boxOfficeMovies[safe: indexPath.row]
         else {
             return UITableViewCell()
         }
@@ -148,7 +131,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.didTapMovie(at: indexPath.row)
 
     }
 }
@@ -157,7 +140,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension HomeViewController: MovieSmallCellDelegate {
     func likeTapped(_ cell: MovieSmallCell) {
-        
+        guard let index = boxOfficeTableView.indexPath(for: cell)?.row else { return }
+        presenter.likeButtonTapped(at: index)
     }
 }
 
@@ -172,7 +156,6 @@ extension HomeViewController: ChipsViewDelegate {
 private extension HomeViewController {
     func setupView() {
         view.backgroundColor = .appBackground
-        navigationController?.navigationBar.isHidden = true
         contentView.addSubviews(
             userHeaderView,
             filmCellView,
@@ -184,7 +167,15 @@ private extension HomeViewController {
         )
         categoryChipsView.delegate = self
     }
-
+    
+    func updateTableViewHeight() {
+        boxOfficeTableView.snp.remakeConstraints {
+            $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(60)
+            $0.height.equalTo((viewModel?.boxOfficeMovies.count ?? 0) * 96 + 20)
+        }
+    }
     
     func setupConstraints() {
         userHeaderView.snp.makeConstraints { 
@@ -222,13 +213,6 @@ private extension HomeViewController {
         seeAllButton.snp.makeConstraints {
             $0.top.equalTo(categoryChipsView.snp.bottom).offset(24)
             $0.trailing.equalToSuperview().inset(24)
-        }
-        
-        boxOfficeTableView.snp.makeConstraints { 
-            $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(60)
-            $0.height.equalTo(MovieSmallCell.mockData.count * 96 + 20)
         }
         
         contentView.snp.makeConstraints {

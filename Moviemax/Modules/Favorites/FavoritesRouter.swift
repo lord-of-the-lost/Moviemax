@@ -13,9 +13,8 @@ final class FavoritesRouter: RouterProtocol {
         self.dependency = dependency
     }
     
-    /// Навигация к деталям фильма
-    func showMovieDetails(_ movie: MovieLargeCell.MovieLargeCellViewModel) {
-        // let detailsVC = MovieDetailsFactory.build(movie, dependency)
-        // viewController?.navigationController?.pushViewController(detailsVC, animated: true)
+    func showMovieDetails(_ movie: Movie) {
+        let detailsVC = MovieDetailFactory.build(model: movie, dependency: dependency)
+        viewController?.navigationController?.pushViewController(detailsVC, animated: true)
     }
 }

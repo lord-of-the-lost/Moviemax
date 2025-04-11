@@ -122,7 +122,7 @@ final class MovieLargeCell: UITableViewCell {
 extension MovieLargeCell {
     struct MovieLargeCellViewModel {
         let title: String
-        let poster: UIImage
+        var poster: UIImage
         let filmLength: String
         let reliseDate: String
         let genre: String
