@@ -25,6 +25,7 @@ final class MovieDetailPresenter {
     
     func viewDidLoad() {
         setupView(with: model)
+        addToRecentWatch()
     }
     
     func openURLTapped() {
@@ -89,6 +90,17 @@ private extension MovieDetailPresenter {
             case .failure:
                 completion(UIImage(resource: .posterPlaceholder))
             }
+        }
+    }
+    
+    private func addToRecentWatch() {
+        let result = movieRepository.addToRecentlyWatched(movie: model)
+        
+        if case .failure(let error) = result {
+            view?.showAlert(
+                title: "Ошибка",
+                message: "Не удалось добавить фильм в недавно просмотренные: \(error.localizedDescription)"
+            )
         }
     }
 }
