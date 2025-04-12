@@ -38,6 +38,7 @@ final class ForgotPassViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter.view = self
         setupUI()
         setupConstraints()
         setupNavigation()
@@ -102,7 +103,7 @@ private extension ForgotPassViewController {
     }
     
     @objc func submitButtonTapped() {
-        print(#function)
+        presenter.submitButtonAction()
     }
 }
 

@@ -71,4 +71,8 @@ final class AuthenticationService {
     func shouldAutoLogout() -> Bool {
         return !shouldRememberUser
     }
+    
+    func getUserByEmail(email: String) -> UserEntity? {
+        coreDataManager.getUser(by: email)
+    }
 }
