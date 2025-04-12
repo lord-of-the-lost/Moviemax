@@ -194,7 +194,7 @@ extension HomeViewController: MovieSmallCellDelegate {
 // MARK: - ChipsViewDelegate
 extension HomeViewController: ChipsViewDelegate {
     func chipsView(_ chipsView: ChipsView, didSelectItemAt index: Int, value: String) {
-        presenter.filterMoviesWith(query: value)
+        print(#function, "selected: \(value)")
     }
 }
 
