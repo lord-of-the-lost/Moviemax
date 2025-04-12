@@ -97,5 +97,3 @@ extension ChipsView: UICollectionViewDelegate {
         }
     }
 }
-
-
