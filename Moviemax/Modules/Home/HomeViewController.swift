@@ -261,7 +261,7 @@ private extension HomeViewController {
     }
     
     @objc func seeAllButtonTapped() {
-        
+        presenter.showAllMovies()
     }
 }
 
