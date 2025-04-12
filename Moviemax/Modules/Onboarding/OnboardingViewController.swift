@@ -65,6 +65,9 @@ final class OnboardingViewController: UIViewController {
         return button
     }()
     
+    private lazy var swipeLeft = UISwipeGestureRecognizer()
+    private lazy var swipeRight = UISwipeGestureRecognizer()
+
     //MARK: Init
     init(presenter: OnboardingPresenter) {
         self.presenter = presenter
@@ -81,6 +84,7 @@ final class OnboardingViewController: UIViewController {
         super.viewDidLoad()
         presenter.view = self
         setupUI()
+        setupGestures()
         presenter.viewDidLoad()
     }
 }
@@ -102,6 +106,14 @@ private extension OnboardingViewController {
     
     @objc func nextButtonTapped() {
         presenter.nextButtonTapped()
+    }
+    
+    @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+        if gesture == swipeLeft {
+            presenter.nextButtonTapped()
+        } else {
+            presenter.prevButtonTapped()
+        }
     }
     
     func setupUI() {
@@ -175,6 +187,16 @@ private extension OnboardingViewController {
             make.height.equalTo(Constants.Constraints.nextButtonHeight)
             make.width.equalTo(Constants.Constraints.nextButtonWidth)
         }
+    }
+    
+    func setupGestures() {
+        swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
+        
+        swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 

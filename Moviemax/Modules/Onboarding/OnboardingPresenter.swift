@@ -57,6 +57,17 @@ final class OnboardingPresenter {
         }
         view?.updateView(with: model)
     }
+    
+    func prevButtonTapped() {
+        currentPageIndex -= 1
+        guard let model = pageModels[safe: currentPageIndex] else {
+            if currentPageIndex > 2 {
+                router.navigateToAuth()
+            }
+            return
+        }
+        view?.updateView(with: model)
+    }
 }
 
 
