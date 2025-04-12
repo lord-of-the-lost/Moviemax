@@ -60,10 +60,20 @@ final class HomeViewController: BaseScrollViewController {
         return label
     }()
     
-    private lazy var filmCellView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-        return view
+    private lazy var posterCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset.left = 20
+        layout.itemSize = CGSize(width: Constants.Size.cellWidth, height: Constants.Size.cellHeight)
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .white
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(PosterCell.self, forCellWithReuseIdentifier: PosterCell.identifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
     }()
 
     init(presenter: HomePresenter) {
@@ -102,6 +112,7 @@ extension HomeViewController {
         userHeaderView.configure(with: viewModel.userHeader)
         categoryChipsView.configure(with: viewModel.categories)
         boxOfficeTableView.reloadData()
+        posterCollectionView.reloadData()
     }
 }
 
@@ -132,12 +143,41 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.didTapMovie(at: indexPath.row)
+    }
+}
 
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        viewModel?.sliderMovies.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PosterCell.identifier, for: indexPath) as? PosterCell,
+            let model = viewModel?.sliderMovies[safe: indexPath.row]
+        else { return UICollectionViewCell() }
+        cell.configure(with: model)
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter.didTapMovie(at: indexPath.row)
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let itemWidthWithSpacing = Constants.Size.cellWidth + Constants.Size.cellSpacing
+        let currentItem = Int(targetContentOffset.pointee.x / itemWidthWithSpacing)
+        let newHorizontalOffset = CGFloat(currentItem) * itemWidthWithSpacing
+        targetContentOffset.pointee = CGPoint(x: newHorizontalOffset, y: 0)
     }
 }
 
 // MARK: - MovieSmallCellDelegate
-
 extension HomeViewController: MovieSmallCellDelegate {
     func likeTapped(_ cell: MovieSmallCell) {
         guard let index = boxOfficeTableView.indexPath(for: cell)?.row else { return }
@@ -158,7 +198,7 @@ private extension HomeViewController {
         view.backgroundColor = .appBackground
         contentView.addSubviews(
             userHeaderView,
-            filmCellView,
+            posterCollectionView,
             categoryLabel,
             seeAllButton,
             categoryChipsView,
@@ -185,14 +225,14 @@ private extension HomeViewController {
             $0.height.equalTo(40)
         }
         
-        filmCellView.snp.makeConstraints {
+        posterCollectionView.snp.makeConstraints {
             $0.top.equalTo(userHeaderView.snp.bottom).offset(43)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(290)
         }
         
         categoryLabel.snp.makeConstraints {
-            $0.top.equalTo(filmCellView.snp.bottom).offset(60)
+            $0.top.equalTo(posterCollectionView.snp.bottom).offset(60)
             $0.leading.equalToSuperview().offset(24)
         }
   
@@ -231,5 +271,11 @@ private extension HomeViewController {
         static let seeAllText = "See All"
         static let boxOfficeText = "Box Office"
         static let category = "Category"
+        
+        enum Size {
+            static let cellWidth: CGFloat = 300
+            static let cellHeight: CGFloat = 280
+            static let cellSpacing: CGFloat = 10
+        }
     }
 }

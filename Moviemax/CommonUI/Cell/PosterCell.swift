@@ -8,6 +8,8 @@
 import UIKit
 
 final class PosterCell: UICollectionViewCell {
+    static let identifier = MovieSmallCell.description()
+    
     private lazy var movieImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
@@ -68,9 +70,9 @@ private extension PosterCell {
     
     func setupConstraints() {
         movieImage.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(50)
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(-50)
+            $0.bottom.equalToSuperview()
         }
         
         categoryLabel.snp.makeConstraints {

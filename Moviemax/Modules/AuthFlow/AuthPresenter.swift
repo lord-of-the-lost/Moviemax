@@ -45,8 +45,11 @@ final class AuthPresenter {
             return
         }
         
+        // Получаем состояние чекбокса "Remember Me"
+        let rememberMe = view.isRememberMeChecked()
+        
         // Авторизация пользователя
-        let result = authService.login(email: email, password: password)
+        let result = authService.login(email: email, password: password, rememberMe: rememberMe)
         
         switch result {
         case .success:

@@ -10,7 +10,7 @@ import UIKit
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    private let dependency = DI()
+    let dependency = DI()
     
     func application(
         _ application: UIApplication,
@@ -26,6 +26,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window?.makeKeyAndVisible()
         return true
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Проверяем, нужно ли выполнить автоматический выход
+        if dependency.authService.shouldAutoLogout() {
+            dependency.authService.logout()
+        }
     }
 }
 

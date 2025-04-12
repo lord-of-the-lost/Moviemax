@@ -235,6 +235,11 @@ private extension HomePresenter {
         if index < viewModel.boxOfficeMovies.count {
             viewModel.boxOfficeMovies[index].poster = image
         }
+        
+        if index < viewModel.sliderMovies.count {
+            viewModel.sliderMovies[index].image = image
+        }
+        
         self.viewModel = viewModel
         // Отправляем обновленную модель на вью
         DispatchQueue.main.async {

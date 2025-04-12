@@ -14,6 +14,7 @@ enum AuthError: Error {
 
 final class AuthenticationService {
     private let coreDataManager: CoreDataManager
+    private var shouldRememberUser: Bool = true
     
     var isAuthorized: Bool {
         coreDataManager.getAppStateModel().currentUser != nil
@@ -23,7 +24,7 @@ final class AuthenticationService {
         self.coreDataManager = coreDataManager
     }
     
-    func login(email: String, password: String) -> Result<User, AuthError> {
+    func login(email: String, password: String, rememberMe: Bool = true) -> Result<User, AuthError> {
         guard let userEntity = coreDataManager.getUser(by: email) else {
             return .failure(.userNotFound)
         }
@@ -31,6 +32,8 @@ final class AuthenticationService {
         guard userEntity.password == password else {
             return .failure(.invalidPassword)
         }
+        
+        shouldRememberUser = rememberMe
         
         let user = coreDataManager.convertToUser(userEntity)
         var appState = coreDataManager.getAppStateModel()
@@ -63,5 +66,9 @@ final class AuthenticationService {
     
     func getCurrentUser() -> User? {
         coreDataManager.getAppStateModel().currentUser
+    }
+    
+    func shouldAutoLogout() -> Bool {
+        return !shouldRememberUser
     }
 }

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class SettingsViewController: UIViewController {
     private let presenter: SettingsPresenter
@@ -33,7 +32,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var personalInfoLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.personalInfo
         label.font = AppFont.plusJakartaMedium.withSize(12)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -49,7 +47,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var profileLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.profile
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -71,7 +68,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var securityInfoLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.securityInfo
         label.font = AppFont.plusJakartaMedium.withSize(12)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -87,7 +83,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var changePassLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.changePassword
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -109,7 +104,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var forgotPassLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.forgotPassword
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -131,7 +125,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var darkModeLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.darkMode
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -154,7 +147,6 @@ final class SettingsViewController: UIViewController {
     
     private lazy var languageLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.language
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .left
@@ -162,16 +154,15 @@ final class SettingsViewController: UIViewController {
         return label
     }()
     
-    private lazy var languagePicker: UIPickerView = {
-        let picker = UIPickerView()
-        picker.delegate = self
-        picker.dataSource = self
-        return picker
+    private lazy var languageSwitch: UISwitch = {
+        let languageSwitch = UISwitch()
+        languageSwitch.onTintColor = .accent
+        languageSwitch.addTarget(self, action: #selector(languageSwitchChanged), for: UIControl.Event.valueChanged)
+        return languageSwitch
     }()
     
     private lazy var logOutButton: UIButton = {
         let button = UIButton()
-        button.setTitle(Constants.Text.logOut, for: .normal)
         button.setTitleColor(.accent, for: .normal)
         button.addTarget(self, action: #selector(logOutButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 30
@@ -179,8 +170,6 @@ final class SettingsViewController: UIViewController {
         button.layer.borderWidth = 1
         return button
     }()
-    
-    private let languages = ["system", "russian", "english"]
     
     init(presenter: SettingsPresenter) {
         self.presenter = presenter
@@ -203,13 +192,13 @@ final class SettingsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         presenter.viewWillAppear()
+        updateLocalizedTexts()
     }
 }
 
 // MARK: - Private Methods
 private extension SettingsViewController {
     func setupUI() {
-        navigationItem.title = Constants.Text.screenTitle
         view.backgroundColor = .appBackground
         
         view.addSubviews(
@@ -233,7 +222,7 @@ private extension SettingsViewController {
             darkModeSwitch,
             languageImageView,
             languageLabel,
-            languagePicker,
+            languageSwitch,
             logOutButton
         )
     }
@@ -362,11 +351,10 @@ private extension SettingsViewController {
             $0.height.equalTo(24)
         }
         
-        languagePicker.snp.makeConstraints {
-            $0.centerY.equalTo(languageLabel.snp.centerY)
+        languageSwitch.snp.makeConstraints {
+            $0.top.equalTo(languageLabel.snp.top)
+            $0.bottom.equalTo(languageLabel.snp.bottom)
             $0.right.equalToSuperview().offset(-24)
-            $0.width.equalTo(150)
-            $0.height.equalTo(100)
         }
         
         logOutButton.snp.makeConstraints {
@@ -393,6 +381,18 @@ private extension SettingsViewController {
         )
     }
     
+    func updateLocalizedTexts() {
+        navigationItem.title = TextConstants.Settings.screenTitle.localized()
+        personalInfoLabel.text = TextConstants.Settings.personalInfo.localized()
+        profileLabel.text = TextConstants.Settings.profile.localized()
+        securityInfoLabel.text = TextConstants.Settings.securityInfo.localized()
+        changePassLabel.text = TextConstants.Settings.changePassword.localized()
+        forgotPassLabel.text = TextConstants.Settings.forgotPassword.localized()
+        darkModeLabel.text = TextConstants.Settings.darkMode.localized()
+        languageLabel.text = TextConstants.Settings.useRussian.localized()
+        logOutButton.setTitle(TextConstants.Settings.logout.localized(), for: .normal)
+    }
+    
     @objc func profileButtonTapped() {
         presenter.showProfileTapped()
     }
@@ -409,6 +409,11 @@ private extension SettingsViewController {
         presenter.toggleDarkMode(isEnabled: darkModeSwitch.isOn)
     }
     
+    @objc func languageSwitchChanged() {
+        let language: AppLanguage = languageSwitch.isOn ? .russian : .english
+        presenter.setLanguage(language: language)
+    }
+    
     @objc func logOutButtonTapped() {
         presenter.logOutTapped()
     }
@@ -420,53 +425,8 @@ private extension SettingsViewController {
     
     @objc private func languageChanged(_ notification: Notification) {
         guard let language = notification.object as? AppLanguage else { return }
-        let languageIndex = languages.firstIndex(of: language.rawValue) ?? 0
-        languagePicker.selectRow(languageIndex, inComponent: 0, animated: true)
-    }
-}
-
-// MARK: - Constants
-private extension SettingsViewController {
-    enum Constants {
-        enum Text {
-            static let screenTitle = "Settings"
-            static let personalInfo = "Personal Info"
-            static let profile = "Profile"
-            static let securityInfo = "Security Info"
-            static let changePassword = "Change Password"
-            static let forgotPassword = "Forgot Password"
-            static let darkMode = "Dark Mode"
-            static let language = "Language"
-            static let system = "system"
-            static let russian = "russian"
-            static let english = "english"
-            static let logOut = "Log Out"
-        }
-    }
-}
-
-extension SettingsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        3
-    }
-
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch row {
-        case 0: Constants.Text.system
-        case 1: Constants.Text.russian
-        case 2: Constants.Text.english
-        default: Constants.Text.system
-        }
-    }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedLanguage = languages[row]
-        let appLanguage = AppLanguage(rawValue: selectedLanguage) ?? .english
-        presenter.setLanguage(language: appLanguage)
+        languageSwitch.isOn = (language == .russian)
+        updateLocalizedTexts()
     }
 }
 
@@ -483,8 +443,7 @@ extension SettingsViewController {
     
     func updateAppSettings(isDarkMode: Bool, language: AppLanguage) {
         darkModeSwitch.isOn = isDarkMode
-        
-        let languageIndex = languages.firstIndex(of: language.rawValue) ?? 0
-        languagePicker.selectRow(languageIndex, inComponent: 0, animated: false)
+        languageSwitch.isOn = (language == .russian)
+        updateLocalizedTexts()
     }
 }

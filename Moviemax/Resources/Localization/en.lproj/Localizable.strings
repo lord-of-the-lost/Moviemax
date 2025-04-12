@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  Moviemax
+
+  Created by Николай Игнатов on 12.04.2025.
+  
+*/
+
+// Common
+"ok" = "OK";
+"cancel" = "Cancel";
+"error" = "Error";
+"success" = "Success";
+
+// Settings Module
+"settings" = "Settings";
+"personalInfo" = "Personal Info";
+"profile" = "Profile";
+"securityInfo" = "Security Info";
+"changePassword" = "Change Password";
+"forgotPassword" = "Forgot Password";
+"darkMode" = "Dark Mode";
+"useRussian" = "Use Russian language";
+"logout" = "Log Out";
