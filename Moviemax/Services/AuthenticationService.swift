@@ -75,4 +75,17 @@ final class AuthenticationService {
     func getUserByEmail(email: String) -> UserEntity? {
         coreDataManager.getUser(by: email)
     }
+    
+    func changePass(newPass: String) -> Bool {
+        guard
+            let currentUser = coreDataManager.getAppStateModel().currentUser,
+            let currentUserEnity = coreDataManager.getUser(by: currentUser.email)
+        else {
+            return false
+        }
+        let newUserEnity = currentUserEnity
+        newUserEnity.password = newPass
+        coreDataManager.updateUser(newUserEnity, with: currentUser)
+        return true
+    }
 }

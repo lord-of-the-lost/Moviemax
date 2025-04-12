@@ -398,7 +398,7 @@ private extension SettingsViewController {
     }
     
     @objc func changePassButtonTapped() {
-        print("Change Password")
+        presenter.showChangePassTapped()
     }
     
     @objc func forgotPassButtonTapped() {
