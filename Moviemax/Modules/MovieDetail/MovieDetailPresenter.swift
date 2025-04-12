@@ -58,6 +58,16 @@ private extension MovieDetailPresenter {
     }
     
     func map(_ model: Movie, completion: @escaping (MovieDetailModel) -> Void) {
+        let result = movieRepository.isFavorite(movie: model)
+        
+        let isLiked: Bool
+        switch result {
+        case .success(let liked):
+            isLiked = liked
+        case .failure:
+            isLiked = false
+        }
+        
         loadMovieImage(for: model) { image in
             let detailModel = MovieDetailModel(
                 title: model.name,
@@ -67,7 +77,7 @@ private extension MovieDetailPresenter {
                 genre: model.genres.first?.name ?? "Unknown",
                 rating: model.rating.value,
                 descriptionText: model.description,
-                isFavorite: model.isFavorite
+                isFavorite: isLiked
             )
             completion(detailModel)
         }

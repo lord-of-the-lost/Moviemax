@@ -33,7 +33,8 @@ final class FavoritesPresenter {
     }
     
     func didSelectMovie(at index: Int) {
-
+        guard let movie = favoriteMovies[safe: index] else { return }
+        router.showMovieDetails(movie)
     }
     
     func likeButtonTapped(at index: Int) {
