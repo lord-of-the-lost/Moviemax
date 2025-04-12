@@ -53,6 +53,10 @@ final class HomePresenter {
         guard let movie = movies[safe: index] else { return }
         router.showMovieDetails(movie: movie)
     }
+    
+    func showAllMovies() {
+        router.showAllMovies()
+    }
 }
 
 // MARK: - Private Methods

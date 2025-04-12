@@ -21,6 +21,11 @@ final class HomeRouter: RouterProtocol {
         viewController?.navigationController?.pushViewController(detailsVC, animated: true)
     }
     
+    func showAllMovies() {
+        let allMoviesVC = SeeAllFactory.build(dependency)
+        viewController?.navigationController?.pushViewController(allMoviesVC, animated: true)
+    }
+    
     func showBoxOfficeMovies() {
      
     }
