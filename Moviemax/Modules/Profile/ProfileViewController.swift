@@ -7,11 +7,13 @@
 
 import UIKit
 
-final class ProfileViewController: BaseScrollViewController {
+final class ProfileViewController: UIViewController {
     
     // MARK: - Properties
     private let presenter: ProfilePresenter
     
+    private lazy var scrollView = UIScrollView()
+    private lazy var contentView = UIView()
     private lazy var profilePhotoContainerView = UIView()
     private lazy var editPhotoView = EditPhotoView()
     
@@ -237,7 +239,8 @@ private extension ProfileViewController {
         navigationItem.title = Constants.Text.screenName
         view.backgroundColor = .appBackground
         
-        view.addSubviews(datePickerContainer)
+        view.addSubviews(scrollView, datePickerContainer)
+        scrollView.addSubview(contentView)
         contentView.addSubview(stackView)
         profilePhotoContainerView.addSubview(profilePhotoView)
         datePickerContainer.addSubviews(datePickerToolbar, datePicker)
@@ -269,6 +272,15 @@ private extension ProfileViewController {
     }
     
     func setupConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+        
         stackView.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(Constants.Constraints.stackViewOffsetInset)
             make.right.equalToSuperview().inset(Constants.Constraints.stackViewOffsetInset)
