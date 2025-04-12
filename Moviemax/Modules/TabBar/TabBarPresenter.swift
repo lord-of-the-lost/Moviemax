@@ -89,5 +89,6 @@ private extension TabBarPresenter {
             favoritesNavigation,
             settingsNavigation
         ], animated: false)
+        view.selectedIndex = 2
     }
 }

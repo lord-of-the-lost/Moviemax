@@ -17,6 +17,6 @@ final class LaunchPresenter {
     }
     
     func viewDidFinishAnimate() {
-        router.navigateToOnboarding()
+        router.navigateToTabbar()
     }
 }

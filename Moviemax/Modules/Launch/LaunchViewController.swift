@@ -92,7 +92,7 @@ private extension LaunchViewController {
 private extension LaunchViewController {
     enum Constants {
         enum Animation {
-            static let duration: TimeInterval = 2.0
+            static let duration: TimeInterval = 1
         }
         enum Constraints {
             enum Logo {

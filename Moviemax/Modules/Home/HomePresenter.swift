@@ -57,6 +57,19 @@ final class HomePresenter {
     func showAllMovies() {
         router.showAllMovies()
     }
+    
+    //TODO: Тут обновляется viewModel, но картинки заново из интернета не загружаются, а больше их взять неоткуда (?)
+    func filterMoviesWith(query: String) {
+        guard !query.isEmpty else { return }
+        if query == "All" {
+            let boxOfficeMovies = movies.map { mapMovieToMovieSmallCellViewModel($0) }
+            updateViewModel(boxOfficeMovies: boxOfficeMovies)
+            return
+        }
+        let filteredMovies: [Movie] = movies.filter({$0.genres.first?.name == query})
+        let boxOfficeMovies = filteredMovies.map { mapMovieToMovieSmallCellViewModel($0) }
+        updateViewModel(boxOfficeMovies: boxOfficeMovies)
+    }
 }
 
 // MARK: - Private Methods
@@ -80,6 +93,7 @@ private extension HomePresenter {
             let result = movieRepository.getPopularMovies()
             
             DispatchQueue.main.async {
+                self.view?.hideLoadingIndicator()
                 switch result {
                 case .success(let movies):
                     self.movies = movies
