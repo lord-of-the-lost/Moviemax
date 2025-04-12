@@ -147,6 +147,10 @@ final class AuthViewController: BaseScrollViewController {
     func getPassword() -> String? {
         passwordField.getText()
     }
+    
+    func isRememberMeChecked() -> Bool {
+        rememberMeCheckbox.isOn
+    }
 }
 
 // MARK: - Private Methods

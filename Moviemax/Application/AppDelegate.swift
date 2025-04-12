@@ -27,6 +27,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         return true
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Проверяем, нужно ли выполнить автоматический выход
+        if dependency.authService.shouldAutoLogout() {
+            dependency.authService.logout()
+        }
+    }
 }
 
 // MARK: - Private Methods
