@@ -136,3 +136,28 @@
 // Search
 "search" = "Поиск";
 "noMovies" = "Ничего не найдено";
+
+// FilterView
+"filterTitle" = "Фильтр";
+"resetFilters" = "Сбросить фильтры";
+"categories" = "Жанры";
+"starRating" = "Рейтинг";
+"applyFilterButton" = "Применить фильтры";
+
+// Categories
+"all" = "Все";
+"action" = "Экшен";
+"adventure" = "Приключение";
+"mystery" = "Мистика";
+"fantasy" = "Фентези";
+"others" = "Другие";
+"animation" = "Мультфильм";
+"biography" = "Биография";
+"drama" = "Драма";
+"history" = "Исторический";
+"music" = "Музыка";
+"romance" = "Романтика";
+"scienceFiction" = "Научпоп";
+"thriller" = "Триллер";
+"war" = "Военный";
+"western" = "Вестерн";

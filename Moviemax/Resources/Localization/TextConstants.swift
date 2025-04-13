@@ -220,4 +220,31 @@ enum TextConstants {
         static let emptyStateTitle = "noMovies"
         static let emptyStateDescription = ""
     }
+    
+    enum FilterView {
+        static let filterTitle = "filterTitle"
+        static let resetFilters = "resetFilters"
+        static let categories = "categories"
+        static let starRating =  "starRating"
+        static let applyFilterButton = "applyFilterButton" 
+    }
+    
+    enum Genres {
+        static let all = "all"
+        static let action = "action"
+        static let adventure = "adventure"
+        static let mystery = "mystery"
+        static let fantasy = "fantasy"
+        static let others = "others"
+        static let animation = "animation"
+        static let biography = "biography"
+        static let drama = "drama"
+        static let history = "history"
+        static let music = "music"
+        static let romance = "romance"
+        static let scienceFiction = "scienceFiction"
+        static let thriller = "thriller"
+        static let war = "war"
+        static let western = "western"
+    }
 }

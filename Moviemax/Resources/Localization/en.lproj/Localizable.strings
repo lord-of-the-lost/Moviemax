@@ -137,3 +137,29 @@
 // Search
 "search" = "Search";
 "noMovies" = "No movies found";
+
+// FilterView
+"filterTitle" = "Filter";
+"resetFilters" = "Reset Filters";
+"categories" = "Categories";
+"starRating" = "Star Rating";
+"applyFilterButton" = "Apply Filters";
+
+// Genres
+"all" = "All";
+"action" = "Action";
+"adventure" = "Adventure";
+"mystery" = "Mystery";
+"fantasy" = "Fantasy";
+"others" = "Others";
+"animation" = "Animation";
+"biography" = "Biography";
+"drama" = "Drama";
+"history" = "History";
+"music" = "Music";
+"romance" = "Romance";
+"scienceFiction" = "Science Fiction";
+"thriller" = "Thriller";
+"war" = "War";
+"western" = "Western";
+

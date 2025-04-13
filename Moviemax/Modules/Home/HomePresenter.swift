@@ -127,7 +127,7 @@ private extension HomePresenter {
         let boxOfficeMovies = movies.map { mapMovieToMovieSmallCellViewModel($0) }
         
         // Формируем категории фильмов на основе жанров
-        let categories = ["All"] + extractUniqueCategories(from: movies)
+        let categories = [TextConstants.Genres.all.localized()] + extractUniqueCategories(from: movies)
         
         // Обновляем вью модель
         updateViewModel(
