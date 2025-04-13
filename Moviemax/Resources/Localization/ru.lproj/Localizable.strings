@@ -35,3 +35,8 @@
 "errorEmptyFields" = "Пожалуйста, заполните все поля";
 "doneButtonTitle" = "Готово";
 "cancelButtonTitle" = "Отмена";
+
+//RecentWatch Module
+"screenTitle" = "Недавно просмотренные";
+"emptyStateTitle" = "Вы ещё не посмотрели ни одного фильма";
+"emptyStateDescription" = "Здесь появятся фильмы, которые вы недавно посмотрели";

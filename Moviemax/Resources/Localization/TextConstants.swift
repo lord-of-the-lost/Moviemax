@@ -31,16 +31,22 @@ enum TextConstants {
     }
     
     enum Profile {
-        static let saveButtonTitle: String = "saveButtonTitle"
-        static let screenName: String = "screenName"
-        static let firstNameLabel: String = "firstName"
-        static let lastNameLabel: String = "lastName"
-        static let emailLabel: String = "email"
-        static let dateOfBirthLabel: String = "dateOfBirth"
-        static let locationLabel: String = "location"
-        static let errorTitle: String = "errorTitle"
-        static let errorEmptyFields: String = "errorEmptyFields"
-        static let doneButtonTitle: String = "doneButtonTitle"
-        static let cancelButtonTitle: String = "cancelButtonTitle"
+        static let saveButtonTitle = "saveButtonTitle"
+        static let screenName = "screenName"
+        static let firstNameLabel = "firstName"
+        static let lastNameLabel = "lastName"
+        static let emailLabel = "email"
+        static let dateOfBirthLabel = "dateOfBirth"
+        static let locationLabel = "location"
+        static let errorTitle = "errorTitle"
+        static let errorEmptyFields = "errorEmptyFields"
+        static let doneButtonTitle = "doneButtonTitle"
+        static let cancelButtonTitle = "cancelButtonTitle"
+    }
+    
+    enum RecentWatch {
+        static let screenTitle = "screenTitle"
+        static let emptyStateTitle = "emptyStateTitle"
+        static let emptyStateDescription = "emptyStateDescription"
     }
 }

@@ -35,3 +35,8 @@
 "errorEmptyFields" = "Please fill in all fields";
 "doneButtonTitle" = "Done";
 "cancelButtonTitle" = "Cancel";
+
+//RecentWatch Module
+"screenTitle" = "Recent Watch";
+"emptyStateTitle" = "You haven't seen any movies yet.";
+"emptyStateDescription" = "Movies that you have watched recently will appear here.";

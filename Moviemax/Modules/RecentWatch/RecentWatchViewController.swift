@@ -37,7 +37,7 @@ final class RecentWatchViewController: UIViewController {
     
     private lazy var emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateTitle
+        label.text = TextConstants.RecentWatch.emptyStateTitle.localized()
         label.font = AppFont.plusJakartaBold.withSize(24)
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -46,7 +46,7 @@ final class RecentWatchViewController: UIViewController {
     
     private lazy var emptyStateDescription: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateDescription
+        label.text = TextConstants.RecentWatch.emptyStateDescription.localized()
         label.font = AppFont.montserratMedium.withSize(16)
         label.textAlignment = .center
         label.textColor = .gray
@@ -154,7 +154,7 @@ extension RecentWatchViewController: MovieLargeCellDelegate {
 // MARK: - Private methods
 private extension RecentWatchViewController {
     func setupUI() {
-        navigationItem.title = Constants.Text.screenTitle
+        navigationItem.title = TextConstants.RecentWatch.screenTitle.localized()
         view.backgroundColor = .appBackground
         view.addSubviews(chipsView, tableView, emptyStateView)
         emptyStateView.addSubviews(emptyStateLabel, emptyStateDescription)
@@ -203,11 +203,6 @@ extension RecentWatchViewController: ChipsViewDelegate {
 // MARK: - Constants
 private extension RecentWatchViewController {
     enum Constants {
-        enum Text {
-            static let screenTitle = "Recent Watch"
-            static let emptyStateTitle = "You haven't seen any movies yet."
-            static let emptyStateDescription = "Movies that you have watched recently will appear here."
-        }
         enum Constraints {
             static let cellHeight: CGFloat = 184
             static let emptyStateSpacing: CGFloat = 16
