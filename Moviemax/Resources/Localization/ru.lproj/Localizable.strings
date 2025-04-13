@@ -71,3 +71,24 @@
 // Gender
 "male" = "Мужской";
 "female" = "Женский";
+
+// Auth
+"login" = "Логин";
+"signIn" = "Войти";
+"forgotPass" = "Забыли пароль?";
+"continueWithGoogle" = "Продолжить с Google";
+"rememberMe" = "Запомнить меня";
+"continueWith" = "———  Или продолжить с  ———";
+"dontHaveAccount" = "Ещё нет аккаунта?";
+"signUp" = "Зарегистироваться";
+"emailTitle" = "E-mail";
+"enterEmail" = "Введите e-mail";
+"passwordTitle" = "Пароль";
+"enterPasswordTitle" = "Введите пароль";
+"errorTitle" = "Ошибка";
+"emptyFieldsError" = "Пожалуйста, заполните все поля";
+"invalidEmailError" = "Введите корректный email";
+"userNotFoundError" = "Пользователь с таким e-mail не найден";
+"invalidPasswordError" = "Неверный пароль";
+"loginError" = "Произошла ошибка при входе";
+    

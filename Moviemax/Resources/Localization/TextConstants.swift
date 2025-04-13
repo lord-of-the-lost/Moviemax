@@ -94,4 +94,34 @@ enum TextConstants {
         static let male = "male"
         static let female  = "female"
     }
+    
+    enum Auth {
+        static let screenTitle = "login"
+        static let singInButtonTitle = "signIn"
+        static let forgotPasswordButtonTitle = "forgotPass"
+        static let continueWithGoogleButtonTitle = "continueWithGoogle"
+        static let rememberMeLabel = "rememberMe"
+        static let dividerLabel = "continueWith"
+        static let accountLabel = "dontHaveAccount"
+        static let signUpButtonTitle = "signUp"
+        
+        enum Email {
+            static let title = "emailTitle"
+            static let placeholder = "enterEmail"
+        }
+        
+        enum Password {
+            static let title = "passwordTitle"
+            static let placeholder = "enterPasswordTitle"
+        }
+        
+        enum Errors {
+            static let errorTitle = "errorTitle"
+            static let emptyFieldsError = "emptyFieldsError"
+            static let invalidEmailError = "invalidEmailError"
+            static let userNotFoundError = "userNotFoundError"
+            static let invalidPasswordError = "invalidPasswordError"
+            static let loginError = "loginError"
+        }
+    }
 }

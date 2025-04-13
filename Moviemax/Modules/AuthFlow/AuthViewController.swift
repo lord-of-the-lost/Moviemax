@@ -13,7 +13,7 @@ final class AuthViewController: BaseScrollViewController {
     private lazy var passwordField = TitledTextField(isSecure: true)
     
     private lazy var signInButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.singInButtonTitle)
+        let button = CommonButton(title: TextConstants.Auth.singInButtonTitle.localized())
         button.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -26,7 +26,7 @@ final class AuthViewController: BaseScrollViewController {
     
     private lazy var rememberMeLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.rememberMeLabel
+        label.text = TextConstants.Auth.rememberMeLabel.localized()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .adaptiveTextMain
         return label
@@ -42,7 +42,7 @@ final class AuthViewController: BaseScrollViewController {
     
     private lazy var forgotPasswordButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constants.Text.forgotPasswordButtonTitle, for: .normal)
+        button.setTitle(TextConstants.Auth.forgotPasswordButtonTitle.localized(), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         button.setTitleColor(UIColor(resource: .accent), for: .normal)
         button.addTarget(self, action: #selector(forgotPasswordTapped), for: .touchUpInside)
@@ -59,7 +59,7 @@ final class AuthViewController: BaseScrollViewController {
     
     private lazy var dividerLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.dividerLabel
+        label.text = TextConstants.Auth.dividerLabel.localized()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .systemGray
         label.textAlignment = .center
@@ -68,7 +68,7 @@ final class AuthViewController: BaseScrollViewController {
     
     private lazy var googleButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constants.Text.continueWithGoogleButtonTitle, for: .normal)
+        button.setTitle(TextConstants.Auth.continueWithGoogleButtonTitle.localized(), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.adaptiveTextMain, for: .normal)
         
@@ -91,7 +91,7 @@ final class AuthViewController: BaseScrollViewController {
     
     private lazy var accountLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.accountLabel
+        label.text = TextConstants.Auth.accountLabel.localized()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .adaptiveTextMain
         return label
@@ -99,7 +99,7 @@ final class AuthViewController: BaseScrollViewController {
     
     private lazy var signUpButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constants.Text.signUpButtonTitle, for: .normal)
+        button.setTitle(TextConstants.Auth.signUpButtonTitle.localized(), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         button.setTitleColor(UIColor(resource: .accent), for: .normal)
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
@@ -156,7 +156,7 @@ final class AuthViewController: BaseScrollViewController {
 // MARK: - Private Methods
 private extension AuthViewController {
     func setupView() {
-        navigationItem.title = Constants.Text.screenTitle
+        navigationItem.title = TextConstants.Auth.screenTitle.localized()
         view.backgroundColor = .appBackground
         setScrollState(isScrollEnabled: false)
         
@@ -216,16 +216,16 @@ private extension AuthViewController {
         
         emailField.configure(
             with: ViewModel(
-                title: Constants.Text.Email.title,
-                placeholder: Constants.Text.Email.placeholder,
+                title: TextConstants.Auth.Email.title.localized(),
+                placeholder: TextConstants.Auth.Email.placeholder.localized(),
                 type: .email
             )
         )
         
         passwordField.configure(
             with: ViewModel(
-                title: Constants.Text.Password.title,
-                placeholder: Constants.Text.Password.placeholder,
+                title: TextConstants.Auth.Password.title.localized(),
+                placeholder: TextConstants.Auth.Password.placeholder.localized(),
                 type: .password
             )
         )
@@ -245,31 +245,5 @@ private extension AuthViewController {
     
     @objc func signUpButtonTapped() {
         presenter.signUpTapped()
-    }
-}
-
-// MARK: - Constants
-private extension AuthViewController {
-    enum Constants {
-        enum Text {
-            static let screenTitle = "Login"
-            static let singInButtonTitle = "Sign In"
-            static let forgotPasswordButtonTitle = "Forgot Password?"
-            static let continueWithGoogleButtonTitle = "Continue with Google"
-            static let rememberMeLabel = "Remember Me"
-            static let dividerLabel = "———  Or continue with  ———"
-            static let accountLabel = "Don't have an account?"
-            static let signUpButtonTitle = "Sign up"
-            
-            enum Email {
-                static let title = "E-mail"
-                static let placeholder = "Enter your email address"
-            }
-            
-            enum Password {
-                static let title = "Password"
-                static let placeholder = "Enter your password"
-            }
-        }
     }
 }
