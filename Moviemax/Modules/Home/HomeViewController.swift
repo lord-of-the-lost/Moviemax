@@ -11,6 +11,8 @@ final class HomeViewController: BaseScrollViewController {
     // MARK: - Properties
     private let presenter: HomePresenter
     private var viewModel: HomeViewModel?
+    
+    private var didScrollToInitialIndex = false
 
     private lazy var userHeaderView = UserHeaderView()
     private lazy var categoryChipsView = ChipsView()
@@ -18,7 +20,7 @@ final class HomeViewController: BaseScrollViewController {
     private lazy var categoryLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.category
-        label.font = AppFont.plusJakartaSemiBold.withSize(14)
+        label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         return label
     }()
@@ -55,17 +57,13 @@ final class HomeViewController: BaseScrollViewController {
     private lazy var boxOfficeHeaderView: UILabel = {
         let label = UILabel()
         label.text = Constants.boxOfficeText
-        label.font = AppFont.plusJakartaSemiBold.withSize(14)
+        label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         return label
     }()
     
     private lazy var posterCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.sectionInset.left = 20
-        layout.itemSize = CGSize(width: Constants.Size.cellWidth, height: Constants.Size.cellHeight)
-        
+        let layout = CarouselFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -73,9 +71,16 @@ final class HomeViewController: BaseScrollViewController {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(PosterCell.self, forCellWithReuseIdentifier: PosterCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.decelerationRate = .fast
         return collectionView
     }()
 
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     init(presenter: HomePresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -88,6 +93,7 @@ final class HomeViewController: BaseScrollViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight()
+        changeInitialItemIfNeeded()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,6 +106,8 @@ final class HomeViewController: BaseScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.view = self
+        setupActivityIndicator()
+        showActivityIndicator()
         setupView()
         setupConstraints()
         presenter.viewDidLoad()
@@ -113,6 +121,14 @@ extension HomeViewController {
         categoryChipsView.configure(with: viewModel.categories)
         boxOfficeTableView.reloadData()
         posterCollectionView.reloadData()
+    }
+    
+    func hideLoadingIndicator() {
+        // TODO: тут костыль в виде таймера, не нашла правильного момента чтобы вызвать этот метод, когда картинки уже загрузились
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+            self.activityIndicator.stopAnimating()
+            self.contentView.isHidden = false
+        }
     }
 }
 
@@ -167,16 +183,6 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
 }
 
-// MARK: - UICollectionViewDelegateFlowLayout
-extension HomeViewController: UICollectionViewDelegateFlowLayout {
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let itemWidthWithSpacing = Constants.Size.cellWidth + Constants.Size.cellSpacing
-        let currentItem = Int(targetContentOffset.pointee.x / itemWidthWithSpacing)
-        let newHorizontalOffset = CGFloat(currentItem) * itemWidthWithSpacing
-        targetContentOffset.pointee = CGPoint(x: newHorizontalOffset, y: 0)
-    }
-}
-
 // MARK: - MovieSmallCellDelegate
 extension HomeViewController: MovieSmallCellDelegate {
     func likeTapped(_ cell: MovieSmallCell) {
@@ -208,13 +214,38 @@ private extension HomeViewController {
         categoryChipsView.delegate = self
     }
     
+    func setupActivityIndicator() {
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    
+    func showActivityIndicator() {
+        activityIndicator.startAnimating()
+        contentView.isHidden = true
+    }
+    
     func updateTableViewHeight() {
         boxOfficeTableView.snp.remakeConstraints {
             $0.top.equalTo(boxOfficeHeaderView.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(60)
-            $0.height.equalTo((viewModel?.boxOfficeMovies.count ?? 0) * 96 + 20)
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo((viewModel?.boxOfficeMovies.count ?? 0) * 96)
         }
+    }
+    
+    func changeInitialItemIfNeeded() {
+        if !didScrollToInitialIndex,
+           posterCollectionView.numberOfItems(inSection: 0) > 1 {
+            didScrollToInitialIndex = true
+            scrollToInitialItem()
+        }
+    }
+    
+    func scrollToInitialItem() {
+        let targetIndex = IndexPath(item: 1, section: 0) // the second cell
+        posterCollectionView.scrollToItem(at: targetIndex, at: .centeredHorizontally, animated: false)
     }
     
     func setupConstraints() {
@@ -226,7 +257,7 @@ private extension HomeViewController {
         }
         
         posterCollectionView.snp.makeConstraints {
-            $0.top.equalTo(userHeaderView.snp.bottom).offset(43)
+            $0.top.equalTo(userHeaderView.snp.bottom).offset(33)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(290)
         }
@@ -251,12 +282,8 @@ private extension HomeViewController {
         }
         
         seeAllButton.snp.makeConstraints {
-            $0.top.equalTo(categoryChipsView.snp.bottom).offset(24)
+            $0.top.equalTo(categoryChipsView.snp.bottom).offset(18)
             $0.trailing.equalToSuperview().inset(24)
-        }
-        
-        contentView.snp.makeConstraints {
-            $0.width.equalTo(view.snp.width)
         }
     }
     
@@ -271,11 +298,5 @@ private extension HomeViewController {
         static let seeAllText = "See All"
         static let boxOfficeText = "Box Office"
         static let category = "Category"
-        
-        enum Size {
-            static let cellWidth: CGFloat = 300
-            static let cellHeight: CGFloat = 280
-            static let cellSpacing: CGFloat = 10
-        }
     }
 }

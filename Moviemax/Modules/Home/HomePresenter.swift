@@ -80,6 +80,7 @@ private extension HomePresenter {
             let result = movieRepository.getPopularMovies()
             
             DispatchQueue.main.async {
+                self.view?.hideLoadingIndicator()
                 switch result {
                 case .success(let movies):
                     self.movies = movies

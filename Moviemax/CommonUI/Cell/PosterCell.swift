@@ -12,26 +12,37 @@ final class PosterCell: UICollectionViewCell {
     
     private lazy var movieImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 16
         imageView.clipsToBounds = true
         imageView.image = .posterPlaceholder
         return imageView
     }()
     
+    private lazy var gradient: CAGradientLayer = {
+        let gradient = CAGradientLayer()
+        gradient.colors = [
+            UIColor.clear.cgColor,
+            UIColor.black.cgColor
+        ]
+        gradient.locations = [0.6, 1.0]
+        gradient.frame = movieImage.bounds
+        return gradient
+    }()
+    
     private lazy var movieName: UILabel = {
         let label = UILabel()
-        label.font = AppFont.plusJakartaBold.withSize(16)
+        label.font = AppFont.plusJakartaBold.withSize(14)
         label.textColor = .white
         return label
     }()
     
     private lazy var categoryLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .gray
-        label.layer.cornerRadius = 9
+        label.backgroundColor = .gray.withAlphaComponent(0.5)
+        label.layer.cornerRadius = 10
         label.clipsToBounds = true
-        label.font = AppFont.plusJakartaMedium.withSize(18)
+        label.font = AppFont.plusJakartaMedium.withSize(10)
         label.textColor = .white
         return label
     }()
@@ -51,6 +62,12 @@ final class PosterCell: UICollectionViewCell {
         movieName.text = model.title
         categoryLabel.text = "  \(model.category)  "
         movieImage.image = model.image
+        movieImage.layer.addSublayer(gradient)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        gradient.frame = movieImage.bounds
     }
 }
 
@@ -76,13 +93,15 @@ private extension PosterCell {
         }
         
         categoryLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(20)
-            $0.bottom.equalTo(movieImage).offset(-110)
+            $0.leading.equalTo(movieImage).offset(15)
+            $0.bottom.equalTo(movieName.snp.top).offset(-10)
+            $0.height.equalTo(20)
         }
         
         movieName.snp.makeConstraints {
-            $0.top.equalTo(categoryLabel.snp.bottom).offset(5)
+            $0.bottom.equalToSuperview().inset(15)
             $0.leading.equalTo(movieImage).offset(15)
+            $0.trailing.equalTo(movieImage).inset(15)
         }
     }
 }

@@ -13,14 +13,9 @@ final class LaunchRouter: RouterProtocol {
     init(dependency: DI) {
         self.dependency = dependency
     }
-    
-    func navigateToAuth() {
-        let authController = AuthFactory.build(dependency)
-        viewController?.view.window?.rootViewController = authController
-    }
-    
-    func navigateToOnboarding() {
-        let onboardingController = OnboardingFactory.build(dependency)
-        viewController?.view.window?.rootViewController = onboardingController
+
+    func navigateToTabbar() {
+        let tabBarController = TabBarFactory.build(dependency)
+        viewController?.view.window?.rootViewController = tabBarController
     }
 }
