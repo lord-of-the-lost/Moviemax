@@ -119,3 +119,8 @@
 "movieDescriptionTitle" = "Сюжет";
 "watchButtonTitle" = "Смотреть";
 "showMoreText" = " Развернуть";
+
+// SeeAll Module
+"seeAllScreenTitle" = "Фильмы";
+"seeAllEmptyTitle" = "Пока нет фильмов";
+"seeAllEmptyDescription" = "Все фильмы появятся здесь";

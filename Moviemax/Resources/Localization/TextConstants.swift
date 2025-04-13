@@ -164,4 +164,10 @@ enum TextConstants {
         static let watchButtonTitle = "watchButtonTitle"
         static let showMoreText = "showMoreText"
     }
+    
+    enum SeeAll {
+        static let screenTitle = "seeAllScreenTitle"
+        static let emptyStateTitle = "seeAllEmptyTitle"
+        static let emptyStateDescription = "seeAllEmptyDescription"
+    }
 }

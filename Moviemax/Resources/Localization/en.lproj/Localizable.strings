@@ -121,3 +121,8 @@
 "watchButtonTitle" = "Watch now";
 "showMoreText" = " Show More";
 
+// SeeAll Module
+"seeAllScreenTitle" = "Movies";
+"seeAllEmptyTitle" = "No Movies Yet";
+"seeAllEmptyDescription" = "All movies will appear here";
+
