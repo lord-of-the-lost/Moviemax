@@ -44,7 +44,7 @@ final class SearchViewController: UIViewController {
     
     private lazy var emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateTitle
+        label.text = TextConstants.Search.emptyStateTitle.localized()
         label.font = AppFont.plusJakartaBold.withSize(24)
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -53,7 +53,7 @@ final class SearchViewController: UIViewController {
     
     private lazy var emptyStateDescription: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateDescription
+        label.text = TextConstants.Search.emptyStateDescription.localized()
         label.font = AppFont.montserratMedium.withSize(16)
         label.textAlignment = .center
         label.textColor = .gray
@@ -79,6 +79,11 @@ final class SearchViewController: UIViewController {
         setupUI()
         presenter.viewDidLoad()
         chipsView.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateLocalizedTexts()
     }
 
     func show(_ state: SearchState) {
@@ -144,7 +149,7 @@ extension SearchViewController: MovieLargeCellDelegate {
 // MARK: - Private methods
 private extension SearchViewController {
     func setupUI() {
-        navigationItem.title = Constants.Text.screenTitle
+        navigationItem.title = TextConstants.Search.screenTitle.localized()
         view.backgroundColor = .appBackground
         view.addSubviews(searhView, chipsView, tableView, emptyStateView)
         emptyStateView.addSubviews(emptyStateLabel, emptyStateDescription)
@@ -194,6 +199,11 @@ private extension SearchViewController {
             $0.bottom.equalToSuperview()
         }
     }
+    func updateLocalizedTexts() {
+        navigationItem.title = TextConstants.Search.screenTitle.localized()
+        emptyStateLabel.text = TextConstants.Search.emptyStateTitle.localized()
+        emptyStateDescription.text = TextConstants.Search.emptyStateDescription.localized()
+    }
 }
 
 extension SearchViewController: ChipsViewDelegate {
@@ -205,11 +215,6 @@ extension SearchViewController: ChipsViewDelegate {
 // MARK: - Constants
 private extension SearchViewController {
     enum Constants {
-        enum Text {
-            static let screenTitle = "Search"
-            static let emptyStateTitle = "You haven't seen any movies yet."
-            static let emptyStateDescription = "Movies that you have watched recently will appear here."
-        }
         enum Constraints {
             static let searchFieldHeight: CGFloat = 52
             static let cellHeight: CGFloat = 184

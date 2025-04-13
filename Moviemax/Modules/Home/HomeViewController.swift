@@ -19,22 +19,15 @@ final class HomeViewController: BaseScrollViewController {
     
     private lazy var categoryLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.category
+        label.text = TextConstants.Home.category.localized()
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
-        label.textColor = .adaptiveTextMain
-        return label
-    }()
-    
-    private lazy var seeAllLabel: UILabel = {
-        let label = UILabel()
-        label.font = AppFont.plusJakartaSemiBold.withSize(14)
         label.textColor = .adaptiveTextMain
         return label
     }()
     
     private lazy var seeAllButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constants.seeAllText, for: .normal)
+        button.setTitle(TextConstants.Home.seeAllText.localized(), for: .normal)
         button.titleLabel?.font = AppFont.plusJakartaRegular.withSize(16)
         button.setTitleColor(.accent, for: .normal)
         button.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
@@ -56,7 +49,7 @@ final class HomeViewController: BaseScrollViewController {
 
     private lazy var boxOfficeHeaderView: UILabel = {
         let label = UILabel()
-        label.text = Constants.boxOfficeText
+        label.text = TextConstants.Home.boxOfficeText.localized()
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
         return label
@@ -101,6 +94,7 @@ final class HomeViewController: BaseScrollViewController {
         navigationController?.navigationBar.isHidden = true
         navigationController?.tabBarController?.tabBar.isHidden = false
         presenter.viewWillAppear()
+        updateLocalizedTexts()
     }
     
     override func viewDidLoad() {
@@ -290,13 +284,10 @@ private extension HomeViewController {
     @objc func seeAllButtonTapped() {
         presenter.showAllMovies()
     }
-}
-
-// MARK: - Constants
-private extension HomeViewController {
-    enum Constants {
-        static let seeAllText = "See All"
-        static let boxOfficeText = "Box Office"
-        static let category = "Category"
+    
+    func updateLocalizedTexts() {
+        seeAllButton.setTitle(TextConstants.Home.seeAllText.localized(), for: .normal)
+        boxOfficeHeaderView.text = TextConstants.Home.boxOfficeText.localized()
+        categoryLabel.text = TextConstants.Home.category.localized()
     }
 }

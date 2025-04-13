@@ -19,7 +19,7 @@ final class ChangePassViewController: UIViewController {
     }()
     
     private lazy var changePassButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.changePassButtonTitle)
+        let button = CommonButton(title: TextConstants.ChangePass.changePassButtonTitle.localized())
         button.addTarget(self, action: #selector(changePassButtonAction), for: .touchUpInside)
         return button
     }()
@@ -65,7 +65,7 @@ final class ChangePassViewController: UIViewController {
 // MARK: - Private Methods
 private extension ChangePassViewController {
     func setupUI() {
-        navigationItem.title = Constants.Text.screenTitle
+        navigationItem.title = TextConstants.ChangePass.screenTitle.localized()
         view.backgroundColor = .appBackground
         view.addSubviews(passField, confirmPassField, newPassField, changePassButton)
     }
@@ -76,13 +76,13 @@ private extension ChangePassViewController {
             $0.leading.trailing.equalToSuperview().inset(30)
         }
         
-        confirmPassField.snp.makeConstraints {
+        newPassField.snp.makeConstraints {
             $0.top.equalTo(passField.snp.bottom).inset(-16)
             $0.leading.trailing.equalToSuperview().inset(30)
         }
         
-        newPassField.snp.makeConstraints {
-            $0.top.equalTo(confirmPassField.snp.bottom).inset(-16)
+        confirmPassField.snp.makeConstraints {
+            $0.top.equalTo(newPassField.snp.bottom).inset(-16)
             $0.leading.trailing.equalToSuperview().inset(30)
         }
         
@@ -94,7 +94,7 @@ private extension ChangePassViewController {
     }
     
     func setupNavigation() {
-        self.title = Constants.Text.screenTitle
+        self.title = TextConstants.ChangePass.screenTitle.localized()
                 
         backButton.snp.makeConstraints {
             $0.size.equalTo(40)
@@ -112,24 +112,24 @@ private extension ChangePassViewController {
         
         passField.configure(
             with: ViewModel(
-                title: Constants.Text.passTitle,
-                placeholder: Constants.Text.passPlaceholder,
+                title: TextConstants.ChangePass.passTitle.localized(),
+                placeholder: TextConstants.ChangePass.passPlaceholder.localized(),
+                type: .password
+            )
+        )
+
+        newPassField.configure(
+            with: ViewModel(
+                title: TextConstants.ChangePass.newPassTitle.localized(),
+                placeholder: TextConstants.ChangePass.newPassPlaceholder.localized(),
                 type: .password
             )
         )
         
         confirmPassField.configure(
             with: ViewModel(
-                title: Constants.Text.confirmPassTitle,
-                placeholder: Constants.Text.confirmPassPlaceholder,
-                type: .password
-            )
-        )
-        
-        newPassField.configure(
-            with: ViewModel(
-                title: Constants.Text.newPassTitle,
-                placeholder: Constants.Text.newPassPlaceholder,
+                title: TextConstants.ChangePass.confirmPassTitle.localized(),
+                placeholder: TextConstants.ChangePass.confirmPassPlaceholder.localized(),
                 type: .password
             )
         )
@@ -141,21 +141,5 @@ private extension ChangePassViewController {
     
     @objc func changePassButtonAction() {
         presenter.changePassButtonAction()
-    }
-}
-
-// MARK: - Constants
-private extension ChangePassViewController {
-    enum Constants {
-        enum Text {
-            static let screenTitle = "Change password"
-            static let changePassButtonTitle = "Change password"
-            static let passTitle = "Current password"
-            static let passPlaceholder = "Enter your current email"
-            static let confirmPassTitle = "Confirm password"
-            static let confirmPassPlaceholder = "Enter your current email"
-            static let newPassTitle = "New password"
-            static let newPassPlaceholder = "Enter your new email"
-        }
     }
 }

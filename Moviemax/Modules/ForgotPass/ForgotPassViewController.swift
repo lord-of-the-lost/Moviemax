@@ -19,7 +19,7 @@ final class ForgotPassViewController: UIViewController {
     }()
     
     private lazy var submitButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.submitButtonTitle)
+        let button = CommonButton(title: TextConstants.ForgotPass.submitButtonTitle.localized())
         button.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -54,7 +54,7 @@ final class ForgotPassViewController: UIViewController {
 // MARK: - Private Methods
 private extension ForgotPassViewController {
     func setupUI() {
-        navigationItem.title = Constants.Text.screenTitle
+        navigationItem.title = TextConstants.ForgotPass.screenTitle.localized()
         view.backgroundColor = .appBackground
         view.addSubviews(emailField, submitButton)
     }
@@ -73,7 +73,7 @@ private extension ForgotPassViewController {
     }
     
     func setupNavigation() {
-        self.title = Constants.Text.screenTitle
+        self.title = TextConstants.ForgotPass.screenTitle.localized()
                 
         backButton.snp.makeConstraints {
             $0.size.equalTo(40)
@@ -91,8 +91,8 @@ private extension ForgotPassViewController {
         
         emailField.configure(
             with: ViewModel(
-                title: Constants.Text.title,
-                placeholder: Constants.Text.placeholder,
+                title: TextConstants.ForgotPass.title.localized(),
+                placeholder: TextConstants.ForgotPass.placeholder.localized(),
                 type: .regular
             )
         )
@@ -104,17 +104,5 @@ private extension ForgotPassViewController {
     
     @objc func submitButtonTapped() {
         presenter.submitButtonAction()
-    }
-}
-
-// MARK: - Constants
-private extension ForgotPassViewController {
-    enum Constants {
-        enum Text {
-            static let screenTitle = "Forgot your password?"
-            static let submitButtonTitle = "Submit"
-            static let title = "E-mail"
-            static let placeholder = "Enter your email"
-        }
     }
 }

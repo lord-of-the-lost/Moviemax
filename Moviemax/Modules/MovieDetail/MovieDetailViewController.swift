@@ -42,7 +42,7 @@ final class MovieDetailViewController: UIViewController {
     
     private lazy var movieDescriptionTitle: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.movieDescriptionTitle
+        label.text = TextConstants.MovieDetail.movieDescriptionTitle.localized()
         label.textAlignment = .left
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         label.textColor = .adaptiveTextMain
@@ -51,7 +51,7 @@ final class MovieDetailViewController: UIViewController {
         
     private lazy var movieCastTitle: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.movieCastTitle
+        label.text = TextConstants.MovieDetail.movieCastTitle.localized()
         label.textAlignment = .left
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         return label
@@ -79,7 +79,7 @@ final class MovieDetailViewController: UIViewController {
     }()
     
     private lazy var watchButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.watchButtonTitle)
+        let button = CommonButton(title: TextConstants.MovieDetail.watchButtonTitle.localized())
         button.addTarget(self, action: #selector(watchNowButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -249,7 +249,7 @@ private extension MovieDetailViewController {
     }
     
     func setupNavigation() {
-        self.title = Constants.Text.screenTitle
+        self.title = TextConstants.MovieDetail.screenTitle.localized()
                 
         backButton.snp.makeConstraints {
             $0.size.equalTo(40)
@@ -280,19 +280,6 @@ private extension MovieDetailViewController {
         presenter.openURLTapped()
     }
 }
-
-// MARK: - Constants
-private extension MovieDetailViewController {
-    enum Constants {
-        enum Text {
-            static let movieCastTitle: String = "Cast and Crew"
-            static let screenTitle: String = "Movie Detail"
-            static let movieDescriptionTitle: String = "Story Line"
-            static let watchButtonTitle: String = "Watch now"
-        }
-    }
-}
-
 
 // MARK: - UICollectionViewDataSource
 extension MovieDetailViewController: UICollectionViewDataSource {

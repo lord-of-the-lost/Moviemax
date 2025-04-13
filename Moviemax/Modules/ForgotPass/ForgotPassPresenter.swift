@@ -25,28 +25,17 @@ final class ForgotPassPresenter {
             let email = view.getEmail(),
             email.count > 0
         else {
-            view?.showAlert(title: Constants.errorTitle, message: Constants.emptyFieldsError)
+            view?.showAlert(title: TextConstants.ForgotPass.errorTitle.localized(), message: TextConstants.ForgotPass.emptyFieldsError.localized())
             return
         }
         
         guard
             let user = authService.getUserByEmail(email: email)
         else {
-            view.showAlert(title: Constants.noUserTitle)
+            view.showAlert(title: TextConstants.ForgotPass.noUserTitle.localized())
             return
         }
         
-        view.showAlert(title: Constants.email + ": " + email, message: Constants.pass + ": " + user.password)
-    }
-}
-
-// MARK: - Constants
-private extension ForgotPassPresenter {
-    enum Constants {
-        static let noUserTitle = "Пользователь не найден"
-        static let errorTitle = "Ошибка"
-        static let emptyFieldsError = "Пожалуйста, заполните все поля"
-        static let email = "Email"
-        static let pass = "Пароль"
+        view.showAlert(title: TextConstants.ForgotPass.email.localized() + ": " + email, message: TextConstants.ForgotPass.pass.localized() + ": " + user.password)
     }
 }

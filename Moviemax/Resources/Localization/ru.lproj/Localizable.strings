@@ -22,3 +22,142 @@
 "darkMode" = "Тёмная тема";
 "useRussian" = "Использовать русский язык";
 "logout" = "Выйти";
+
+// Profile Module
+"saveButtonTitle" = "Сохранить изменения";
+"screenName" = "Профиль";
+"firstName" = "Имя";
+"lastName" = "Фамилия";
+"email" = "Электронная почта";
+"dateOfBirth" = "Дата рождения";
+"location" = "Местоположение";
+"errorTitle" = "Ошибка";
+"errorEmptyFields" = "Пожалуйста, заполните все поля";
+"doneButtonTitle" = "Готово";
+"cancelButtonTitle" = "Отмена";
+
+// RecentWatch Module
+"screenTitle" = "Недавно просмотренные";
+"emptyStateTitle" = "Вы ещё не посмотрели ни одного фильма";
+"emptyStateDescription" = "Здесь появятся фильмы, которые вы недавно посмотрели";
+
+// Onboarding Module
+"continue" = "Далее";
+"start" = "Начать";
+"firstPageTitle" = "Твой карманный кинотеатр";
+"firstPageDescription" = "Смотри фильмы, шоу, мультики и документалки в любое время и в любом месте!";
+"secondPageTitle" = "Создай свой список просмотра";
+"secondPageDescription" = "Сохраняйте избранное и получайте персональные рекомендации, чтобы найти свое следующее любимое шоу.";
+"thirdPageTitle" = "Смотри свои любимые шоу легко!";
+"thirdPageDescription" = "Погрузись в обширную библиотеку фильмов и сериалов различных жанров и стран.";
+
+// Home Module
+"greeting" = "Привет, пользователь!";
+"shortGreeting" = "Привет";
+"status" = "только для фанатов стриминга";
+"seeAll" = "Посмотреть все";
+"boxOffice" = "Витрина";
+"category" = "Категория";
+
+// EditPhotoView
+"editPhotoTitle" = "Изменить фото профиля";
+"takePhotoTitle" = "Сделать фото";
+"choosePhotoTitle" = "Выбрать из галереи";
+"deletePhotoTitle" = "Удалить фото";
+
+// GenderSelectorView
+"gender" = "Пол";
+
+// Gender
+"male" = "Мужской";
+"female" = "Женский";
+
+// Auth Module
+"login" = "Логин";
+"signIn" = "Войти";
+"forgotPass" = "Забыли пароль?";
+"continueWithGoogle" = "Продолжить с Google";
+"rememberMe" = "Запомнить меня";
+"continueWith" = "———  Или продолжить с  ———";
+"dontHaveAccount" = "Ещё нет аккаунта?";
+"signUp" = "Зарегистироваться";
+"emailTitle" = "E-mail";
+"enterEmail" = "Введите e-mail";
+"passwordTitle" = "Пароль";
+"enterPasswordTitle" = "Введите пароль";
+"errorTitle" = "Ошибка";
+"emptyFieldsError" = "Пожалуйста, заполните все поля";
+"invalidEmailError" = "Введите корректный email";
+"userNotFoundError" = "Пользователь с таким e-mail не найден";
+"invalidPasswordError" = "Неверный пароль";
+"loginError" = "Произошла ошибка при входе";
+    
+// ChangePass Module
+"changePassTitle" = "Изменить пароль";
+"passTitle" = "Текущий пароль";
+"passPlaceholder" = "Введите ваш текущий пароль";
+"newPassTitle" = "Новый пароль";
+"newPassPlaceholder" = "Введите новый пароль";
+"confirmPassTitle" = "Подтвердить пароль";
+"confirmPassPlaceholder" = "Повторите ваш новый пароль";
+"noUserTitle" = "Пользователь не найден";
+"successPass" = "Пароль успешно изменён";
+"passNotMatch" = "Пароли не совпадают";
+"passMatch" = "Новый пароль должен отличаться от старого. Пожалуйста, придумайте другой пароль.";
+
+// Favorites Module
+"favorites" = "Избранное";
+"emptyFavoritesTitle" = "В избранном пока нет фильмов";
+"emptyFavoritesDescription" = "Здесь появятся избранные фильмы";
+"minutes" = "Мин.";
+"cantDownloadFavorites" = "Не удалось загрузить избранные фильмы:";
+"cantDeleteFromFavorites" = "Не удалось удалить фильм из избранного:";
+
+// MovieDetail Module
+"movieCastTitle" = "Актёры";
+"moviewDetailScreenTitle" = "Подробно о фильме";
+"movieDescriptionTitle" = "Сюжет";
+"watchButtonTitle" = "Смотреть";
+"showMoreText" = " Развернуть";
+
+// SeeAll Module
+"seeAllScreenTitle" = "Фильмы";
+"seeAllEmptyTitle" = "Пока нет фильмов";
+"seeAllEmptyDescription" = "Все фильмы появятся здесь";
+
+// ForgotPass Module
+"submitButtonTitle" = "Отправить";
+
+// SignUp Module
+"accountLabel" = "Уже есть аккаунт?";
+"namePlaceholder" = "Введите имя";
+"surnamePlaceholder" = "Введите фамилию";
+
+// Search
+"search" = "Поиск";
+"noMovies" = "Ничего не найдено";
+
+// FilterView
+"filterTitle" = "Фильтр";
+"resetFilters" = "Сбросить фильтры";
+"categories" = "Жанры";
+"starRating" = "Рейтинг";
+"applyFilterButton" = "Применить фильтры";
+
+// Categories
+"all" = "Все";
+"action" = "Экшен";
+"adventure" = "Приключение";
+"mystery" = "Мистика";
+"fantasy" = "Фентези";
+"others" = "Другие";
+"animation" = "Мультфильм";
+"biography" = "Биография";
+"drama" = "Драма";
+"history" = "Исторический";
+"music" = "Музыка";
+"romance" = "Романтика";
+"scienceFiction" = "Научпоп";
+"thriller" = "Триллер";
+"war" = "Военный";
+"western" = "Вестерн";

@@ -64,14 +64,3 @@ private extension FilterViewController {
         }
     }
 }
-
-// MARK: - Constants
-private extension FilterViewController {
-    enum Constants {
-        enum Text {
-            static let screenTitle = "Search"
-            static let emptyStateTitle = "You haven't seen any movies yet."
-            static let emptyStateDescription = "Movies that you have watched recently will appear here."
-        }
-    }
-}
