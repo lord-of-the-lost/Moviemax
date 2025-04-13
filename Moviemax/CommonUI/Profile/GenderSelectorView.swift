@@ -25,12 +25,12 @@ final class GenderSelectorView: UIView {
     }()
     
     private lazy var maleView = CheckBoxView(
-        text: User.Gender.male.rawValue,
+        text: User.Gender.male.description,
         isSelected: true
     )
     
     private lazy var femaleView = CheckBoxView(
-        text: User.Gender.female.rawValue,
+        text: User.Gender.female.description,
         isSelected: false
     )
     

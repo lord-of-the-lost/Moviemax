@@ -67,3 +67,7 @@
 
 // GenderSelectorView
 "gender" = "Пол";
+
+// Gender
+"male" = "Мужской";
+"female" = "Женский";

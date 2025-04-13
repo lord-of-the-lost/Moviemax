@@ -67,3 +67,7 @@
 
 // GenderSelectorView
 "gender" = "Gender";
+
+// Gender
+"male" = "Male";
+"female" = "Female";

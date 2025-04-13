@@ -87,6 +87,11 @@ enum TextConstants {
     }
     
     enum GenderSelectorView {
-        static let labelText: String = "gender"
+        static let labelText = "gender"
+    }
+    
+    enum Gender {
+        static let male = "male"
+        static let female  = "female"
     }
 }
