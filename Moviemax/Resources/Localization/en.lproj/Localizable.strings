@@ -113,3 +113,10 @@
 "minutes" = "Minutes";
 "cantDownloadFavorites" = "Couldn't download favorite movies:";
 "cantDeleteFromFavorites" = "Couldn't delete movie from favorites:";
+
+// MovieDetail Module
+"movieCastTitle" = "Cast and Crew";
+"moviewDetailScreenTitle" = "Movie Detail";
+"movieDescriptionTitle" = "Story Line";
+"watchButtonTitle" = "Watch now";
+

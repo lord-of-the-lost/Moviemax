@@ -83,7 +83,7 @@ enum TextConstants {
         static let title = "editPhotoTitle"
         static let takeTitle = "takePhotoTitle"
         static let chooseTitle = "choosePhotoTitle"
-        static let deleteTitle = "deletePhotoTitle" 
+        static let deleteTitle = "deletePhotoTitle"
     }
     
     enum GenderSelectorView {
@@ -134,7 +134,7 @@ enum TextConstants {
         static let newPassPlaceholder = "newPassPlaceholder"
         static let confirmPassTitle = "confirmPassTitle"
         static let confirmPassPlaceholder = "confirmPassPlaceholder"
-      
+        
         enum Errors {
             static let noUserTitle = "noUserTitle"
             static let errorTitle = "errorTitle"
@@ -155,5 +155,12 @@ enum TextConstants {
             static let cantDownloadFavorites = "cantDownloadFavorites"
             static let cantDeleteFromFavorites = "cantDeleteFromFavorites"
         }
+    }
+    
+    enum MovieDetail {
+        static let movieCastTitle = "movieCastTitle"
+        static let screenTitle = "moviewDetailScreenTitle"
+        static let movieDescriptionTitle = "movieDescriptionTitle"
+        static let watchButtonTitle = "watchButtonTitle"
     }
 }

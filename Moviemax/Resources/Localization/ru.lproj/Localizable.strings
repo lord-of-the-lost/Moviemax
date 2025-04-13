@@ -112,3 +112,9 @@
 "minutes" = "Мин.";
 "cantDownloadFavorites" = "Не удалось загрузить избранные фильмы:";
 "cantDeleteFromFavorites" = "Не удалось удалить фильм из избранного:";
+
+// MovieDetail Module
+"movieCastTitle" = "Актёры";
+"moviewDetailScreenTitle" = "Подробно о фильме";
+"movieDescriptionTitle" = "Сюжет";
+"watchButtonTitle" = "Смотреть";
