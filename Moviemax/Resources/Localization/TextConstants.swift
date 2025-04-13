@@ -49,4 +49,24 @@ enum TextConstants {
         static let emptyStateTitle = "emptyStateTitle"
         static let emptyStateDescription = "emptyStateDescription"
     }
+    
+    enum Onboarding {
+        enum FirstPage {
+            static let largeTitle = "firstPageTitle"
+            static let description = "firstPageDescription"
+            static let buttonTitle = "continue"
+        }
+        
+        enum SecontPage {
+            static let largeTitle = "secondPageTitle"
+            static let description = "secondPageDescription"
+            static let buttonTitle = "continue"
+        }
+        
+        enum ThirdPage {
+            static let largeTitle = "thirdPageTitle"
+            static let description = "thirdPageDescription"
+            static let buttonTitle = "start"
+        }
+    }
 }

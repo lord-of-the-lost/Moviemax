@@ -17,23 +17,23 @@ final class OnboardingPresenter {
         PageModel(
             id: 0,
             image: .page1,
-            largeTitle: Constants.Text.FirstPage.largeTitle,
-            text: Constants.Text.FirstPage.description,
-            buttonTitle: Constants.Text.FirstPage.buttonTitle
+            largeTitle: TextConstants.Onboarding.FirstPage.largeTitle.localized(),
+            text: TextConstants.Onboarding.FirstPage.description.localized(),
+            buttonTitle: TextConstants.Onboarding.FirstPage.buttonTitle.localized()
         ),
         PageModel(
             id: 1,
             image: .page2,
-            largeTitle: Constants.Text.SecontPage.largeTitle,
-            text: Constants.Text.SecontPage.description,
-            buttonTitle: Constants.Text.SecontPage.buttonTitle
+            largeTitle: TextConstants.Onboarding.SecontPage.largeTitle.localized(),
+            text: TextConstants.Onboarding.SecontPage.description.localized(),
+            buttonTitle: TextConstants.Onboarding.SecontPage.buttonTitle.localized()
         ),
         PageModel(
             id: 2,
             image: .page3,
-            largeTitle: Constants.Text.ThirdPage.largeTitle,
-            text: Constants.Text.ThirdPage.description,
-            buttonTitle: Constants.Text.ThirdPage.buttonTitle
+            largeTitle: TextConstants.Onboarding.ThirdPage.largeTitle.localized(),
+            text: TextConstants.Onboarding.ThirdPage.description.localized(),
+            buttonTitle: TextConstants.Onboarding.ThirdPage.buttonTitle.localized()
         )
     ]
     
@@ -67,31 +67,5 @@ final class OnboardingPresenter {
             return
         }
         view?.updateView(with: model)
-    }
-}
-
-
-// MARK: - Constants
-private extension OnboardingPresenter {
-    enum Constants {
-        enum Text {
-            enum FirstPage {
-                static let largeTitle: String = "Your Pocket Cinema"
-                static let description: String = "Stream movies, shows, cartoons, and documentaries anytime, anywhere — all eyes on the screen!"
-                static let buttonTitle: String = "Continue"
-            }
-            
-            enum SecontPage {
-                static let largeTitle: String = "Create Your Watchlist"
-                static let description: String = "Save your favorites and get personalized recommendations to find your next favorite show."
-                static let buttonTitle: String = "Continue"
-            }
-            
-            enum ThirdPage {
-                static let largeTitle: String = "Watch your favorite movie easily"
-                static let description: String = "Browse a vast library of films and series from various genres and languages."
-                static let buttonTitle: String = "Start"
-            }
-        }
     }
 }

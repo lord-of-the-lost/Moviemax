@@ -40,3 +40,13 @@
 "screenTitle" = "Recent Watch";
 "emptyStateTitle" = "You haven't seen any movies yet.";
 "emptyStateDescription" = "Movies that you have watched recently will appear here.";
+
+//Onboarding Module
+"continue" = "Continue";
+"start" = "Start";
+"firstPageTitle" = "Your Pocket Cinema";
+"firstPageDescription" = "Stream movies, shows, cartoons, and documentaries anytime, anywhere — all eyes on the screen!";
+"secondPageTitle" = "Create Your Watchlist";
+"secondPageDescription" = "Save your favorites and get personalized recommendations to find your next favorite show.";
+"thirdPageTitle" = "Watch your favorite movie easily";
+"thirdPageDescription" = "Browse a vast library of films and series from various genres and languages.";

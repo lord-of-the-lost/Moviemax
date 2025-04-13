@@ -203,10 +203,6 @@ private extension OnboardingViewController {
 // MARK: - Constants
 private extension OnboardingViewController {
     enum Constants {
-        enum Text {
-            static let nextButtonTitle: String = "Continue"
-        }
-        
         enum Constraints {
             static let nextButtonHeight: CGFloat = 56
             static let nextButtonWidth: CGFloat = 200
