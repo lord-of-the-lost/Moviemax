@@ -81,6 +81,7 @@ final class RecentWatchViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         navigationController?.tabBarController?.tabBar.isHidden = false
         presenter.viewWillAppear()
+        updateLocalizedTexts()
     }
 
     func show(_ state: RecentWatchState) {
@@ -192,6 +193,12 @@ private extension RecentWatchViewController {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+    }
+    
+    func updateLocalizedTexts() {
+        navigationItem.title = TextConstants.RecentWatch.screenTitle.localized()
+        emptyStateDescription.text = TextConstants.RecentWatch.emptyStateDescription.localized()
+        emptyStateLabel.text = TextConstants.RecentWatch.emptyStateTitle.localized()
     }
 }
 
