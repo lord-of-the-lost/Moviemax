@@ -20,27 +20,47 @@ final class ChangePassPresenter {
     }
     
     func changePassButtonAction() {
-        print(#function)
         guard
             let view,
-            let pass = view.getPass(),
-            let confirmPass = view.getConfirmPass(),
-            let newPass = view.getNewPass(),
-            pass.count + confirmPass.count + newPass.count > 0
+            let currentPass = view.getCurrentPassword(),
+            let newPass = view.getNewPassword(),
+            let confirmNewPass = view.getConfirmNewPassword(),
+            currentPass.count > 0 && newPass.count > 0 && confirmNewPass.count > 0
         else {
             view?.showAlert(title: Constants.errorTitle, message: Constants.emptyFieldsError)
             return
         }
         
-        if pass == confirmPass && pass != newPass {
-            let result = authService.changePass(newPass: newPass)
-            result ? view.showAlert(title: Constants.success) : view.showAlert(title: Constants.errorTitle)
-        } else if pass == confirmPass && pass == newPass {
-            view.showAlert(title: Constants.passMatch)
-        } else {
-            view.showAlert(title: Constants.notMatch)
+        guard let currentUser = authService.getCurrentUser() else {
+            view.showAlert(title: Constants.noUserTitle)
+            return
         }
         
+        // Проверяем, что текущий пароль верный
+        if currentUser.password != currentPass {
+            view.showAlert(title: Constants.errorTitle, message: Constants.invalidCurrentPassword)
+            return
+        }
+        
+        // Проверяем, что новый пароль и его подтверждение совпадают
+        if newPass != confirmNewPass {
+            view.showAlert(title: Constants.notMatch)
+            return
+        }
+        
+        // Проверяем, что новый пароль отличается от текущего
+        if currentPass == newPass {
+            view.showAlert(title: Constants.passMatch)
+            return
+        }
+        
+        // Обновляем пароль
+        let result = authService.changePass(newPass: newPass)
+        if result {
+            view.showAlert(title: Constants.success)
+        } else {
+            view.showAlert(title: Constants.errorTitle)
+        }
     }
 }
 
@@ -53,6 +73,6 @@ private extension ChangePassPresenter {
         static let success = "Пароль успешно изменён"
         static let notMatch = "Пароли не совпадают"
         static let passMatch = "Новый пароль должен отличаться от старого. Пожалуйста, придумайте другой пароль."
-
+        static let invalidCurrentPassword = "Неверный текущий пароль"
     }
 }

@@ -49,16 +49,16 @@ final class ChangePassViewController: UIViewController {
     }
     
     // MARK: - Public Methods
-    func getPass() -> String? {
+    func getCurrentPassword() -> String? {
         passField.getText()
     }
     
-    func getConfirmPass() -> String? {
-        confirmPassField.getText()
+    func getNewPassword() -> String? {
+        newPassField.getText()
     }
     
-    func getNewPass() -> String? {
-        newPassField.getText()
+    func getConfirmNewPassword() -> String? {
+        confirmPassField.getText()
     }
 }
 
@@ -76,13 +76,13 @@ private extension ChangePassViewController {
             $0.leading.trailing.equalToSuperview().inset(30)
         }
         
-        confirmPassField.snp.makeConstraints {
+        newPassField.snp.makeConstraints {
             $0.top.equalTo(passField.snp.bottom).inset(-16)
             $0.leading.trailing.equalToSuperview().inset(30)
         }
         
-        newPassField.snp.makeConstraints {
-            $0.top.equalTo(confirmPassField.snp.bottom).inset(-16)
+        confirmPassField.snp.makeConstraints {
+            $0.top.equalTo(newPassField.snp.bottom).inset(-16)
             $0.leading.trailing.equalToSuperview().inset(30)
         }
         
@@ -151,11 +151,11 @@ private extension ChangePassViewController {
             static let screenTitle = "Change password"
             static let changePassButtonTitle = "Change password"
             static let passTitle = "Current password"
-            static let passPlaceholder = "Enter your current email"
-            static let confirmPassTitle = "Confirm password"
-            static let confirmPassPlaceholder = "Enter your current email"
+            static let passPlaceholder = "Enter your current password"
+            static let confirmPassTitle = "Confirm new password"
+            static let confirmPassPlaceholder = "Confirm your new password"
             static let newPassTitle = "New password"
-            static let newPassPlaceholder = "Enter your new email"
+            static let newPassPlaceholder = "Enter your new password"
         }
     }
 }
