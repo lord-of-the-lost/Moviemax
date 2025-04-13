@@ -162,5 +162,6 @@ enum TextConstants {
         static let screenTitle = "moviewDetailScreenTitle"
         static let movieDescriptionTitle = "movieDescriptionTitle"
         static let watchButtonTitle = "watchButtonTitle"
+        static let showMoreText = "showMoreText"
     }
 }
