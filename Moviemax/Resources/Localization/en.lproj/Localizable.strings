@@ -133,3 +133,7 @@
 "accountLabel" = "Already have an account?";
 "namePlaceholder" = "Enter your name";
 "surnamePlaceholder" = "Enter your last name";
+
+// Search
+"search" = "Search";
+"noMovies" = "No movies found";

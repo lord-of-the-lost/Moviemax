@@ -214,4 +214,10 @@ enum TextConstants {
             static let placeholder = "enterPasswordTitle"
         }
     }
+    
+    enum Search {
+        static let screenTitle = "search"
+        static let emptyStateTitle = "noMovies"
+        static let emptyStateDescription = ""
+    }
 }

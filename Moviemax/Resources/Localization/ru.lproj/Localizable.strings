@@ -132,3 +132,7 @@
 "accountLabel" = "Уже есть аккаунт?";
 "namePlaceholder" = "Введите имя";
 "surnamePlaceholder" = "Введите фамилию";
+
+// Search
+"search" = "Поиск";
+"noMovies" = "Ничего не найдено";
