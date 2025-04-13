@@ -29,4 +29,18 @@ enum TextConstants {
         static let useRussian = "useRussian"
         static let logout = "logout"
     }
+    
+    enum Profile {
+        static let saveButtonTitle: String = "saveButtonTitle"
+        static let screenName: String = "screenName"
+        static let firstNameLabel: String = "firstName"
+        static let lastNameLabel: String = "lastName"
+        static let emailLabel: String = "email"
+        static let dateOfBirthLabel: String = "dateOfBirth"
+        static let locationLabel: String = "location"
+        static let errorTitle: String = "errorTitle"
+        static let errorEmptyFields: String = "errorEmptyFields"
+        static let doneButtonTitle: String = "doneButtonTitle"
+        static let cancelButtonTitle: String = "cancelButtonTitle"
+    }
 }

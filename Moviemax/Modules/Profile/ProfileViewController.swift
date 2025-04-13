@@ -23,26 +23,26 @@ final class ProfileViewController: UIViewController {
     )
     
     private lazy var firstNameTextField = CustomTextEditView(
-        labelName: Constants.Text.firstNameLabel,
+        labelName: TextConstants.Profile.firstNameLabel.localized(),
         type: .textField
     )
     
     private lazy var lastNameTextField = CustomTextEditView(
-        labelName: Constants.Text.lastNameLabel,
+        labelName: TextConstants.Profile.lastNameLabel.localized(),
         type: .textField
     )
     
     private lazy var emailTextField = CustomTextEditView(
-        labelName: Constants.Text.emailLabel,
+        labelName: TextConstants.Profile.emailLabel.localized(),
         type: .textField
     )
     
     private lazy var dateOfBirthPicker = DatePickerView(
-        labelName: Constants.Text.dateOfBirthLabel
+        labelName: TextConstants.Profile.dateOfBirthLabel.localized()
     )
     
     private lazy var locationTextView = CustomTextEditView(
-        labelName: Constants.Text.locationLabel,
+        labelName: TextConstants.Profile.locationLabel.localized(),
         type: .textView
     )
     
@@ -50,7 +50,7 @@ final class ProfileViewController: UIViewController {
     private lazy var genderSelectorView = GenderSelectorView(selectedGender: .male)
     
     private lazy var saveButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.saveButtonTitle)
+        let button = CommonButton(title: TextConstants.Profile.saveButtonTitle.localized())
         button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -86,7 +86,7 @@ final class ProfileViewController: UIViewController {
         toolbar.barStyle = .default
         
         let cancelButton = UIBarButtonItem(
-            title: Constants.Text.cancelButtonTitle,
+            title: TextConstants.Profile.cancelButtonTitle.localized(),
             style: .plain,
             target: self,
             action: #selector(cancelButtonTapped)
@@ -99,7 +99,7 @@ final class ProfileViewController: UIViewController {
         )
         
         let doneButton = UIBarButtonItem(
-            title: Constants.Text.doneButtonTitle,
+            title: TextConstants.Profile.doneButtonTitle.localized(),
             style: .done,
             target: self,
             action: #selector(doneButtonTapped)
@@ -236,7 +236,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 // MARK: - Private Methods
 private extension ProfileViewController {
     func setupUI() {
-        navigationItem.title = Constants.Text.screenName
+        navigationItem.title = TextConstants.Profile.screenName.localized()
         view.backgroundColor = .appBackground
         
         view.addSubviews(scrollView, datePickerContainer)
@@ -366,7 +366,7 @@ private extension ProfileViewController {
             let notes = locationTextView.getText(),
             !birthDate.isEmpty
         else {
-            showAlert(title: Constants.Text.errorTitle, message: Constants.Text.errorEmptyFields)
+            showAlert(title: TextConstants.Profile.errorTitle.localized(), message: TextConstants.Profile.errorEmptyFields.localized())
             return
         }
         
@@ -385,23 +385,6 @@ private extension ProfileViewController {
 // MARK: - Constants
 private extension ProfileViewController {
     enum Constants {
-        enum Text {
-            static let saveButtonTitle: String = "Сохранить изменения"
-            static let screenName: String = "Profile"
-            
-            static let firstNameLabel: String = "First Name"
-            static let lastNameLabel: String = "Last Name"
-            static let emailLabel: String = "E-mail"
-            static let dateOfBirthLabel: String = "Date of Birth"
-            static let locationLabel: String = "Location"
-            
-            static let errorTitle: String = "Ошибка"
-            static let errorEmptyFields: String = "Пожалуйста, заполните все поля"
-            
-            static let doneButtonTitle: String = "Готово"
-            static let cancelButtonTitle: String = "Отмена"
-        }
-        
         enum Constraints {
             static let stackViewSpacing: CGFloat = 16
             static let stackViewOffsetInset: CGFloat = 24

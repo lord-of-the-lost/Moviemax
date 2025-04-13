@@ -22,3 +22,16 @@
 "darkMode" = "Тёмная тема";
 "useRussian" = "Использовать русский язык";
 "logout" = "Выйти";
+
+//Profile Module
+"saveButtonTitle" = "Сохранить изменения";
+"screenName" = "Профиль";
+"firstName" = "Имя";
+"lastName" = "Фамилия";
+"email" = "Электронная почта";
+"dateOfBirth" = "Дата рождения";
+"location" = "Местоположение";
+"errorTitle" = "Ошибка";
+"errorEmptyFields" = "Пожалуйста, заполните все поля";
+"doneButtonTitle" = "Готово";
+"cancelButtonTitle" = "Отмена";

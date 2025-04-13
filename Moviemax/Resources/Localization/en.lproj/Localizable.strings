@@ -22,3 +22,16 @@
 "darkMode" = "Dark Mode";
 "useRussian" = "Use Russian language";
 "logout" = "Log Out";
+
+//Profile Module
+"saveButtonTitle" = "Save changes";
+"screenName" = "Profile";
+"firstName" = "First name";
+"lastName" = "Last name";
+"email" = "E-mail";
+"dateOfBirth" = "Date of birth";
+"location" = "Location";
+"errorTitle" = "Error";
+"errorEmptyFields" = "Please fill in all fields";
+"doneButtonTitle" = "Done";
+"cancelButtonTitle" = "Cancel";
