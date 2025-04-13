@@ -50,3 +50,11 @@
 "secondPageDescription" = "Save your favorites and get personalized recommendations to find your next favorite show.";
 "thirdPageTitle" = "Watch your favorite movie easily";
 "thirdPageDescription" = "Browse a vast library of films and series from various genres and languages.";
+
+//Home Module
+"greeting" = "Hi, User";
+"shortGreeting" = "Hi";
+"status" = "only streaming movie lovers";
+"seeAll" = "See All";
+"boxOffice" = "Box Office";
+"category" = "Category";

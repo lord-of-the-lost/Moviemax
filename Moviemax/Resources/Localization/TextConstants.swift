@@ -69,4 +69,13 @@ enum TextConstants {
             static let buttonTitle = "start"
         }
     }
+    
+    enum Home {
+        static let greeting = "greeting" //"Hi, User"
+        static let shortGreeting = "shortGreeting" //"Hi, User"
+        static let status = "status" //"only streaming movie lovers"
+        static let seeAllText = "seeAll"// "See All"
+        static let boxOfficeText = "boxOffice"// "Box Office"
+        static let category = "category"// "Category"
+    }
 }

@@ -66,8 +66,8 @@ private extension HomePresenter {
         
         let avatar = currentUser.avatar.flatMap { UIImage(data: $0) } ?? UIImage(resource: .avatar)
         let viewModel = UserHeaderView.UserHeaderViewModel(
-            greeting: "Hi, \(currentUser.firstName)",
-            status: "only streaming movie lovers",
+            greeting: "\(TextConstants.Home.shortGreeting.localized()), \(currentUser.firstName)",
+            status: TextConstants.Home.status.localized(),
             avatar: avatar
         )
         
@@ -150,8 +150,8 @@ private extension HomePresenter {
         if viewModel == nil {
             viewModel = HomeViewModel(
                 userHeader: UserHeaderView.UserHeaderViewModel(
-                    greeting: "Hi, User",
-                    status: "only streaming movie lovers",
+                    greeting: TextConstants.Home.greeting.localized(),
+                    status: TextConstants.Home.status.localized(),
                     avatar: UIImage(resource: .avatar)
                 ),
                 sliderMovies: [],
