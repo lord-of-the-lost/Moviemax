@@ -26,6 +26,7 @@ final class RecentWatchViewController: UIViewController {
         tableView.backgroundColor = .appBackground
         tableView.register(MovieLargeCell.self, forCellReuseIdentifier: MovieLargeCell.identifier)
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
