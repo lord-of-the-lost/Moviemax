@@ -58,3 +58,9 @@
 "seeAll" = "Посмотреть все";
 "boxOffice" = "Витрина";
 "category" = "Категория";
+
+// EditPhotoView
+"editPhotoTitle" = "Изменить фото профиля";
+"takePhotoTitle" = "Сделать фото";
+"choosePhotoTitle" = "Выбрать из галереи";
+"deletePhotoTitle" = "Удалить фото";

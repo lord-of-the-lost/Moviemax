@@ -71,11 +71,18 @@ enum TextConstants {
     }
     
     enum Home {
-        static let greeting = "greeting" //"Hi, User"
-        static let shortGreeting = "shortGreeting" //"Hi, User"
-        static let status = "status" //"only streaming movie lovers"
-        static let seeAllText = "seeAll"// "See All"
-        static let boxOfficeText = "boxOffice"// "Box Office"
-        static let category = "category"// "Category"
+        static let greeting = "greeting"
+        static let shortGreeting = "shortGreeting"
+        static let status = "status"
+        static let seeAllText = "seeAll"
+        static let boxOfficeText = "boxOffice"
+        static let category = "category"
+    }
+    
+    enum EditPhotoView {
+        static let title = "editPhotoTitle"
+        static let takeTitle = "takePhotoTitle"
+        static let chooseTitle = "choosePhotoTitle"
+        static let deleteTitle = "deletePhotoTitle" 
     }
 }

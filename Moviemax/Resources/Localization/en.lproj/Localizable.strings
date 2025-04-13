@@ -58,3 +58,10 @@
 "seeAll" = "See All";
 "boxOffice" = "Box Office";
 "category" = "Category";
+
+// EditPhotoView
+"editPhotoTitle" = "Change your picture";
+"takePhotoTitle" = "Take a photo";
+"choosePhotoTitle" = "Choose from your file";
+"deletePhotoTitle" = "Delete Photo";
+

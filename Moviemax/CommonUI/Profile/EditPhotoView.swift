@@ -34,7 +34,7 @@ final class EditPhotoView: UIView {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.title
+        label.text = TextConstants.EditPhotoView.title.localized()
         label.font = AppFont.plusJakartaSemiBold.withSize(20)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .center
@@ -48,19 +48,19 @@ final class EditPhotoView: UIView {
     }()
     
     private lazy var takePhotoButtonView = ButtonView(
-        title: Constants.Text.takeTitle,
+        title: TextConstants.EditPhotoView.takeTitle.localized(),
         color: .adaptiveTextMain,
         icon: .cameraIcon
     )
     
     private lazy var choosePhotoButtonView = ButtonView(
-        title: Constants.Text.chooseTitle,
+        title: TextConstants.EditPhotoView.chooseTitle.localized(),
         color: .adaptiveTextMain,
         icon: .folderIcon
     )
     
     private lazy var deletePhotoButtonView = ButtonView(
-        title: Constants.Text.deleteTitle,
+        title: TextConstants.EditPhotoView.deleteTitle.localized(),
         color: .red,
         icon: .trashbinIcon
     )
@@ -182,20 +182,5 @@ private extension EditPhotoView {
     @objc
     func didTapDeletePhoto() {
         delegate?.editPhotoViewDidTapDeletePhoto(self)
-    }
-}
-
-//MARK: - Constants
-private extension EditPhotoView {
-    enum Constants {
-        enum Text {
-            static let title = "Change your picture"
-            static let takeTitle = "Take a photo"
-            static let chooseTitle = "Choose from your file"
-            static let deleteTitle = "Delete Photo"
-        }
-        enum Constraints {
-            
-        }
     }
 }
