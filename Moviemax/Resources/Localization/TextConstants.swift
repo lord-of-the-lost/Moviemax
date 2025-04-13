@@ -134,6 +134,7 @@ enum TextConstants {
         static let newPassPlaceholder = "newPassPlaceholder"
         static let confirmPassTitle = "confirmPassTitle"
         static let confirmPassPlaceholder = "confirmPassPlaceholder"
+      
         enum Errors {
             static let noUserTitle = "noUserTitle"
             static let errorTitle = "errorTitle"
@@ -141,6 +142,18 @@ enum TextConstants {
             static let success = "successPass"
             static let notMatch = "passNotMatch"
             static let passMatch = "passMatch"
+        }
+    }
+    
+    enum Favorites {
+        static let screenTitle = "favorites"
+        static let emptyStateTitle = "emptyFavoritesTitle"
+        static let emptyStateDescription = "emptyFavoritesDescription"
+        static let minutes = "minutes"
+        
+        enum Errors {
+            static let cantDownloadFavorites = "cantDownloadFavorites"
+            static let cantDeleteFromFavorites = "cantDeleteFromFavorites"
         }
     }
 }

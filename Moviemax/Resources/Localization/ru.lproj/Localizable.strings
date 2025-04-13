@@ -104,3 +104,11 @@
 "successPass" = "Пароль успешно изменён";
 "passNotMatch" = "Пароли не совпадают";
 "passMatch" = "Новый пароль должен отличаться от старого. Пожалуйста, придумайте другой пароль.";
+
+// Favorites Module
+"favorites" = "Избранное";
+"emptyFavoritesTitle" = "В избранном пока нет фильмов";
+"emptyFavoritesDescription" = "Здесь появятся избранные фильмы";
+"minutes" = "Мин.";
+"cantDownloadFavorites" = "Не удалось загрузить избранные фильмы:";
+"cantDeleteFromFavorites" = "Не удалось удалить фильм из избранного:";

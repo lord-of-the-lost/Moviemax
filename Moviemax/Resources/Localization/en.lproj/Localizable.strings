@@ -106,3 +106,10 @@
 "passNotMatch" = "Passwords don't match";
 "passMatch" = "The new password must be different from the old one. Please come up with a different password.";
 
+// Favorites Module
+"favorites" = "Favorites";
+"emptyFavoritesTitle" = "No Favorite Movies Yet";
+"emptyFavoritesDescription" = "Movies you like will appear here";
+"minutes" = "Minutes";
+"cantDownloadFavorites" = "Couldn't download favorite movies:";
+"cantDeleteFromFavorites" = "Couldn't delete movie from favorites:";
