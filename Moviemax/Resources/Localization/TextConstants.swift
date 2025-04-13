@@ -170,4 +170,16 @@ enum TextConstants {
         static let emptyStateTitle = "seeAllEmptyTitle"
         static let emptyStateDescription = "seeAllEmptyDescription"
     }
+    
+    enum ForgotPass {
+        static let screenTitle = "forgotPassword"
+        static let submitButtonTitle = "submitButtonTitle"
+        static let title = "emailTitle"
+        static let placeholder = "enterEmail"
+        static let noUserTitle = "noUserTitle"
+        static let errorTitle = "error"
+        static let emptyFieldsError = "emptyFieldsError"
+        static let email = "emailTitle"
+        static let pass = "passwordTitle"
+    }
 }

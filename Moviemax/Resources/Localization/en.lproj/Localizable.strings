@@ -126,3 +126,5 @@
 "seeAllEmptyTitle" = "No Movies Yet";
 "seeAllEmptyDescription" = "All movies will appear here";
 
+// ForgotPass Module
+"submitButtonTitle" = "Submit";

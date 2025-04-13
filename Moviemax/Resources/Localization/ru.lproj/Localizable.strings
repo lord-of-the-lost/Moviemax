@@ -124,3 +124,6 @@
 "seeAllScreenTitle" = "Фильмы";
 "seeAllEmptyTitle" = "Пока нет фильмов";
 "seeAllEmptyDescription" = "Все фильмы появятся здесь";
+
+// ForgotPass Module
+"submitButtonTitle" = "Отправить";
