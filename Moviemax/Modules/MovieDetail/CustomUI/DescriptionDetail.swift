@@ -75,7 +75,7 @@ private extension DescriptionDetail {
             textLabel.text = fullText
         } else {
             textLabel.numberOfLines = maxLines
-            let textWithShowMore = fullText + Constants.Text.showMoreText
+            let textWithShowMore = fullText + TextConstants.MovieDetail.showMoreText.localized()
             
             let tempLabel = UILabel()
             tempLabel.font = textLabel.font
@@ -91,13 +91,13 @@ private extension DescriptionDetail {
             if estimatedLines > maxLines {
                 var truncatedText = fullText
                 while truncatedText.count > 0 {
-                    let testText = truncatedText + "... " + Constants.Text.showMoreText
+                    let testText = truncatedText + "... " + TextConstants.MovieDetail.showMoreText.localized()
                     tempLabel.text = testText
                     tempLabel.sizeToFit()
                     
                     if Int(ceil(tempLabel.frame.height / lineHeight)) <= maxLines {
                         let attributedString = NSMutableAttributedString(string: testText)
-                        let showMoreRange = NSRange(location: testText.count - Constants.Text.showMoreText.count, length: Constants.Text.showMoreText.count)
+                        let showMoreRange = NSRange(location: testText.count - TextConstants.MovieDetail.showMoreText.localized().count, length: TextConstants.MovieDetail.showMoreText.localized().count)
                         attributedString.addAttribute(.foregroundColor, value: UIColor.accent, range: showMoreRange)
                         textLabel.attributedText = attributedString
                         break
@@ -108,15 +108,6 @@ private extension DescriptionDetail {
             } else {
                 textLabel.text = fullText
             }
-        }
-    }
-}
-
-// MARK: - Constants
-private extension DescriptionDetail {
-    enum Constants {
-        enum Text {
-            static let showMoreText: String = " Show More"
         }
     }
 }

@@ -17,7 +17,14 @@ final class FilterView: UIView {
     var selectedRatingChanged: ((Int) -> Void)?
     
     // MARK: - Private Properties
-    private let categories = ["All", "Action", "Adventure", "Mystery", "Fantasy", "Others"]
+    private let categories = [
+        TextConstants.Genres.all.localized(),
+        TextConstants.Genres.action.localized(),
+        TextConstants.Genres.adventure.localized(),
+        TextConstants.Genres.mystery.localized(),
+        TextConstants.Genres.fantasy.localized(),
+        TextConstants.Genres.others.localized()
+    ]
     private var categoryLabels: [UILabel] = []
     private var selectedLabel: UILabel?
     
@@ -33,7 +40,7 @@ final class FilterView: UIView {
     
     private lazy var titleFilter: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.filterTitle
+        label.text = TextConstants.FilterView.filterTitle.localized()
         label.textColor = .adaptiveTextMain
         label.font = AppFont.plusJakartaSemiBold.withSize(18)
         return label
@@ -41,7 +48,7 @@ final class FilterView: UIView {
     
     private lazy var resetFiltersButton: UIButton = {
         let button = UIButton()
-        button.setTitle(Constants.Text.resetFilters, for: .normal)
+        button.setTitle(TextConstants.FilterView.resetFilters.localized(), for: .normal)
         button.setTitleColor(.accent, for: .normal)
         button.titleLabel?.font = AppFont.plusJakartaSemiBold.withSize(14)
         button.addTarget(self, action: #selector(resetFiltersButtonTapped), for: .touchUpInside)
@@ -50,7 +57,7 @@ final class FilterView: UIView {
     
     private lazy var categoriesTitle: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.categories
+        label.text = TextConstants.FilterView.categories.localized()
         label.textColor = .adaptiveTextMain
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         return label
@@ -86,7 +93,7 @@ final class FilterView: UIView {
     
     private lazy var starRatingTitle: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.starRating
+        label.text = TextConstants.FilterView.starRating.localized()
         label.textColor = .adaptiveTextMain
         label.font = AppFont.plusJakartaSemiBold.withSize(16)
         return label
@@ -122,7 +129,7 @@ final class FilterView: UIView {
     }()
     
     private lazy var applyFiltersButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.applyFilterButton)
+        let button = CommonButton(title: TextConstants.FilterView.applyFilterButton.localized())
         button.addTarget(self, action: #selector(applyFilterButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -176,7 +183,6 @@ private extension FilterView {
             $0.top.equalToSuperview().offset(21)
             $0.trailing.equalToSuperview().offset(-35)
             $0.height.equalTo(22)
-            $0.width.equalTo(100)
         }
         
         titleFilter.snp.makeConstraints {
@@ -386,18 +392,5 @@ private extension FilterView {
     
     @objc private func applyFilterButtonTapped() {
         closeButtonAction?()
-    }
-}
-
-// MARK: - Constants
-private extension FilterView {
-    enum Constants {
-        enum Text {
-            static let filterTitle = "Filter"
-            static let resetFilters = "Reset Filters"
-            static let categories = "Categories"
-            static let starRating = "Star Rating"
-            static let applyFilterButton = "Apply Filters"
-        }
     }
 }

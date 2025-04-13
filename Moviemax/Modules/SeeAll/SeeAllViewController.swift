@@ -24,6 +24,7 @@ final class SeeAllViewController: UIViewController {
         tableView.backgroundColor = .appBackground
         tableView.register(MovieLargeCell.self, forCellReuseIdentifier: MovieLargeCell.identifier)
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -35,7 +36,7 @@ final class SeeAllViewController: UIViewController {
     
     private lazy var emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateTitle
+        label.text = TextConstants.SeeAll.emptyStateTitle.localized()
         label.font = AppFont.plusJakartaBold.withSize(24)
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -44,7 +45,7 @@ final class SeeAllViewController: UIViewController {
     
     private lazy var emptyStateDescription: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateDescription
+        label.text = TextConstants.SeeAll.emptyStateDescription.localized()
         label.font = AppFont.montserratMedium.withSize(16)
         label.textAlignment = .center
         label.textColor = .gray
@@ -83,6 +84,7 @@ final class SeeAllViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         navigationController?.tabBarController?.tabBar.isHidden = false
         presenter.viewWillAppear()
+        updateLocalizedTexts()
     }
     
     func show(_ state: SeeAllState) {
@@ -179,7 +181,7 @@ private extension SeeAllViewController {
     }
     
     func setupNavigation() {
-        self.title = Constants.Text.screenTitle
+        self.title = TextConstants.SeeAll.screenTitle.localized()
                 
         backButton.snp.makeConstraints {
             $0.size.equalTo(40)
@@ -195,17 +197,17 @@ private extension SeeAllViewController {
     @objc func backButtonTapped() {
         presenter.backButtonTapped()
     }
+    
+    func updateLocalizedTexts() {
+        self.title = TextConstants.SeeAll.screenTitle.localized()
+        emptyStateLabel.text = TextConstants.SeeAll.emptyStateTitle.localized()
+        emptyStateDescription.text = TextConstants.SeeAll.emptyStateDescription.localized()
+    }
 }
 
 // MARK: - Constants
 private extension SeeAllViewController {
     enum Constants {
-        enum Text {
-            static let screenTitle = "Movies"
-            static let emptyStateTitle = "No Movies Yet"
-            static let emptyStateDescription = "All movies will appear here"
-        }
-        
         enum Constraints {
             static let cellHeight: CGFloat = 184
             static let emptyStateSpacing: CGFloat = 16

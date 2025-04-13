@@ -35,7 +35,7 @@ final class FavoritesViewController: UIViewController {
     
     private lazy var emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateTitle
+        label.text = TextConstants.Favorites.emptyStateTitle.localized()
         label.font = AppFont.plusJakartaBold.withSize(24)
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -44,7 +44,7 @@ final class FavoritesViewController: UIViewController {
     
     private lazy var emptyStateDescription: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.emptyStateDescription
+        label.text = TextConstants.Favorites.emptyStateDescription.localized()
         label.font = AppFont.montserratMedium.withSize(16)
         label.textAlignment = .center
         label.textColor = .gray
@@ -75,6 +75,7 @@ final class FavoritesViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         navigationController?.tabBarController?.tabBar.isHidden = false
         presenter.viewWillAppear()
+        updateLocalizedTexts()
     }
     
     func show(_ state: FavoritesState) {
@@ -140,7 +141,7 @@ extension FavoritesViewController: MovieLargeCellDelegate {
 // MARK: - Private Methods
 private extension FavoritesViewController {
     func setupUI() {
-        navigationItem.title = Constants.Text.screenTitle
+        navigationItem.title = TextConstants.Favorites.screenTitle.localized()
         view.backgroundColor = .appBackground
         view.addSubviews(tableView, emptyStateView)
         emptyStateView.addSubviews(emptyStateLabel, emptyStateDescription)
@@ -169,17 +170,17 @@ private extension FavoritesViewController {
             $0.bottom.equalToSuperview()
         }
     }
+    
+    func updateLocalizedTexts() {
+        navigationItem.title = TextConstants.Favorites.screenTitle.localized()
+        emptyStateDescription.text = TextConstants.Favorites.emptyStateDescription.localized()
+        emptyStateLabel.text = TextConstants.Favorites.emptyStateTitle.localized()
+    }
 }
 
 // MARK: - Constants
 private extension FavoritesViewController {
     enum Constants {
-        enum Text {
-            static let screenTitle = "Favorites"
-            static let emptyStateTitle = "No Favorite Movies Yet"
-            static let emptyStateDescription = "Movies you like will appear here"
-        }
-        
         enum Constraints {
             static let cellHeight: CGFloat = 184
             static let emptyStateSpacing: CGFloat = 16

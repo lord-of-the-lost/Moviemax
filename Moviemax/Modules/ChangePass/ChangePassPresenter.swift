@@ -27,52 +27,42 @@ final class ChangePassPresenter {
             let confirmNewPass = view.getConfirmNewPassword(),
             currentPass.count > 0 && newPass.count > 0 && confirmNewPass.count > 0
         else {
-            view?.showAlert(title: Constants.errorTitle, message: Constants.emptyFieldsError)
+            view?.showAlert(title: TextConstants.ChangePass.Errors.errorTitle.localized(), message: TextConstants.ChangePass.Errors.emptyFieldsError.localized())
             return
         }
         
         guard let currentUser = authService.getCurrentUser() else {
-            view.showAlert(title: Constants.noUserTitle)
+            view.showAlert(title: TextConstants.ChangePass.Errors.noUserTitle)
             return
         }
         
         // Проверяем, что текущий пароль верный
         if currentUser.password != currentPass {
-            view.showAlert(title: Constants.errorTitle, message: Constants.invalidCurrentPassword)
+            view.showAlert(
+                title: TextConstants.ChangePass.Errors.errorTitle.localized(),
+                message: TextConstants.ChangePass.Errors.invalidCurrentPassword.localized()
+            )
             return
         }
         
         // Проверяем, что новый пароль и его подтверждение совпадают
         if newPass != confirmNewPass {
-            view.showAlert(title: Constants.notMatch)
+            view.showAlert(title: TextConstants.ChangePass.Errors.notMatch.localized())
             return
         }
         
         // Проверяем, что новый пароль отличается от текущего
         if currentPass == newPass {
-            view.showAlert(title: Constants.passMatch)
+            view.showAlert(title: TextConstants.ChangePass.Errors.passMatch.localized())
             return
         }
         
         // Обновляем пароль
         let result = authService.changePass(newPass: newPass)
         if result {
-            view.showAlert(title: Constants.success)
+            view.showAlert(title: TextConstants.ChangePass.Errors.success.localized())
         } else {
-            view.showAlert(title: Constants.errorTitle)
+            view.showAlert(title: TextConstants.ChangePass.Errors.errorTitle.localized())
         }
-    }
-}
-
-// MARK: - Constants
-private extension ChangePassPresenter {
-    enum Constants {
-        static let noUserTitle = "Пользователь не найден"
-        static let errorTitle = "Ошибка"
-        static let emptyFieldsError = "Пожалуйста, заполните все поля"
-        static let success = "Пароль успешно изменён"
-        static let notMatch = "Пароли не совпадают"
-        static let passMatch = "Новый пароль должен отличаться от старого. Пожалуйста, придумайте другой пароль."
-        static let invalidCurrentPassword = "Неверный текущий пароль"
     }
 }

@@ -49,7 +49,7 @@ final class FavoritesPresenter {
         case .failure(let error):
             view?.showAlert(
                 title: "Ошибка",
-                message: "Не удалось удалить фильм из избранного: \(error.localizedDescription)"
+                message: "\(TextConstants.Favorites.Errors.cantDeleteFromFavorites.localized()) \(error.localizedDescription)"
             )
         }
     }
@@ -76,8 +76,8 @@ private extension FavoritesPresenter {
         case .failure(let error):
             state = .empty
             view?.showAlert(
-                title: "Ошибка",
-                message: "Не удалось загрузить избранные фильмы: \(error.localizedDescription)"
+                title: TextConstants.Common.error.localized(),
+                message: "\(TextConstants.Favorites.Errors.cantDownloadFavorites.localized()) \(error.localizedDescription)"
             )
         }
     }
@@ -121,7 +121,7 @@ private extension FavoritesPresenter {
         MovieLargeCell.MovieLargeCellViewModel(
             title: movie.name,
             poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "\(movie.movieLength) Minutes",
+            filmLength: "\(movie.movieLength) \(TextConstants.Favorites.minutes.localized())",
             reliseDate: movie.premiere.world,
             genre: movie.genres.first?.name ?? "Unknown",
             isLiked: true

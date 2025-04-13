@@ -46,6 +46,15 @@ struct User {
     enum Gender: String {
         case male = "Male"
         case female = "Female"
+        
+        var description: String {
+            switch self {
+            case .male:
+                return TextConstants.Gender.male.localized()
+            case .female:
+                return TextConstants.Gender.female.localized()
+            }
+        }
     }
 }
 

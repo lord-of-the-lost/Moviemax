@@ -35,13 +35,19 @@ final class AuthPresenter {
             let email = view.getEmail(),
             let password = view.getPassword()
         else {
-            view?.showAlert(title: Constants.errorTitle, message: Constants.emptyFieldsError)
+            view?.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Auth.Errors.emptyFieldsError.localized()
+            )
             return
         }
         
         // Проверка валидности email
         guard isValidEmail(email) else {
-            view.showAlert(title: Constants.errorTitle, message: Constants.invalidEmailError)
+            view.showAlert(
+                    title: TextConstants.Auth.Errors.errorTitle.localized(),
+                    message: TextConstants.Auth.Errors.invalidEmailError.localized()
+                )
             return
         }
         
@@ -55,11 +61,20 @@ final class AuthPresenter {
         case .success:
             router.navigateToMain()
         case .failure(.userNotFound):
-            view.showAlert(title: Constants.errorTitle, message: Constants.userNotFoundError)
+            view.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Auth.Errors.userNotFoundError.localized()
+            )
         case .failure(.invalidPassword):
-            view.showAlert(title: Constants.errorTitle, message: Constants.invalidPasswordError)
+            view.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Auth.Errors.invalidPasswordError.localized()
+            )
         case .failure:
-            view.showAlert(title: Constants.errorTitle, message: Constants.loginError)
+            view.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Auth.Errors.loginError.localized()
+            )
         }
     }
     
@@ -68,17 +83,5 @@ final class AuthPresenter {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
-    }
-}
-
-// MARK: - Constants
-private extension AuthPresenter {
-    enum Constants {
-        static let errorTitle = "Ошибка"
-        static let emptyFieldsError = "Пожалуйста, заполните все поля"
-        static let invalidEmailError = "Введите корректный email"
-        static let userNotFoundError = "Пользователь с таким email не найден"
-        static let invalidPasswordError = "Неверный пароль"
-        static let loginError = "Произошла ошибка при входе"
     }
 }
