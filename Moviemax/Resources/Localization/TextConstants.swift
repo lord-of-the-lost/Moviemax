@@ -124,4 +124,23 @@ enum TextConstants {
             static let loginError = "loginError"
         }
     }
+    
+    enum ChangePass {
+        static let screenTitle = "changePassTitle"
+        static let changePassButtonTitle = "changePassTitle"
+        static let passTitle = "passTitle"
+        static let passPlaceholder = "passPlaceholder"
+        static let newPassTitle = "newPassTitle"
+        static let newPassPlaceholder = "newPassPlaceholder"
+        static let confirmPassTitle = "confirmPassTitle"
+        static let confirmPassPlaceholder = "confirmPassPlaceholder"
+        enum Errors {
+            static let noUserTitle = "noUserTitle"
+            static let errorTitle = "errorTitle"
+            static let emptyFieldsError = "emptyFieldsError"
+            static let success = "successPass"
+            static let notMatch = "passNotMatch"
+            static let passMatch = "passMatch"
+        }
+    }
 }

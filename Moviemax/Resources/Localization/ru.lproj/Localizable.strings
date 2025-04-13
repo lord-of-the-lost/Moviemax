@@ -72,7 +72,7 @@
 "male" = "Мужской";
 "female" = "Женский";
 
-// Auth
+// Auth Module
 "login" = "Логин";
 "signIn" = "Войти";
 "forgotPass" = "Забыли пароль?";
@@ -92,3 +92,15 @@
 "invalidPasswordError" = "Неверный пароль";
 "loginError" = "Произошла ошибка при входе";
     
+// ChangePass Module
+"changePassTitle" = "Изменить пароль";
+"passTitle" = "Текущий пароль";
+"passPlaceholder" = "Введите ваш текущий пароль";
+"newPassTitle" = "Новый пароль";
+"newPassPlaceholder" = "Введите новый пароль";
+"confirmPassTitle" = "Подтвердить пароль";
+"confirmPassPlaceholder" = "Повторите ваш новый пароль";
+"noUserTitle" = "Пользователь не найден";
+"successPass" = "Пароль успешно изменён";
+"passNotMatch" = "Пароли не совпадают";
+"passMatch" = "Новый пароль должен отличаться от старого. Пожалуйста, придумайте другой пароль.";

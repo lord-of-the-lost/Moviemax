@@ -72,7 +72,7 @@
 "male" = "Male";
 "female" = "Female";
 
-// Auth
+// Auth Module
 "login" = "Login";
 "signIn" = "Sign In";
 "forgotPass" = "Forgot Password?";
@@ -92,4 +92,17 @@
 "invalidPasswordError" = "Invalid password";
 "loginError" = "An error occurred when logging in";
     
+// ChangePass Module
+"changePassTitle" = "Change password";
+"changePassTitle" = "Change password";
+"passTitle" = "Current password";
+"passPlaceholder" = "Enter your current password";
+"newPassTitle" = "New password";
+"newPassPlaceholder" = "Enter your new password";
+"confirmPassTitle" = "Confirm password";
+"confirmPassPlaceholder" = "Repeat your new password";
+"noUserTitle" = "The user was not found";
+"successPass" = "The password has been successfully changed";
+"passNotMatch" = "Passwords don't match";
+"passMatch" = "The new password must be different from the old one. Please come up with a different password.";
 
