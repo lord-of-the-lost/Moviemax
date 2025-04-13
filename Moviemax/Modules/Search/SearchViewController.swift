@@ -80,6 +80,11 @@ final class SearchViewController: UIViewController {
         presenter.viewDidLoad()
         chipsView.delegate = self
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateLocalizedTexts()
+    }
 
     func show(_ state: SearchState) {
         switch state {
@@ -193,6 +198,11 @@ private extension SearchViewController {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+    }
+    func updateLocalizedTexts() {
+        navigationItem.title = TextConstants.Search.screenTitle.localized()
+        emptyStateLabel.text = TextConstants.Search.emptyStateTitle.localized()
+        emptyStateDescription.text = TextConstants.Search.emptyStateDescription.localized()
     }
 }
 
