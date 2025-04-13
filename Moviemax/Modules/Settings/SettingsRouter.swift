@@ -26,4 +26,9 @@ final class SettingsRouter: RouterProtocol {
         let profileViewController = ProfileFactory.build(dependency)
         viewController?.navigationController?.pushViewController(profileViewController, animated: true)
     }
+    
+    func showChangePass() {
+        let changePassController = ChangePassFactory.build(dependency)
+        viewController?.navigationController?.pushViewController(changePassController, animated: true)
+    }
 }
