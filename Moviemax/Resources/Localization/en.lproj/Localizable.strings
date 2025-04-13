@@ -23,7 +23,7 @@
 "useRussian" = "Use Russian language";
 "logout" = "Log Out";
 
-//Profile Module
+// Profile Module
 "saveButtonTitle" = "Save changes";
 "screenName" = "Profile";
 "firstName" = "First name";
@@ -36,12 +36,12 @@
 "doneButtonTitle" = "Done";
 "cancelButtonTitle" = "Cancel";
 
-//RecentWatch Module
+// RecentWatch Module
 "screenTitle" = "Recent Watch";
 "emptyStateTitle" = "You haven't seen any movies yet.";
 "emptyStateDescription" = "Movies that you have watched recently will appear here.";
 
-//Onboarding Module
+// Onboarding Module
 "continue" = "Continue";
 "start" = "Start";
 "firstPageTitle" = "Your Pocket Cinema";
@@ -51,7 +51,7 @@
 "thirdPageTitle" = "Watch your favorite movie easily";
 "thirdPageDescription" = "Browse a vast library of films and series from various genres and languages.";
 
-//Home Module
+// Home Module
 "greeting" = "Hi, User";
 "shortGreeting" = "Hi";
 "status" = "only streaming movie lovers";
@@ -65,3 +65,5 @@
 "choosePhotoTitle" = "Choose from your file";
 "deletePhotoTitle" = "Delete Photo";
 
+// GenderSelectorView
+"gender" = "Gender";

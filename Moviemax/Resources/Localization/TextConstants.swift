@@ -85,4 +85,8 @@ enum TextConstants {
         static let chooseTitle = "choosePhotoTitle"
         static let deleteTitle = "deletePhotoTitle" 
     }
+    
+    enum GenderSelectorView {
+        static let labelText: String = "gender"
+    }
 }

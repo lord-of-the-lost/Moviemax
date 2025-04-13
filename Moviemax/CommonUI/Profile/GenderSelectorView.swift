@@ -18,7 +18,7 @@ final class GenderSelectorView: UIView {
 
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.labelText
+        label.text = TextConstants.GenderSelectorView.labelText.localized()
         label.font = AppFont.plusJakartaMedium.withSize(Constants.FontSizes.label)
         label.textColor = .lightGray
         return label
@@ -112,9 +112,6 @@ extension GenderSelectorView: CheckBoxViewDelegate {
 // MARK: - Constants
 private extension GenderSelectorView {
     enum Constants {
-        enum Text {
-            static let labelText: String = "Gender"
-        }
         enum FontSizes {
             static let label: CGFloat = 14
         }

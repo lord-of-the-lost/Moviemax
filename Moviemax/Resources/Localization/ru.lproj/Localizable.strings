@@ -23,7 +23,7 @@
 "useRussian" = "Использовать русский язык";
 "logout" = "Выйти";
 
-//Profile Module
+// Profile Module
 "saveButtonTitle" = "Сохранить изменения";
 "screenName" = "Профиль";
 "firstName" = "Имя";
@@ -36,12 +36,12 @@
 "doneButtonTitle" = "Готово";
 "cancelButtonTitle" = "Отмена";
 
-//RecentWatch Module
+// RecentWatch Module
 "screenTitle" = "Недавно просмотренные";
 "emptyStateTitle" = "Вы ещё не посмотрели ни одного фильма";
 "emptyStateDescription" = "Здесь появятся фильмы, которые вы недавно посмотрели";
 
-//Onboarding Module
+// Onboarding Module
 "continue" = "Далее";
 "start" = "Начать";
 "firstPageTitle" = "Твой карманный кинотеатр";
@@ -51,7 +51,7 @@
 "thirdPageTitle" = "Смотри свои любимые шоу легко!";
 "thirdPageDescription" = "Погрузись в обширную библиотеку фильмов и сериалов различных жанров и стран.";
 
-//Home Module
+// Home Module
 "greeting" = "Привет, пользователь!";
 "shortGreeting" = "Привет";
 "status" = "только для фанатов стриминга";
@@ -64,3 +64,6 @@
 "takePhotoTitle" = "Сделать фото";
 "choosePhotoTitle" = "Выбрать из галереи";
 "deletePhotoTitle" = "Удалить фото";
+
+// GenderSelectorView
+"gender" = "Пол";
