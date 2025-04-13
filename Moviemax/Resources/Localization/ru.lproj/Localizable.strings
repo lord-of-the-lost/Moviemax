@@ -127,3 +127,8 @@
 
 // ForgotPass Module
 "submitButtonTitle" = "Отправить";
+
+// SignUp Module
+"accountLabel" = "Уже есть аккаунт?";
+"namePlaceholder" = "Введите имя";
+"surnamePlaceholder" = "Введите фамилию";

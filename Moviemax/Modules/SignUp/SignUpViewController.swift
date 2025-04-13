@@ -16,14 +16,14 @@ final class SignUpViewController: BaseScrollViewController {
     private lazy var confirmPasswordField = TitledTextField(isSecure: true)
     
     private lazy var signUpButton: CommonButton = {
-        let button = CommonButton(title: Constants.Text.singUpButtonTitle)
+        let button = CommonButton(title: TextConstants.SignUp.singUpButtonTitle.localized())
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private lazy var accountLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.accountLabel
+        label.text = TextConstants.SignUp.accountLabel.localized()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .adaptiveTextMain
         return label
@@ -31,7 +31,7 @@ final class SignUpViewController: BaseScrollViewController {
     
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constants.Text.loginButtonTitle, for: .normal)
+        button.setTitle(TextConstants.SignUp.loginButtonTitle.localized(), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         button.setTitleColor(UIColor(resource: .accent), for: .normal)
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
@@ -96,7 +96,7 @@ final class SignUpViewController: BaseScrollViewController {
 // MARK: - Private Methods
 private extension SignUpViewController {
     func setupView() {
-        navigationItem.title = Constants.Text.screenTitle
+        navigationItem.title = TextConstants.SignUp.screenTitle.localized()
         view.backgroundColor = .appBackground
         contentView.addSubviews(formStackView, signUpButton, loginStackView)
         loginStackView.addArrangedSubviews(accountLabel, loginButton)
@@ -133,40 +133,40 @@ private extension SignUpViewController {
         
         firstNameField.configure(
             with: ViewModel(
-                title: Constants.Text.FirstName.title,
-                placeholder: Constants.Text.FirstName.placeholder,
+                title: TextConstants.SignUp.FirstName.title.localized(),
+                placeholder: TextConstants.SignUp.FirstName.placeholder.localized(),
                 type: .regular
             )
         )
         
         lastNameField.configure(
             with: ViewModel(
-                title: Constants.Text.LastName.title,
-                placeholder: Constants.Text.LastName.placeholder,
+                title: TextConstants.SignUp.LastName.title.localized(),
+                placeholder: TextConstants.SignUp.LastName.placeholder.localized(),
                 type: .regular
             )
         )
         
         emailField.configure(
             with: ViewModel(
-                title: Constants.Text.Email.title,
-                placeholder: Constants.Text.Email.placeholder,
+                title: TextConstants.SignUp.Email.title.localized(),
+                placeholder: TextConstants.SignUp.Email.placeholder.localized(),
                 type: .email
             )
         )
         
         passwordField.configure(
             with: ViewModel(
-                title: Constants.Text.Password.title,
-                placeholder: Constants.Text.Password.placeholder,
+                title: TextConstants.SignUp.Password.title.localized(),
+                placeholder: TextConstants.SignUp.Password.placeholder.localized(),
                 type: .password
             )
         )
         
         confirmPasswordField.configure(
             with: ViewModel(
-                title: Constants.Text.ConfirmPassword.title,
-                placeholder: Constants.Text.ConfirmPassword.placeholder,
+                title: TextConstants.SignUp.ConfirmPassword.title.localized(),
+                placeholder:TextConstants.SignUp.ConfirmPassword.placeholder.localized(),
                 type: .password
             )
         )
@@ -178,42 +178,5 @@ private extension SignUpViewController {
     
     @objc func loginButtonTapped() {
         presenter.loginTapped()
-    }
-}
-
-// MARK: - Constants
-private extension SignUpViewController {
-    enum Constants {
-        enum Text {
-            static let screenTitle = "Sign Up"
-            static let singUpButtonTitle = "Sign Up"
-            static let accountLabel = "Already have an account?"
-            static let loginButtonTitle = "Login"
-            
-            enum FirstName {
-                static let title = "First Name"
-                static let placeholder = "Enter your name"
-            }
-            
-            enum LastName {
-                static let title = "Last Name"
-                static let placeholder = "Enter your name"
-            }
-            
-            enum Email {
-                static let title = "E-mail"
-                static let placeholder = "Enter your email address"
-            }
-            
-            enum Password {
-                static let title = "Password"
-                static let placeholder = "Enter your password"
-            }
-            
-            enum ConfirmPassword {
-                static let title = "Confirm Password"
-                static let placeholder = "Enter your password"
-            }
-        }
     }
 }

@@ -182,4 +182,36 @@ enum TextConstants {
         static let email = "emailTitle"
         static let pass = "passwordTitle"
     }
+    
+    enum SignUp {
+        static let screenTitle = "signUp"
+        static let singUpButtonTitle = "signUp"
+        static let accountLabel = "accountLabel"
+        static let loginButtonTitle = "login"
+        
+        enum FirstName {
+            static let title = "firstName"
+            static let placeholder = "namePlaceholder"
+        }
+        
+        enum LastName {
+            static let title = "lastName"
+            static let placeholder = "surnamePlaceholder"
+        }
+        
+        enum Email {
+            static let title = "email"
+            static let placeholder = "enterEmail"
+        }
+        
+        enum Password {
+            static let title = "passwordTitle"
+            static let placeholder = "enterPasswordTitle"
+        }
+        
+        enum ConfirmPassword {
+            static let title = "confirmPassTitle"
+            static let placeholder = "enterPasswordTitle"
+        }
+    }
 }
