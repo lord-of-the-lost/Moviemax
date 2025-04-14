@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class MovieDetailViewController: UIViewController {
     private let presenter: MovieDetailPresenter
@@ -62,7 +61,7 @@ final class MovieDetailViewController: UIViewController {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 16
-        
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -125,6 +124,7 @@ final class MovieDetailViewController: UIViewController {
         movieDurationView.configure(with: model.duration, image: UIImage(resource: .clock))
         movieGenreView.configure(with: model.genre, image: UIImage(resource: .movie))
         likeButton.setLiked(model.isFavorite)
+        castCollectionView.reloadData()
     }
 }
 
@@ -284,7 +284,7 @@ private extension MovieDetailViewController {
 // MARK: - UICollectionViewDataSource
 extension MovieDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        MovieCastCell.mockData.count
+        presenter.getPersonsCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -295,7 +295,7 @@ extension MovieDetailViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        let model = MovieCastCell.mockData[indexPath.item]
+        let model = presenter.getPersonViewModel(at: indexPath.item)
         cell.configure(with: model)
         return cell
     }
@@ -303,10 +303,6 @@ extension MovieDetailViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MovieDetailViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 144, height: 40)
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         0
     }

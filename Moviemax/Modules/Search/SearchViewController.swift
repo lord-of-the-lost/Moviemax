@@ -14,23 +14,21 @@ enum SearchState {
 }
 
 final class SearchViewController: UIViewController {
-    
     // MARK: Properties
     private let presenter: SearchPresenter
     
-    private lazy var searhView = SearchFieldView()
-    
-    private lazy var chipsView: ChipsView = {
-        let view = ChipsView()
-        view.configure(with: presenter.genres)
+    private lazy var searhView: SearchFieldView = {
+        let view = SearchFieldView()
+        view.delegate = self
         return view
     }()
-        
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .appBackground
+        tableView.showsVerticalScrollIndicator = false
         tableView.register(MovieLargeCell.self, forCellReuseIdentifier: MovieLargeCell.identifier)
         tableView.separatorStyle = .none
         return tableView
@@ -61,6 +59,13 @@ final class SearchViewController: UIViewController {
         return label
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .accent
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     // MARK: Init
     init(presenter: SearchPresenter) {
         self.presenter = presenter
@@ -78,12 +83,13 @@ final class SearchViewController: UIViewController {
         presenter.view = self
         setupUI()
         presenter.viewDidLoad()
-        chipsView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.tabBarController?.tabBar.isHidden = false
         updateLocalizedTexts()
+        presenter.viewWillAppear()
     }
 
     func show(_ state: SearchState) {
@@ -96,6 +102,16 @@ final class SearchViewController: UIViewController {
             emptyStateView.isHidden = true
             tableView.reloadData()
         }
+    }
+    
+    func showLoadingIndicator() {
+        tableView.isHidden = true
+        emptyStateView.isHidden = true
+        activityIndicator.startAnimating()
+    }
+    
+    func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
     }
 }
 
@@ -146,12 +162,19 @@ extension SearchViewController: MovieLargeCellDelegate {
     }
 }
 
+// MARK: - SearchFieldViewDelegate
+extension SearchViewController: SearchFieldViewDelegate {
+    func searchFieldTextChanged(_ searchField: SearchFieldView, text: String) {
+        presenter.searchTextChanged(text)
+    }
+}
+
 // MARK: - Private methods
 private extension SearchViewController {
     func setupUI() {
         navigationItem.title = TextConstants.Search.screenTitle.localized()
         view.backgroundColor = .appBackground
-        view.addSubviews(searhView, chipsView, tableView, emptyStateView)
+        view.addSubviews(searhView, tableView, emptyStateView, activityIndicator)
         emptyStateView.addSubviews(emptyStateLabel, emptyStateDescription)
         setupConstraints()
         
@@ -161,7 +184,6 @@ private extension SearchViewController {
     }
     
     func setupConstraints() {
-        
         searhView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Constraints.smallOffset)
             $0.leading.equalTo(Constants.Constraints.contentInset)
@@ -169,15 +191,8 @@ private extension SearchViewController {
             $0.height.equalTo(Constants.Constraints.searchFieldHeight)
         }
         
-        chipsView.snp.makeConstraints {
-            $0.top.equalTo(searhView.snp.bottom).offset(Constants.Constraints.topOffset)
-            $0.leading.equalTo(Constants.Constraints.contentInset)
-            $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
-            $0.height.equalTo(Constants.Constraints.chipsViewHeight)
-        }
-        
         tableView.snp.makeConstraints {
-            $0.top.equalTo(chipsView.snp.bottom).offset(Constants.Constraints.topOffset)
+            $0.top.equalTo(searhView.snp.bottom).offset(Constants.Constraints.topOffset)
             $0.bottom.equalToSuperview()
             $0.leading.equalTo(Constants.Constraints.contentInset)
             $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
@@ -198,17 +213,16 @@ private extension SearchViewController {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+        
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
+    
     func updateLocalizedTexts() {
         navigationItem.title = TextConstants.Search.screenTitle.localized()
         emptyStateLabel.text = TextConstants.Search.emptyStateTitle.localized()
         emptyStateDescription.text = TextConstants.Search.emptyStateDescription.localized()
-    }
-}
-
-extension SearchViewController: ChipsViewDelegate {
-    func chipsView(_ chipsView: ChipsView, didSelectItemAt index: Int, value: String) {
-        print(#function, "selected: \(value)")
     }
 }
 

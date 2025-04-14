@@ -60,7 +60,7 @@ final class HomeViewController: BaseScrollViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .appBackground
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(PosterCell.self, forCellWithReuseIdentifier: PosterCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false

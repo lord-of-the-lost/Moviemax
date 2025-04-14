@@ -8,10 +8,16 @@
 import UIKit
 import SnapKit
 
+// MARK: - SearchFieldViewDelegate
+protocol SearchFieldViewDelegate: AnyObject {
+    func searchFieldTextChanged(_ searchField: SearchFieldView, text: String)
+}
+
 final class SearchFieldView: UIView {
     
     // MARK: - Public Properties
     var rightButtonAction: (() -> Void)?
+    weak var delegate: SearchFieldViewDelegate?
     
     // MARK: - Private Properties
     private lazy var searchIconImageView: UIImageView = {
@@ -120,6 +126,7 @@ private extension SearchFieldView {
         searchTextField.text = ""
         searchTextField.resignFirstResponder()
         updateClearButtonVisibility()
+        delegate?.searchFieldTextChanged(self, text: "")
     }
     
     @objc private func rightButtonTapped() {
@@ -128,6 +135,7 @@ private extension SearchFieldView {
     
     @objc private func textFieldDidChange() {
         updateClearButtonVisibility()
+        delegate?.searchFieldTextChanged(self, text: searchTextField.text ?? "")
     }
     
     private func updateClearButtonVisibility() {

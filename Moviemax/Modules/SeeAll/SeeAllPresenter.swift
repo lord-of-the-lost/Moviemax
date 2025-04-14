@@ -141,7 +141,7 @@ private extension SeeAllPresenter {
         MovieLargeCell.MovieLargeCellViewModel(
             title: movie.name,
             poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "\(movie.movieLength) Minutes",
+            filmLength: "\(movie.movieLength) \(TextConstants.Favorites.minutes.localized())",
             reliseDate: movie.premiere.world,
             genre: movie.genres.first?.name ?? "Unknown",
             isLiked: movie.isFavorite

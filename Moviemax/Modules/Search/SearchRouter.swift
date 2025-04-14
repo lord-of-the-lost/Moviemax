@@ -19,4 +19,9 @@ final class SearchRouter: RouterProtocol {
         filterViewController.modalTransitionStyle = .crossDissolve
         viewController?.present(filterViewController, animated: true)
     }
+    
+    func showMovieDetails(movie: Movie) {
+        let detailsVC = MovieDetailFactory.build(model: movie, dependency: dependency)
+        viewController?.navigationController?.pushViewController(detailsVC, animated: true)
+    }
 }

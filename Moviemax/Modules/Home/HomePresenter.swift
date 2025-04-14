@@ -449,7 +449,7 @@ private extension HomePresenter {
         return MovieSmallCell.MovieSmallCellViewModel(
             title: movie.name,
             poster: poster,
-            filmLength: "\(movie.movieLength) Minutes",
+            filmLength: "\(movie.movieLength) \(TextConstants.Favorites.minutes.localized())",
             genre: genre,
             rating: String(format: "%.1f", movie.rating.value),
             voiceCount: "(\(movie.rating.votesCount))",
