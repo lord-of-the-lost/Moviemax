@@ -272,7 +272,7 @@ private extension RecentWatchPresenter {
     
     /// Загружает изображения для фильмов и обновляет UI
     private func loadImagesForMovies(_ movies: [Movie]) {
-        for (index, movie) in movies.enumerated() {
+        for (_, movie) in movies.enumerated() {
             guard !movie.poster.url.isEmpty else { continue }
             
             // Если изображение уже в кеше, используем его сразу

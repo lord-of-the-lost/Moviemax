@@ -20,7 +20,7 @@ enum HTTPMethods: String {
 // MARK: - NetworkService
 final class NetworkService {
     private let baseURL = "https://api.kinopoisk.dev/v1.4"
-    private let apiKey = "KNWPBBJ-ZE1MWWK-P1P35CB-DSXZDQJ"
+    private let apiKey = "5QVH807-GAP49T6-QY0P863-EQW1F83"
     //220FRRR-ZF0M9VE-JTNC41C-FSB7ATX
     //5QVH807-GAP49T6-QY0P863-EQW1F83
     //F6QX0P1-FQTMPFY-PWNT126-KXFHWZK
