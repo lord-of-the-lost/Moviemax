@@ -41,6 +41,10 @@ final class SettingsPresenter {
         router.showChangePass()
     }
     
+    func showForgotPassTapped() {
+        router.showForgotPass()
+    }
+    
     func toggleDarkMode(isEnabled: Bool) {
         let theme: AppTheme = isEnabled ? .dark : .light
         themeManager.setTheme(theme)
