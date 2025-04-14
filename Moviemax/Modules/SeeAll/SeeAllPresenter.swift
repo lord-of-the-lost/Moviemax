@@ -19,6 +19,7 @@ final class SeeAllPresenter {
     private let router: SeeAllRouter
     private let movieRepository: MovieRepository
     private var allMovies: [Movie] = []
+    private var isFirstScreenLaunch = true
     
     var state: SeeAllState = .loading {
         didSet {
@@ -36,7 +37,11 @@ final class SeeAllPresenter {
     }
     
     func viewWillAppear() {
-        checkFavoriteStatus(for: allMovies)
+        if isFirstScreenLaunch {
+            isFirstScreenLaunch = false
+        } else {
+            checkFavoriteStatus(for: allMovies)
+        }
     }
     
     func didSelectMovie(at index: Int) {
