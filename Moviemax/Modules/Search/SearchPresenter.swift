@@ -292,13 +292,10 @@ private extension SearchPresenter {
             genre = "Неизвестно"
         }
         
-        // Форматируем дату релиза
-        let reliseDate = formatReleaseDate(movie.premiere.world)
-        
         // Формируем длительность фильма
         let filmLength: String
         if movie.movieLength > 0 {
-            filmLength = "\(movie.movieLength) Minutes"
+            filmLength = "\(movie.movieLength) \(TextConstants.Favorites.minutes.localized())"
         } else {
             filmLength = "Неизвестно"
         }
@@ -318,46 +315,9 @@ private extension SearchPresenter {
             title: title,
             poster: poster,
             filmLength: filmLength,
-            reliseDate: reliseDate,
+            reliseDate: movie.premiere.world,
             genre: genre,
             isLiked: movie.isFavorite
         )
-    }
-    
-    // Форматирование даты релиза
-    func formatReleaseDate(_ dateString: String) -> String {
-        // Если строка пустая, возвращаем "Неизвестно"
-        if dateString.isEmpty {
-            return "Неизвестно"
-        }
-        
-        // Массив возможных форматов даты
-        let formatters: [DateFormatter] = {
-            let formats = ["dd.MM.yyyy", "yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd'T'HH:mm:ss'Z'"]
-            return formats.map { format in
-                let formatter = DateFormatter()
-                formatter.dateFormat = format
-                return formatter
-            }
-        }()
-        
-        // Пробуем распарсить дату разными форматами
-        var date: Date?
-        for formatter in formatters {
-            if let parsedDate = formatter.date(from: dateString) {
-                date = parsedDate
-                break
-            }
-        }
-        
-        // Если не удалось распарсить, возвращаем исходную строку
-        guard let date = date else {
-            return dateString
-        }
-        
-        // Форматируем дату в нужном формате
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "d MMM yyyy"
-        return outputFormatter.string(from: date)
     }
 }

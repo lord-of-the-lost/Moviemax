@@ -72,7 +72,7 @@ private extension MovieDetailPresenter {
             let detailModel = MovieDetailModel(
                 title: model.name,
                 image: image,
-                duration: model.movieLength.formatted(),
+                duration: "\(model.movieLength.formatted()) \(TextConstants.Favorites.minutes.localized())",
                 date: model.premiere.world,
                 genre: model.genres.first?.name ?? "Unknown",
                 rating: model.rating.value,
