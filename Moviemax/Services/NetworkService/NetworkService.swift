@@ -154,9 +154,43 @@ final class NetworkService {
     }
     
     /// Получить список фильмов через поиск
-    func fetchMovies(for query: String, completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
-        let urlString = baseURL + "/movie/search?query=\(query)"
-        performRequest(urlString: urlString, completion: completion)
+    func fetchMovies(for query: String, genre: GenreType? = nil, rating: RatingType? = nil, completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
+        // Создаем базовый URL
+        guard var urlComponents = URLComponents(string: baseURL + "/movie/search") else {
+            completion(.failure(.badURL))
+            return
+        }
+        
+        // Формируем базовые параметры запроса без кодирования
+        var queryItems = [
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "limit", value: "20"),
+            URLQueryItem(name: "sortField", value: "rating.kp"),
+            URLQueryItem(name: "sortType", value: "-1"),
+            URLQueryItem(name: "type", value: "movie"),
+            URLQueryItem(name: "selectFields", value: "id name description movieLength rating.kp votes.kp poster.url genres type premiere.world")
+        ]
+        
+        // Добавляем параметры жанра
+        if let genre, genre != .all {
+            queryItems.append(URLQueryItem(name: "genres.name", value: genre.rawValue))
+        }
+        
+        // Добавляем параметры рейтинга
+        if let rating = rating {
+            queryItems.append(URLQueryItem(name: "rating.kp", value: rating.apiRange))
+        }
+        
+        urlComponents.queryItems = queryItems
+        
+        // Получаем финальный URL, URLComponents автоматически закодирует все параметры правильно
+        guard let url = urlComponents.url else {
+            completion(.failure(.badURL))
+            return
+        }
+        
+        // Выполняем запрос
+        performRequest(urlString: url.absoluteString, completion: completion)
     }
     
     /// Получить информацию о людях по ID фильма
@@ -165,7 +199,7 @@ final class NetworkService {
         completion: @escaping (Result<PersonList, NetworkError>) -> Void
     ) {
         let urlString = "\(baseURL)/person?movies.id=\(id)"
-        performRequest(urlString: urlString, completion: completion)
+        performRequest(urlString: urlString, method: .GET, completion: completion)
     }
     
     /// Загрузка картинки
@@ -231,22 +265,57 @@ private extension NetworkService {
         }.resume()
     }
     
-    func performRequest<T: Decodable>(
+    private func performRequest<T: Decodable>(
         urlString: String,
+        method: HTTPMethods = .GET,
+        body: Data? = nil,
         completion: @escaping (Result<T, NetworkError>) -> Void
     ) {
-        performDataRequest(urlString: urlString) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let decodedData = try JSONDecoder().decode(T.self, from: data)
-                    completion(.success(decodedData))
-                } catch {
-                    completion(.failure(.decodeError))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
+        guard let url = URL(string: urlString) else {
+            completion(.failure(.badURL))
+            return
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.addValue(apiKey, forHTTPHeaderField: "X-API-KEY")
+        
+        if let body = body {
+            request.httpBody = body
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let _ = error {
+                completion(.failure(.requestFailed))
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard (200...299).contains(httpResponse.statusCode) else {
+                if httpResponse.statusCode == 401 {
+                    completion(.failure(.invalidToken))
+                } else {
+                    completion(.failure(.requestFailed))
+                }
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            do {
+                let decodedResponse = try JSONDecoder().decode(T.self, from: data)
+                completion(.success(decodedResponse))
+            } catch {
+                completion(.failure(.decodeError))
+            }
+        }.resume()
     }
 }

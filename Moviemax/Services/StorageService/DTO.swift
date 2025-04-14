@@ -61,7 +61,7 @@ struct User {
 // MARK: - Movie
 struct Movie {
     let id: Int
-    let poster: Poster
+    var poster: Poster
     let movieLength: Int
     let premiere: Premiere
     let genres: [Genre]
@@ -78,7 +78,7 @@ struct Movie {
     
     // MARK: Poster
     struct Poster {
-        let url: String
+        var url: String
         let previewUrl: String
     }
 
