@@ -35,6 +35,10 @@ final class ProfilePresenter {
         displayFormatter.string(from: date)
     }
     
+    func backButtonTapped() {
+        router.navigateToBack()
+    }
+    
     func loadUserProfile() {
         guard let currentUser = userService.getCurrentUser() else {
             assertionFailure("User not found")
