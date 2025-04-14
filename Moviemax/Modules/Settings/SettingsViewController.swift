@@ -191,6 +191,7 @@ final class SettingsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.tabBarController?.tabBar.isHidden = false
         presenter.viewWillAppear()
         updateLocalizedTexts()
     }

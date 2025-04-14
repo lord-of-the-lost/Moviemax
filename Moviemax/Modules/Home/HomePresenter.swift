@@ -173,6 +173,7 @@ private extension HomePresenter {
                     
                     // Инициализируем модель представления всех данных
                     self.initializeViewModel(with: movies)
+                    self.loadUserData()
                     
                     // Загружаем изображения для фильмов
                     self.loadImagesForMovies(movies)
