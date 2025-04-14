@@ -402,7 +402,7 @@ private extension SettingsViewController {
     }
     
     @objc func forgotPassButtonTapped() {
-        print("Forgot Password")
+        presenter.showForgotPassTapped()
     }
     
     @objc func darkModeSwitchChanged() {

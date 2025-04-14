@@ -66,7 +66,7 @@ private extension ForgotPassViewController {
         }
         
         submitButton.snp.makeConstraints {
-            $0.bottom.equalToSuperview().offset(-40)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
             $0.leading.trailing.equalToSuperview().inset(30)
             $0.height.equalTo(50)
         }

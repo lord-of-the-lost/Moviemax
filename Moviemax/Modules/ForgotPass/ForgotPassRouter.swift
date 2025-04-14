@@ -10,8 +10,7 @@ final class ForgotPassRouter: RouterProtocol {
     private let dependency: DI
     
     func navigateToBack() {
-        let authViewController = AuthFactory.build(dependency)
-        viewController?.view.window?.rootViewController = authViewController
+        viewController?.navigationController?.popViewController(animated: true)
     }
     
     init(dependency: DI) {

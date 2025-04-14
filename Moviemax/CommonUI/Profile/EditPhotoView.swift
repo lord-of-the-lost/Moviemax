@@ -11,6 +11,7 @@ protocol EditPhotoViewDelegate: AnyObject {
     func editPhotoViewDidTapTakePhoto(_ view: EditPhotoView)
     func editPhotoViewDidTapChoosePhoto(_ view: EditPhotoView)
     func editPhotoViewDidTapDeletePhoto(_ view: EditPhotoView)
+    func editPhotoViewDidTapCloseView(_ view: EditPhotoView)
 }
 
 final class EditPhotoView: UIView {
@@ -146,6 +147,7 @@ private extension EditPhotoView {
         takePhotoButtonView.isUserInteractionEnabled = true
         choosePhotoButtonView.isUserInteractionEnabled = true
         deletePhotoButtonView.isUserInteractionEnabled = true
+        blurEffectView.isUserInteractionEnabled = true
         
         takePhotoButtonView.addGestureRecognizer(
             UITapGestureRecognizer(
@@ -167,6 +169,14 @@ private extension EditPhotoView {
                     action: #selector(didTapDeletePhoto)
                 )
             )
+        
+        blurEffectView
+            .addGestureRecognizer(
+                UITapGestureRecognizer(
+                    target: self,
+                    action: #selector(didTapCloseView)
+                )
+            )
     }
     
     @objc
@@ -182,6 +192,11 @@ private extension EditPhotoView {
     @objc
     func didTapDeletePhoto() {
         delegate?.editPhotoViewDidTapDeletePhoto(self)
+    }
+    
+    @objc
+    func didTapCloseView() {
+        delegate?.editPhotoViewDidTapCloseView(self)
     }
 }
 

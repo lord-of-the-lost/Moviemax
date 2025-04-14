@@ -108,6 +108,13 @@ final class ProfileViewController: UIViewController {
         toolbar.items = [cancelButton, flexSpace, doneButton]
         return toolbar
     }()
+    
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(resource: .arrowBack), for: .normal)
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        return button
+    }()
         
     //MARK: Init
     init(presenter: ProfilePresenter) {
@@ -187,6 +194,10 @@ extension ProfileViewController: EditPhotoViewDelegate {
     func editPhotoViewDidTapDeletePhoto(_ view: EditPhotoView) {
         deletePhoto()
     }
+    
+    func editPhotoViewDidTapCloseView(_ view: EditPhotoView) {
+        closePhotoView()
+    }
 }
 
 // MARK: - UIImagePickerControllerDelegate
@@ -225,6 +236,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         removeEditPhotoView()
     }
     
+    func closePhotoView() {
+        removeEditPhotoView()
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     func presentPhotoLibraryFallback() {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -238,6 +254,11 @@ private extension ProfileViewController {
     func setupUI() {
         navigationItem.title = Constants.Text.screenName
         view.backgroundColor = .appBackground
+        
+        backButton.snp.makeConstraints {
+            $0.size.equalTo(40)
+        }
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
         view.addSubviews(scrollView, datePickerContainer)
         scrollView.addSubview(contentView)
@@ -265,6 +286,7 @@ private extension ProfileViewController {
         editPhotoView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     func removeEditPhotoView() {
@@ -379,6 +401,10 @@ private extension ProfileViewController {
             notes: notes,
             avatarData: avatarData
         )
+    }
+    
+    @objc func backButtonTapped() {
+        presenter.backButtonTapped()
     }
 }
 

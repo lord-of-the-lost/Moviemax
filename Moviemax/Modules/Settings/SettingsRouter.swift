@@ -31,4 +31,9 @@ final class SettingsRouter: RouterProtocol {
         let changePassController = ChangePassFactory.build(dependency)
         viewController?.navigationController?.pushViewController(changePassController, animated: true)
     }
+    
+    func showForgotPass() {
+        let forgotPassController = ForgotPassFactory.build(dependency)
+        viewController?.navigationController?.pushViewController(forgotPassController, animated: true)
+    }
 }
