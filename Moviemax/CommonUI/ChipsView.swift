@@ -50,6 +50,26 @@ final class ChipsView: UIView {
         self.items = items
         collectionView.reloadData()
     }
+    
+    func selectItem(at index: Int) {
+        guard index >= 0, index < items.count else { return }
+        
+        let indexPath = IndexPath(item: index, section: 0)
+        
+        // Если это не текущий выбранный элемент
+        if indexPath != selectedIndex {
+            let previous = selectedIndex
+            selectedIndex = indexPath
+            
+            // Обновляем ячейки без анимации
+            UIView.performWithoutAnimation {
+                collectionView.reloadItems(at: [previous, selectedIndex])
+            }
+            
+            // Прокручиваем к выбранному элементу
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+        }
+    }
 }
 
 // MARK: - Private methods

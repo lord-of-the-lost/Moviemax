@@ -95,6 +95,21 @@ final class RecentWatchViewController: UIViewController {
             tableView.reloadData()
         }
     }
+    
+    func updateGenres(_ genres: [String]) {
+        chipsView.configure(with: genres)
+        
+        // Получаем текущий выбранный жанр из презентера
+        let selectedGenre = presenter.getSelectedGenre()
+        
+        // Находим индекс выбранного жанра в обновленном списке
+        if let index = genres.firstIndex(of: selectedGenre) {
+            chipsView.selectItem(at: index)
+        } else if !genres.isEmpty {
+            // Если жанр не найден, выбираем первый жанр (обычно "All")
+            chipsView.selectItem(at: 0)
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -204,7 +219,7 @@ private extension RecentWatchViewController {
 
 extension RecentWatchViewController: ChipsViewDelegate {
     func chipsView(_ chipsView: ChipsView, didSelectItemAt index: Int, value: String) {
-        print(#function, "selected: \(value)")
+        presenter.didSelectGenre(at: index, value: value)
     }
 }
 

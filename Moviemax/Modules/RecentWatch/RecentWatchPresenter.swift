@@ -11,7 +11,18 @@ final class RecentWatchPresenter {
     weak var view: RecentWatchViewController?
     private let router: RecentWatchRouter
     private let movieRepository: MovieRepository
+    
+    // Кеш всех загруженных фильмов
+    private var allRecentMovies: [Movie] = []
+    
+    // Фильтрованные фильмы для отображения
     private var recentMovies: [Movie] = []
+    
+    // Кеш загруженных изображений
+    private var movieImagesCache: [String: UIImage] = [:]
+    
+    // Текущий выбранный жанр для фильтрации
+    private var selectedGenre: String?
     
     var state: RecentWatchState = .empty {
         didSet {
@@ -19,24 +30,8 @@ final class RecentWatchPresenter {
         }
     }
     
-    let genres: [String] = [
-        TextConstants.Genres.all.localized(),
-        TextConstants.Genres.action.localized(),
-        TextConstants.Genres.adventure.localized(),
-        TextConstants.Genres.animation.localized(),
-        TextConstants.Genres.biography.localized(),
-        TextConstants.Genres.drama.localized(),
-        TextConstants.Genres.fantasy.localized(),
-        TextConstants.Genres.history.localized(),
-        TextConstants.Genres.music.localized(),
-        TextConstants.Genres.mystery.localized(),
-        TextConstants.Genres.romance.localized(),
-        TextConstants.Genres.scienceFiction.localized(),
-        TextConstants.Genres.thriller.localized(),
-        TextConstants.Genres.war.localized(),
-        TextConstants.Genres.western.localized(),
-    ]
-    
+    // Динамический список жанров, который будет заполняться из фильмов
+    private(set) var genres: [String] = []
     
     init(router: RecentWatchRouter, dependency: DI) {
         self.router = router
@@ -65,6 +60,15 @@ final class RecentWatchPresenter {
         switch result {
         case .success(let isFavorite):
             recentMovies[index].isFavorite = isFavorite
+            
+            // Обновляем статус в кеше всех фильмов
+            if let originalIndex = allRecentMovies.firstIndex(where: { $0.id == movie.id }) {
+                allRecentMovies[originalIndex].isFavorite = isFavorite
+            }
+            
+            // Обновляем UI конкретной ячейки
+            updateMovieViewModel(at: index)
+            
         case .failure(let error):
             view?.showAlert(
                 title: "Ошибка",
@@ -89,6 +93,46 @@ final class RecentWatchPresenter {
             )
         }
     }
+    
+    // Метод для обработки выбора жанра по индексу
+    func didSelectGenre(at index: Int, value: String) {
+        didSelectGenre(value)
+    }
+    
+    // Метод для обработки выбора жанра по значению
+    func didSelectGenre(_ value: String) {
+        selectedGenre = value
+        
+        if value == TextConstants.Genres.all.localized() {
+            // Если выбрана категория "Все", отображаем все фильмы
+            recentMovies = allRecentMovies
+        } else {
+            // Фильтруем фильмы только по первому жанру
+            recentMovies = allRecentMovies.filter { movie in
+                guard let firstGenre = movie.genres.first else { return false }
+                return firstGenre.name.lowercased() == value.lowercased()
+            }
+        }
+        
+        if recentMovies.isEmpty {
+            view?.showAlert(
+                title: "Информация",
+                message: "По выбранному жанру фильмы не найдены"
+            )
+            
+            // Возвращаемся к показу всех фильмов
+            selectedGenre = TextConstants.Genres.all.localized()
+            recentMovies = allRecentMovies
+        }
+        
+        // Обновляем только UI с отфильтрованными фильмами
+        updateMovieViewModels()
+    }
+    
+    // Возвращает текущий выбранный жанр
+    func getSelectedGenre() -> String {
+        return selectedGenre ?? TextConstants.Genres.all.localized()
+    }
 }
 
 // MARK: - Private Methods
@@ -98,14 +142,31 @@ private extension RecentWatchPresenter {
         
         switch result {
         case .success(let movies):
-            self.recentMovies = movies
+            self.allRecentMovies = movies
+            
+            // Обновляем список жанров на основе полученных фильмов
+            updateGenres(from: movies)
+            
+            // Применяем фильтр по жанру, если он был выбран ранее
+            if let selectedGenre = self.selectedGenre, selectedGenre != TextConstants.Genres.all.localized() {
+                recentMovies = movies.filter { movie in
+                    guard let firstGenre = movie.genres.first else { return false }
+                    return firstGenre.name.lowercased() == selectedGenre.lowercased()
+                }
+                
+                // Если после фильтрации нет фильмов, показываем все
+                if recentMovies.isEmpty {
+                    self.selectedGenre = TextConstants.Genres.all.localized()
+                    recentMovies = movies
+                }
+            } else {
+                recentMovies = movies
+            }
             
             if movies.isEmpty {
                 state = .empty
             } else {
-                let viewModels = movies.map { mapMovieToViewModel($0) }
-                state = .content(viewModels)
-                
+                updateMovieViewModels()
                 loadImagesForMovies(movies)
             }
             
@@ -115,6 +176,67 @@ private extension RecentWatchPresenter {
                 title: "Ошибка",
                 message: "Не удалось загрузить недавно просмотренные фильмы: \(error.localizedDescription)"
             )
+        }
+    }
+    
+    /// Обновляет список жанров на основе загруженных фильмов
+    func updateGenres(from movies: [Movie]) {
+        // Получаем первый жанр из каждого фильма
+        let uniqueGenres = extractUniqueCategories(from: movies)
+        
+        // Формируем окончательный список с категорией "Все" в начале
+        let allGenres = [TextConstants.Genres.all.localized()] + uniqueGenres
+        
+        // Если список жанров изменился - обновляем UI
+        if genres != allGenres {
+            // Проверяем, существует ли выбранный жанр в новом списке
+            let needResetToAll = selectedGenre != nil && 
+                                selectedGenre != TextConstants.Genres.all.localized() && 
+                                !allGenres.contains(selectedGenre!)
+            
+            // Обновляем список жанров
+            genres = allGenres
+            view?.updateGenres(genres)
+            
+            // Если выбранный жанр больше не существует, сбрасываем на "All"
+            if needResetToAll {
+                selectedGenre = TextConstants.Genres.all.localized()
+                recentMovies = allRecentMovies
+                updateMovieViewModels()
+                
+                // Уведомляем пользователя, что фильтр был сброшен
+                view?.showAlert(
+                    title: "Информация",
+                    message: "Выбранная категория больше не доступна. Показаны все фильмы."
+                )
+            }
+        }
+    }
+    
+    /// Извлекает уникальные категории из списка фильмов (берет только первый жанр из каждого фильма)
+    func extractUniqueCategories(from movies: [Movie]) -> [String] {
+        // Получаем все первые жанры из всех фильмов
+        let allGenres = movies.compactMap { movie -> String? in
+            guard let firstGenre = movie.genres.first?.name else { return nil }
+            return firstGenre
+        }
+        
+        // Получаем уникальные жанры и сортируем
+        let uniqueGenres = Array(Set(allGenres)).sorted()
+        return uniqueGenres
+    }
+    
+    /// Обновляет все вьюмодели фильмов в UI
+    func updateMovieViewModels() {
+        let viewModels = recentMovies.map { mapMovieToViewModel($0) }
+        state = .content(viewModels)
+    }
+    
+    /// Обновляет вьюмодель фильма по индексу
+    func updateMovieViewModel(at index: Int) {
+        if case .content(var viewModels) = state, index < recentMovies.count, index < viewModels.count {
+            viewModels[index] = mapMovieToViewModel(recentMovies[index])
+            state = .content(viewModels)
         }
     }
     
@@ -130,9 +252,17 @@ private extension RecentWatchPresenter {
             isLiked = false
         }
         
+        // Используем кешированное изображение если доступно
+        let poster: UIImage
+        if !movie.poster.url.isEmpty, let cachedImage = movieImagesCache[movie.poster.url] {
+            poster = cachedImage
+        } else {
+            poster = UIImage(resource: .posterPlaceholder)
+        }
+        
         return MovieLargeCell.MovieLargeCellViewModel(
             title: movie.name,
-            poster: UIImage(resource: .posterPlaceholder),
+            poster: poster,
             filmLength: "\(movie.movieLength) \(TextConstants.Favorites.minutes.localized())",
             reliseDate: movie.premiere.world,
             genre: movie.genres.first?.name ?? "Unknown",
@@ -145,14 +275,24 @@ private extension RecentWatchPresenter {
         for (index, movie) in movies.enumerated() {
             guard !movie.poster.url.isEmpty else { continue }
             
+            // Если изображение уже в кеше, используем его сразу
+            if let cachedImage = movieImagesCache[movie.poster.url] {
+                updateMovieImage(for: movie, with: cachedImage)
+                continue
+            }
+            
+            // Загружаем изображение если его нет в кеше
             movieRepository.loadImage(from: movie.poster.url) { [weak self] result in
-                guard let self else { return }
+                guard let self = self else { return }
                 
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let imageData):
                         if let image = UIImage(data: imageData) {
-                            self.updateMovieImage(at: index, with: image)
+                            // Сохраняем в кеш
+                            self.movieImagesCache[movie.poster.url] = image
+                            // Обновляем изображение во всех фильмах с таким же URL
+                            self.updateMovieImage(for: movie, with: image)
                         }
                     case .failure:
                         // В случае ошибки оставляем изображение-заглушку
@@ -163,7 +303,28 @@ private extension RecentWatchPresenter {
         }
     }
     
-    /// Обновляет изображение в модели и UI
+    /// Обновляет изображение для всех фильмов с заданным ID
+    func updateMovieImage(for movie: Movie, with image: UIImage) {
+        // Обновляем изображения во всех фильтрованных фильмах с тем же URL
+        guard case .content(var viewModels) = state else { return }
+        
+        var updated = false
+        
+        // Ищем все фильмы с таким же ID в фильтрованном списке
+        for (index, filteredMovie) in recentMovies.enumerated() where filteredMovie.id == movie.id {
+            if index < viewModels.count {
+                viewModels[index].poster = image
+                updated = true
+            }
+        }
+        
+        // Обновляем состояние только если были изменения
+        if updated {
+            state = .content(viewModels)
+        }
+    }
+    
+    /// Обновляет изображение в модели и UI по индексу
     func updateMovieImage(at index: Int, with image: UIImage) {
         guard case .content(var viewModels) = state, index < viewModels.count else {
             return
