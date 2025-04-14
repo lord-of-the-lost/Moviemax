@@ -231,6 +231,45 @@ final class MovieRepository {
         return result
     }
     
+    // MARK: - Filtered Movies
+    func getMovies(genre: String? = nil, rating: Int? = nil) -> Result<[Movie], RepositoryError> {
+        var result: Result<[Movie], RepositoryError> = .failure(.dataNotFound)
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        // Преобразование параметров в новые типы
+        let genreType = genre.flatMap { NetworkService.GenreType.fromTextConstant($0) }
+        let ratingType = rating.flatMap { NetworkService.RatingType(rawValue: $0) }
+        
+        networkService.fetchMovies(genre: genreType, rating: ratingType) { [weak self] networkResult in
+            guard let self else {
+                semaphore.signal()
+                return
+            }
+            
+            switch networkResult {
+            case .success(let movieList):
+                if let docs = movieList.docs, !docs.isEmpty {
+                    let movies = docs.compactMap { self.mapMovieModelToMovie($0) }
+                    
+                    // Сохраняем результаты в базу данных
+                    let movieEntities = movies.map { self.coreDataManager.createMovie(from: $0) }
+                    result = .success(self.coreDataManager.convertToMovies(movieEntities))
+                } else {
+                    result = .success([]) // Пустой результат
+                }
+                
+            case .failure:
+                result = .failure(.networkError)
+            }
+            
+            semaphore.signal()
+        }
+        
+        semaphore.wait()
+        return result
+    }
+    
     // MARK: - Popular Movies
     func getPopularMovies() -> Result<[Movie], RepositoryError> {
         var result: Result<[Movie], RepositoryError> = .failure(.dataNotFound)

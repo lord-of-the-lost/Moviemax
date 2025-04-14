@@ -142,6 +142,7 @@ enum TextConstants {
             static let success = "successPass"
             static let notMatch = "passNotMatch"
             static let passMatch = "passMatch"
+            static let invalidCurrentPassword = "invalidCurrentPassword"
         }
     }
     

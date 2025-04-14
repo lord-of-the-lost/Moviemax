@@ -49,16 +49,16 @@ final class ChangePassViewController: UIViewController {
     }
     
     // MARK: - Public Methods
-    func getPass() -> String? {
+    func getCurrentPassword() -> String? {
         passField.getText()
     }
     
-    func getConfirmPass() -> String? {
-        confirmPassField.getText()
+    func getNewPassword() -> String? {
+        newPassField.getText()
     }
     
-    func getNewPass() -> String? {
-        newPassField.getText()
+    func getConfirmNewPassword() -> String? {
+        confirmPassField.getText()
     }
 }
 

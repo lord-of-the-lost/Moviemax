@@ -31,6 +31,69 @@ final class NetworkService {
         self.imageCacheService = imageCacheService
     }
     
+    /// Перечисление типов жанров для API
+    enum GenreType: String {
+        case all = "Все"
+        case action = "боевик"
+        case adventure = "приключения"
+        case mystery = "детектив"
+        case fantasy = "фэнтези"
+        case others = "другие"
+        case animation = "мультфильм"
+        case biography = "биография"
+        case drama = "драма"
+        case history = "история"
+        case music = "музыка"
+        case romance = "мелодрама"
+        case scienceFiction = "фантастика"
+        case thriller = "триллер"
+        case war = "военный"
+        case western = "вестерн"
+        
+        /// Вернуть название жанра для API из TextConstants.Genres
+        static func fromTextConstant(_ constant: String) -> GenreType {
+            switch constant {
+            case TextConstants.Genres.all.localized(): return .all
+            case TextConstants.Genres.action.localized(): return .action
+            case TextConstants.Genres.adventure.localized(): return .adventure
+            case TextConstants.Genres.mystery.localized(): return .mystery
+            case TextConstants.Genres.fantasy.localized(): return .fantasy
+            case TextConstants.Genres.others.localized(): return .others
+            case TextConstants.Genres.animation.localized(): return .animation
+            case TextConstants.Genres.biography.localized(): return .biography
+            case TextConstants.Genres.drama.localized(): return .drama
+            case TextConstants.Genres.history.localized(): return .history
+            case TextConstants.Genres.music.localized(): return .music
+            case TextConstants.Genres.romance.localized(): return .romance
+            case TextConstants.Genres.scienceFiction.localized(): return .scienceFiction
+            case TextConstants.Genres.thriller.localized(): return .thriller
+            case TextConstants.Genres.war.localized(): return .war
+            case TextConstants.Genres.western.localized(): return .western
+            default: return .all
+            }
+        }
+    }
+    
+    /// Перечисление для рейтинга (5-балльная система)
+    enum RatingType: Int {
+        case one = 1
+        case two = 2
+        case three = 3
+        case four = 4
+        case five = 5
+        
+        /// Получить диапазон для API (10-балльная система)
+        var apiRange: String {
+            switch self {
+            case .five: return "9-10"
+            case .four: return "7-8"
+            case .three: return "5-6"
+            case .two: return "3-4"
+            case .one: return "1-2"
+            }
+        }
+    }
+    
     /// Получить список фильмов
     func fetchMovies(completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
         var urlComponents = URLComponents(string: baseURL + "/movie")
@@ -44,6 +107,41 @@ final class NetworkService {
             URLQueryItem(name: "notNullFields", value: "description"),
             URLQueryItem(name: "notNullFields", value: "movieLength"),
         ]
+        
+        urlComponents?.queryItems = queryItems
+        
+        guard let urlString = urlComponents?.url?.absoluteString else {
+            completion(.failure(.badURL))
+            return
+        }
+        
+        performRequest(urlString: urlString, completion: completion)
+    }
+    
+    /// Получить список фильмов с фильтрацией по жанру и рейтингу
+    func fetchMovies(genre: GenreType? = nil, rating: RatingType? = nil, completion: @escaping (Result<MovieList, NetworkError>) -> Void) {
+        var urlComponents = URLComponents(string: baseURL + "/movie")
+                
+        // Базовые параметры запроса
+        var queryItems = [
+            URLQueryItem(name: "limit", value: "10"),
+            URLQueryItem(name: "notNullFields", value: "id"),
+            URLQueryItem(name: "notNullFields", value: "name"),
+            URLQueryItem(name: "notNullFields", value: "poster.url"),
+            URLQueryItem(name: "notNullFields", value: "description"),
+            URLQueryItem(name: "notNullFields", value: "movieLength"),
+            URLQueryItem(name: "type", value: "movie"),
+        ]
+        
+        // Добавляем параметры жанра
+        if let genre, genre != .all {
+            queryItems.append(URLQueryItem(name: "genres.name", value: genre.rawValue))
+        }
+        
+        // Добавляем параметры рейтинга
+        if let rating = rating {
+            queryItems.append(URLQueryItem(name: "rating.kp", value: rating.apiRange))
+        }
         
         urlComponents?.queryItems = queryItems
         

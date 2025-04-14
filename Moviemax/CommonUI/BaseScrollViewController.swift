@@ -13,6 +13,7 @@ class BaseScrollViewController: UIViewController {
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.keyboardDismissMode = .interactive
+        scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
     

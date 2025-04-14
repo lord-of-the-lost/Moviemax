@@ -101,7 +101,7 @@ final class HomeViewController: BaseScrollViewController {
         super.viewDidLoad()
         presenter.view = self
         setupActivityIndicator()
-        showActivityIndicator()
+        showLoadingIndicator()
         setupView()
         setupConstraints()
         presenter.viewDidLoad()
@@ -113,8 +113,46 @@ extension HomeViewController {
         self.viewModel = viewModel
         userHeaderView.configure(with: viewModel.userHeader)
         categoryChipsView.configure(with: viewModel.categories)
-        boxOfficeTableView.reloadData()
         posterCollectionView.reloadData()
+        boxOfficeTableView.reloadData()
+    }
+    
+    // Метод для обновления только заголовка с пользовательскими данными
+    func updateUserHeader(with userHeader: UserHeaderView.UserHeaderViewModel) {
+        guard var viewModel = self.viewModel else { return }
+        viewModel.userHeader = userHeader
+        self.viewModel = viewModel
+        userHeaderView.configure(with: userHeader)
+    }
+    
+    // Метод для обновления только слайдера с фильмами
+    func updateSliderSection(with sliderMovies: [PosterCell.PosterCellViewModel]) {
+        guard var viewModel = self.viewModel else { return }
+        viewModel.sliderMovies = sliderMovies
+        self.viewModel = viewModel
+        posterCollectionView.reloadData()
+    }
+    
+    // Метод для обновления только секции boxOffice
+    func updateBoxOfficeSection(with boxOfficeMovies: [MovieSmallCell.MovieSmallCellViewModel]) {
+        guard var viewModel = self.viewModel else { return }
+        viewModel.boxOfficeMovies = boxOfficeMovies
+        self.viewModel = viewModel
+        updateTableViewHeight()
+        boxOfficeTableView.reloadData()
+    }
+    
+    // Метод для обновления конкретной ячейки в boxOffice
+    func updateBoxOfficeItem(at index: Int, with model: MovieSmallCell.MovieSmallCellViewModel) {
+        guard var viewModel = self.viewModel, index < viewModel.boxOfficeMovies.count else { return }
+        
+        viewModel.boxOfficeMovies[index] = model
+        self.viewModel = viewModel
+        
+        // Обновляем только видимую ячейку, если она видна
+        if let cell = boxOfficeTableView.cellForRow(at: IndexPath(row: index, section: 0)) as? MovieSmallCell {
+            cell.configure(with: model)
+        }
     }
     
     func hideLoadingIndicator() {
@@ -123,6 +161,11 @@ extension HomeViewController {
             self.activityIndicator.stopAnimating()
             self.contentView.isHidden = false
         }
+    }
+    
+    func showLoadingIndicator() {
+        contentView.isHidden = true
+        activityIndicator.startAnimating()
     }
 }
 
@@ -152,7 +195,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter.didTapMovie(at: indexPath.row)
+        presenter.didTapBoxOfficeMovie(at: indexPath.row)
     }
 }
 
@@ -173,7 +216,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didTapMovie(at: indexPath.row)
+        presenter.didTapSliderMovie(at: indexPath.row)
     }
 }
 
@@ -188,7 +231,7 @@ extension HomeViewController: MovieSmallCellDelegate {
 // MARK: - ChipsViewDelegate
 extension HomeViewController: ChipsViewDelegate {
     func chipsView(_ chipsView: ChipsView, didSelectItemAt index: Int, value: String) {
-        print(#function, "selected: \(value)")
+        presenter.didSelectGenre(value)
     }
 }
 
@@ -213,11 +256,6 @@ private extension HomeViewController {
         activityIndicator.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
-    }
-    
-    func showActivityIndicator() {
-        activityIndicator.startAnimating()
-        contentView.isHidden = true
     }
     
     func updateTableViewHeight() {

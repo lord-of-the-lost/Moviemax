@@ -105,6 +105,7 @@
 "successPass" = "The password has been successfully changed";
 "passNotMatch" = "Passwords don't match";
 "passMatch" = "The new password must be different from the old one. Please come up with a different password.";
+"invalidCurrentPassword" = "Invalid current password";
 
 // Favorites Module
 "favorites" = "Favorites";

@@ -79,13 +79,23 @@ final class AuthenticationService {
     func changePass(newPass: String) -> Bool {
         guard
             let currentUser = coreDataManager.getAppStateModel().currentUser,
-            let currentUserEnity = coreDataManager.getUser(by: currentUser.email)
+            let userEntity = coreDataManager.getUser(by: currentUser.email)
         else {
             return false
         }
-        let newUserEnity = currentUserEnity
-        newUserEnity.password = newPass
-        coreDataManager.updateUser(newUserEnity, with: currentUser)
+        
+        // Обновляем пароль в UserEntity
+        userEntity.password = newPass
+        coreDataManager.saveContext()
+        
+        // Обновляем пароль в текущем пользователе AppState
+        var updatedUser = currentUser
+        updatedUser.password = newPass
+        
+        var appState = coreDataManager.getAppStateModel()
+        appState.currentUser = updatedUser
+        coreDataManager.updateAppState(with: appState)
+        
         return true
     }
 }
