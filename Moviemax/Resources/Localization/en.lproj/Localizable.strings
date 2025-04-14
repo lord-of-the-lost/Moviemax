@@ -1,0 +1,166 @@
+/* 
+  Localizable.strings
+  Moviemax
+
+  Created by Николай Игнатов on 12.04.2025.
+  
+*/
+
+// Common
+"ok" = "OK";
+"cancel" = "Cancel";
+"error" = "Error";
+"success" = "Success";
+
+// Settings Module
+"settings" = "Settings";
+"personalInfo" = "Personal Info";
+"profile" = "Profile";
+"securityInfo" = "Security Info";
+"changePassword" = "Change Password";
+"forgotPassword" = "Forgot Password";
+"darkMode" = "Dark Mode";
+"useRussian" = "Use Russian language";
+"logout" = "Log Out";
+
+// Profile Module
+"saveButtonTitle" = "Save changes";
+"screenName" = "Profile";
+"firstName" = "First name";
+"lastName" = "Last name";
+"email" = "E-mail";
+"dateOfBirth" = "Date of birth";
+"location" = "Location";
+"errorTitle" = "Error";
+"errorEmptyFields" = "Please fill in all fields";
+"doneButtonTitle" = "Done";
+"cancelButtonTitle" = "Cancel";
+
+// RecentWatch Module
+"screenTitle" = "Recent Watch";
+"emptyStateTitle" = "You haven't seen any movies yet.";
+"emptyStateDescription" = "Movies that you have watched recently will appear here.";
+
+// Onboarding Module
+"continue" = "Continue";
+"start" = "Start";
+"firstPageTitle" = "Your Pocket Cinema";
+"firstPageDescription" = "Stream movies, shows, cartoons, and documentaries anytime, anywhere — all eyes on the screen!";
+"secondPageTitle" = "Create Your Watchlist";
+"secondPageDescription" = "Save your favorites and get personalized recommendations to find your next favorite show.";
+"thirdPageTitle" = "Watch your favorite movie easily";
+"thirdPageDescription" = "Browse a vast library of films and series from various genres and languages.";
+
+// Home Module
+"greeting" = "Hi, User";
+"shortGreeting" = "Hi";
+"status" = "only streaming movie lovers";
+"seeAll" = "See All";
+"boxOffice" = "Box Office";
+"category" = "Category";
+
+// EditPhotoView
+"editPhotoTitle" = "Change your picture";
+"takePhotoTitle" = "Take a photo";
+"choosePhotoTitle" = "Choose from your file";
+"deletePhotoTitle" = "Delete Photo";
+
+// GenderSelectorView
+"gender" = "Gender";
+
+// Gender
+"male" = "Male";
+"female" = "Female";
+
+// Auth Module
+"login" = "Login";
+"signIn" = "Sign In";
+"forgotPass" = "Forgot Password?";
+"continueWithGoogle" = "Continue with Google";
+"rememberMe" = "Remember Me";
+"continueWith" = "———  Or continue with  ———";
+"dontHaveAccount" = "Don't have an account?";
+"signUp" = "Sign up";
+"emailTitle" = "E-mail";
+"enterEmail" = "Enter your email address";
+"passwordTitle" = "Password";
+"enterPasswordTitle" = "Enter your password";
+"errorTitle" = "Error";
+"emptyFieldsError" = "Please fill in all fields";
+"invalidEmailError" = "Enter the correct e-mail";
+"userNotFoundError" = "The user with this email was not found";
+"invalidPasswordError" = "Invalid password";
+"loginError" = "An error occurred when logging in";
+    
+// ChangePass Module
+"changePassTitle" = "Change password";
+"changePassTitle" = "Change password";
+"passTitle" = "Current password";
+"passPlaceholder" = "Enter your current password";
+"newPassTitle" = "New password";
+"newPassPlaceholder" = "Enter your new password";
+"confirmPassTitle" = "Confirm password";
+"confirmPassPlaceholder" = "Repeat your new password";
+"noUserTitle" = "The user was not found";
+"successPass" = "The password has been successfully changed";
+"passNotMatch" = "Passwords don't match";
+"passMatch" = "The new password must be different from the old one. Please come up with a different password.";
+"invalidCurrentPassword" = "Invalid current password";
+
+// Favorites Module
+"favorites" = "Favorites";
+"emptyFavoritesTitle" = "No Favorite Movies Yet";
+"emptyFavoritesDescription" = "Movies you like will appear here";
+"minutes" = "Min.";
+"cantDownloadFavorites" = "Couldn't download favorite movies:";
+"cantDeleteFromFavorites" = "Couldn't delete movie from favorites:";
+
+// MovieDetail Module
+"movieCastTitle" = "Cast and Crew";
+"moviewDetailScreenTitle" = "Movie Detail";
+"movieDescriptionTitle" = "Story Line";
+"watchButtonTitle" = "Watch now";
+"showMoreText" = " Show More";
+
+// SeeAll Module
+"seeAllScreenTitle" = "Movies";
+"seeAllEmptyTitle" = "No Movies Yet";
+"seeAllEmptyDescription" = "All movies will appear here";
+
+// ForgotPass Module
+"submitButtonTitle" = "Submit";
+
+// SignUp Module
+"accountLabel" = "Already have an account?";
+"namePlaceholder" = "Enter your name";
+"surnamePlaceholder" = "Enter your last name";
+
+// Search
+"search" = "Search";
+"noMovies" = "No movies found";
+
+// FilterView
+"filterTitle" = "Filter";
+"resetFilters" = "Reset Filters";
+"categories" = "Categories";
+"starRating" = "Star Rating";
+"applyFilterButton" = "Apply Filters";
+
+// Genres
+"all" = "All";
+"action" = "Action";
+"adventure" = "Adventure";
+"mystery" = "Mystery";
+"fantasy" = "Fantasy";
+"others" = "Others";
+"animation" = "Animation";
+"biography" = "Biography";
+"drama" = "Drama";
+"history" = "History";
+"music" = "Music";
+"romance" = "Romance";
+"scienceFiction" = "Science Fiction";
+"thriller" = "Thriller";
+"war" = "War";
+"western" = "Western";
+
