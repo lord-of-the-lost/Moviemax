@@ -332,26 +332,79 @@ final class MovieRepository {
             genres: model.genres?.compactMap { Movie.Genre(name: $0.name ?? "") } ?? [],
             type: model.type ?? "",
             rating: Movie.Rating(
-                value: model.rating?.kp ?? Double.random(in: 1...5),
-                votesCount: model.votes?.kp ?? Int.random(in: 20...999)
-            ),
+                value: (model.rating?.kp ?? 0) > 0 ? model.rating?.kp ?? Double.random(in: 1...5) : Double.random(in: 1...5),
+                votesCount: (model.votes?.kp ?? 0) > 0 ? model.votes?.kp ?? Int.random(in: 20...999) : Int.random(in: 20...999)
+            ) ,
             description: model.description ?? "",
             shortDescription: model.shortDescription ?? "",
             name: model.name ?? "",
             enName: model.enName ?? "",
-            persons: model.persons?.compactMap {
-                Movie.Person(
-                    id: $0.id ?? 0,
-                    photo: $0.photo ?? "",
-                    name: $0.name ?? "",
-                    enName: $0.enName ?? "",
-                    profession: $0.profession ?? "",
-                    enProfession: $0.enProfession ?? ""
-                )
-            } ?? [],
+            persons: {
+                let mappedPersons = model.persons?.compactMap {
+                    Movie.Person(
+                        id: $0.id ?? 0,
+                        photo: $0.photo ?? "",
+                        name: $0.name ?? "",
+                        enName: $0.enName ?? "",
+                        profession: $0.profession ?? "",
+                        enProfession: $0.enProfession ?? ""
+                    )
+                } ?? []
+                return mappedPersons.isEmpty ? mockPersons : mappedPersons
+            }(),
             trailerURL: model.videos?.trailers?.first?.url ?? "https://yandex.ru/video/preview/10510689359700548639",
             isFavorite: false,
             isRecent: false
         )
     }
+    
+    private let mockPersons: [Movie.Person] = [
+        .init(
+            id: 1,
+            photo: "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/e32de330-17e9-4c83-8a05-a2c2c1f96dd2/280x420",
+            name: "Леонардо ДиКаприо",
+            enName: "Leonardo DiCaprio",
+            profession: "Актер",
+            enProfession: "Actor"
+        ),
+        .init(
+            id: 2,
+            photo: "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/637271d5-61b4-4e46-ac83-6d07494c7645/280x420",
+            name: "Кристофер Нолан",
+            enName: "Christopher Nolan",
+            profession: "Режиссер",
+            enProfession: "Director"
+        ),
+        .init(
+            id: 3,
+            photo: "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/0c15d161-eb02-4125-8b84-49ac2f58f9c0/280x420",
+            name: "Марго Робби",
+            enName: "Margot Robbie",
+            profession: "Актриса",
+            enProfession: "Actor"
+        ),
+        .init(
+            id: 4,
+            photo: "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/a8f3599c-78d5-4f34-9ca1-5de86dd4aa58/280x420",
+            name: "Квентин Тарантино",
+            enName: "Quentin Tarantino",
+            profession: "Режиссер",
+            enProfession: "Director"
+        ),
+        .init(
+            id: 5,
+            photo: "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/0f9f9490-6ce0-4612-9247-9ecee137f860/280x420",
+            name: "Скарлетт Йоханссон",
+            enName: "Scarlett Johansson",
+            profession: "Актриса",
+            enProfession: "Actor"
+        ),
+        .init(
+            id: 6,
+            photo: "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/4e0f0816-8d7b-4108-9244-f1f08e48a6cf/280x420",
+            name: "Мартин Скорсезе",
+            enName: "Martin Scorsese",
+            profession: "Режиссер",
+            enProfession: "Director"
+        )]
 }

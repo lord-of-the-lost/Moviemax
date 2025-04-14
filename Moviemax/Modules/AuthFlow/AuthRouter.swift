@@ -27,7 +27,6 @@ final class AuthRouter: RouterProtocol {
     
     func showForgotPassFlow() {
         let forgotPassViewController = ForgotPassFactory.build(dependency)
-        let navigationController = UINavigationController(rootViewController: forgotPassViewController)
-        viewController?.view.window?.rootViewController = navigationController
+        viewController?.navigationController?.pushViewController(forgotPassViewController, animated: true)
     }
 }

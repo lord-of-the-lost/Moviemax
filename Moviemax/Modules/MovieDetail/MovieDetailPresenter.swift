@@ -48,6 +48,26 @@ final class MovieDetailPresenter {
             )
         }
     }
+    
+    func getPersonsCount() -> Int {
+        return model.persons.count
+    }
+    
+    func getPersonViewModel(at index: Int) -> MovieCastCell.MovieCastCellViewModel {
+        guard let person = model.persons[safe: index] else {
+            return MovieCastCell.MovieCastCellViewModel(
+                castImage: UIImage(resource: .avatar),
+                castName: "Unknown",
+                castDescription: "Unknown"
+            )
+        }
+        
+        return MovieCastCell.MovieCastCellViewModel(
+            castImage: UIImage(resource: .avatar),
+            castName: person.name,
+            castDescription: person.profession
+        )
+    }
 }
 
 private extension MovieDetailPresenter {
@@ -77,7 +97,8 @@ private extension MovieDetailPresenter {
                 genre: model.genres.first?.name ?? "Unknown",
                 rating: model.rating.value,
                 descriptionText: model.description,
-                isFavorite: isLiked
+                isFavorite: isLiked,
+                persons: model.persons
             )
             completion(detailModel)
         }

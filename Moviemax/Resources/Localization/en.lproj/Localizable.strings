@@ -111,7 +111,7 @@
 "favorites" = "Favorites";
 "emptyFavoritesTitle" = "No Favorite Movies Yet";
 "emptyFavoritesDescription" = "Movies you like will appear here";
-"minutes" = "Minutes";
+"minutes" = "Min.";
 "cantDownloadFavorites" = "Couldn't download favorite movies:";
 "cantDeleteFromFavorites" = "Couldn't delete movie from favorites:";
 

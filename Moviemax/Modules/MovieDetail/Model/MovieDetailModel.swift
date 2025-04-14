@@ -16,4 +16,5 @@ struct MovieDetailModel {
     let rating: Double
     let descriptionText: String
     var isFavorite: Bool
+    let persons: [Movie.Person]?
 }
