@@ -6,13 +6,6 @@
 //
 
 import UIKit
-import SnapKit
-
-// MARK: - State
-enum SeeAllState {
-    case empty
-    case content([MovieLargeCell.MovieLargeCellViewModel])
-}
 
 final class SeeAllViewController: UIViewController {
     private let presenter: SeeAllPresenter
@@ -60,6 +53,12 @@ final class SeeAllViewController: UIViewController {
         return button
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     init(presenter: SeeAllPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -72,10 +71,12 @@ final class SeeAllViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter.view = self
         setupUI()
         setupConstraints()
         setupNavigation()
-        presenter.view = self
+        setupActivityIndicator()
+        showActivityIndicator()
         presenter.viewDidLoad()
     }
     
@@ -90,12 +91,34 @@ final class SeeAllViewController: UIViewController {
     func show(_ state: SeeAllState) {
         switch state {
         case .empty:
+            hideActivityIndicator()
             tableView.isHidden = true
             emptyStateView.isHidden = false
+        case .loading:
+            showActivityIndicator()
         case .content:
+            hideActivityIndicator()
             tableView.isHidden = false
             emptyStateView.isHidden = true
             tableView.reloadData()
+        }
+    }
+    
+    func hideActivityIndicator() {
+        activityIndicator.stopAnimating()
+        tableView.isHidden = false
+    }
+    
+    func showActivityIndicator() {
+        activityIndicator.startAnimating()
+        tableView.isHidden = true
+        emptyStateView.isHidden = true
+    }
+    
+    func setupActivityIndicator() {
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
     }
 }

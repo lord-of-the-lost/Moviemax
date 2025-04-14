@@ -7,13 +7,20 @@
 
 import UIKit
 
+// MARK: - State
+enum SeeAllState {
+    case empty
+    case loading
+    case content([MovieLargeCell.MovieLargeCellViewModel])
+}
+
 final class SeeAllPresenter {
     weak var view: SeeAllViewController?
     private let router: SeeAllRouter
     private let movieRepository: MovieRepository
     private var allMovies: [Movie] = []
     
-    var state: SeeAllState = .empty {
+    var state: SeeAllState = .loading {
         didSet {
             view?.show(state)
         }
@@ -29,7 +36,7 @@ final class SeeAllPresenter {
     }
     
     func viewWillAppear() {
-        loadMovies()
+        checkFavoriteStatus(for: allMovies)
     }
     
     func didSelectMovie(at index: Int) {
@@ -40,16 +47,23 @@ final class SeeAllPresenter {
     func likeButtonTapped(at index: Int) {
         guard let movie = allMovies[safe: index] else { return }
         
-        // Удаляем фильм из избранного
+        // Переключаем статус избранного для фильма
         let result = movieRepository.toggleFavorite(movie: movie)
         
         switch result {
-        case .success:
-            loadMovies()
+        case .success(let isFavorite):
+            allMovies[index].isFavorite = isFavorite
+            
+            // Обновляем только статус лайка в модели представления
+            if case .content(var viewModels) = state, index < viewModels.count {
+                viewModels[index].isLiked = isFavorite
+                state = .content(viewModels)
+            }
+            
         case .failure(let error):
             view?.showAlert(
                 title: "Ошибка",
-                message: "Не удалось удалить фильм из избранного: \(error.localizedDescription)"
+                message: "Не удалось обновить статус избранного: \(error.localizedDescription)"
             )
         }
     }
@@ -70,15 +84,7 @@ private extension SeeAllPresenter {
                 switch result {
                 case .success(let movies):
                     self.allMovies = movies
-                    
-                    if movies.isEmpty {
-                        self.state = .empty
-                    } else {
-                        let viewModels = movies.map { self.mapMovieToViewModel($0) }
-                        self.state = .content(viewModels)
-                        
-                        self.loadImagesForMovies(movies)
-                    }
+                    self.checkFavoriteStatus(for: movies)
                     
                 case .failure(let error):
                     self.state = .empty
@@ -135,5 +141,35 @@ private extension SeeAllPresenter {
             genre: movie.genres.first?.name ?? "Unknown",
             isLiked: movie.isFavorite
         )
+    }
+    
+    /// Проверяет статус избранного для фильмов
+    func checkFavoriteStatus(for movies: [Movie]) {
+        var updatedMovies = movies
+        let group = DispatchGroup()
+        
+        for (index, movie) in movies.enumerated() {
+            group.enter()
+            let result = movieRepository.isFavorite(movie: movie)
+            
+            switch result {
+            case .success(let isFavorite):
+                updatedMovies[index].isFavorite = isFavorite
+            case .failure:
+                break
+            }
+            
+            group.leave()
+        }
+        
+        group.notify(queue: .main) { [weak self] in
+            guard let self else { return }
+            self.allMovies = updatedMovies
+            
+            let viewModels = updatedMovies.map { self.mapMovieToViewModel($0) }
+            self.state = .content(viewModels)
+            
+            self.loadImagesForMovies(updatedMovies)
+        }
     }
 }

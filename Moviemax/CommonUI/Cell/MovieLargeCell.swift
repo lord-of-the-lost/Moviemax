@@ -126,7 +126,7 @@ extension MovieLargeCell {
         let filmLength: String
         let reliseDate: String
         let genre: String
-        let isLiked: Bool
+        var isLiked: Bool
     }
     
     // TODO: выпилить
