@@ -128,34 +128,6 @@ extension MovieLargeCell {
         let genre: String
         var isLiked: Bool
     }
-    
-    // TODO: выпилить
-    static let mockData: [MovieLargeCellViewModel] = [
-        MovieLargeCellViewModel(
-            title: "Drifting Home",
-            poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "148 Minutes",
-            reliseDate: "17 Sep 2021",
-            genre: "Animation",
-            isLiked: false
-        ),
-        MovieLargeCellViewModel(
-            title: "The Batman",
-            poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "176 Minutes",
-            reliseDate: "4 Mar 2022",
-            genre: "Action",
-            isLiked: true
-        ),
-        MovieLargeCellViewModel(
-            title: "Everything Everywhere All at Once",
-            poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "139 Minutes",
-            reliseDate: "25 Mar 2022",
-            genre: "Adventure",
-            isLiked: false
-        )
-    ]
 }
 
 // MARK: - Private Methods

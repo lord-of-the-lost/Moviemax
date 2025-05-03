@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 final class ChipViewCell: UICollectionViewCell {
     static let identifier = ChipViewCell.description()
     
@@ -15,7 +14,7 @@ final class ChipViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 1
         label.textColor = .adaptiveTextMain
-        label.font = AppFont.plusJakartaRegular.withSize(Constants.FontSizes.label)
+        label.font = AppFont.plusJakartaRegular.withSize(12)
         label.textAlignment = .center
         label.clipsToBounds = true
         return label
@@ -56,26 +55,9 @@ private extension ChipViewCell {
     }
     
     func setupConstrains() {
-        label.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Constants.Constraints.labelInset)
-            make.trailing.equalToSuperview().inset(Constants.Constraints.labelInset)
-           
-            make.top.equalToSuperview().offset(Constants.Constraints.labelSmallInset)
-            make.bottom.equalToSuperview().inset(Constants.Constraints.labelSmallInset)
-        }
-    }
-}
-
-// MARK: - Constants
-private extension ChipViewCell {
-    enum Constants {
-        enum Constraints {
-            static let labelSmallInset: CGFloat = 9
-            static let labelInset: CGFloat = 24
-            static let labelHeight: CGFloat = 34
-        }
-        enum FontSizes {
-            static let label: CGFloat = 12
+        label.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().offset(24)
+            $0.top.bottom.equalToSuperview().offset(9)
         }
     }
 }

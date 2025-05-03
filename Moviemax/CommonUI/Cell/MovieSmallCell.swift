@@ -119,37 +119,6 @@ extension MovieSmallCell {
         let voiceCount: String
         var isLiked: Bool
     }
-    
-    // TODO: выпилить
-    static let mockData: [MovieSmallCellViewModel] = [
-        MovieSmallCellViewModel(
-            title: "Drifting Home",
-            poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "148 Minutes",
-            genre: "Animation",
-            rating: "4.2",
-            voiceCount: "(17)",
-            isLiked: false
-        ),
-        MovieSmallCellViewModel(
-            title: "The Batman",
-            poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "176 Minutes",
-            genre: "Action",
-            rating: "4.8",
-            voiceCount: "(117)",
-            isLiked: false
-        ),
-        MovieSmallCellViewModel(
-            title: "Everything Everywhere All at Once",
-            poster: UIImage(resource: .posterPlaceholder),
-            filmLength: "139 Minutes",
-            genre: "Adventure",
-            rating: "3.8",
-            voiceCount: "(90)",
-            isLiked: false
-        ),
-    ]
 }
 
 // MARK: - Private Methods
