@@ -19,7 +19,7 @@ final class MovieLargeCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = Constants.Sizes.cornerRadius
+        imageView.layer.cornerRadius = 16
         return imageView
     }()
     
@@ -69,7 +69,7 @@ final class MovieLargeCell: UITableViewCell {
         let view = UIView()
         view.addSubview(genreLabel)
         view.backgroundColor = .accent
-        view.layer.cornerRadius = Constants.Sizes.genreCornerRadius
+        view.layer.cornerRadius = 6
         return view
     }()
     
@@ -149,89 +149,65 @@ private extension MovieLargeCell {
     
     func setupConstraints() {
         movieImage.snp.makeConstraints {
-            $0.width.equalTo(Constants.Sizes.posterWidth)
+            $0.width.equalTo(120)
             $0.top.equalToSuperview()
             $0.leading.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(Constants.Spacing.bottomInset)
+            $0.bottom.equalToSuperview().inset(24)
         }
         
         movieName.snp.makeConstraints {
             $0.top.equalTo(movieImage.snp.top)
-            $0.leading.equalTo(movieImage.snp.trailing).offset(Constants.Spacing.horizontalOffset)
-            $0.trailing.equalTo(likeButton.snp.leading).offset(Constants.Spacing.movieNameTrailing.negative)
+            $0.leading.equalTo(movieImage.snp.trailing).offset(15)
+            $0.trailing.equalTo(likeButton.snp.leading).offset(-10)
         }
         
         timeIcon.snp.makeConstraints {
-            $0.top.equalTo(movieName.snp.bottom).offset(Constants.Spacing.verticalSpacing)
+            $0.top.equalTo(movieName.snp.bottom).offset(12)
             $0.leading.equalTo(movieName.snp.leading)
-            $0.size.equalTo(Constants.Sizes.iconSize)
+            $0.size.equalTo(16)
         }
         
         timeLabel.snp.makeConstraints {
             $0.centerY.equalTo(timeIcon)
-            $0.leading.equalTo(timeIcon.snp.trailing).offset(Constants.Spacing.iconTextSpacing)
+            $0.leading.equalTo(timeIcon.snp.trailing).offset(5)
         }
         
         dateIcon.snp.makeConstraints {
-            $0.top.equalTo(timeIcon.snp.bottom).offset(Constants.Spacing.verticalSpacing)
+            $0.top.equalTo(timeIcon.snp.bottom).offset(12)
             $0.leading.equalTo(movieName.snp.leading)
-            $0.size.equalTo(Constants.Sizes.iconSize)
+            $0.size.equalTo(16)
         }
         
         dateLabel.snp.makeConstraints {
             $0.centerY.equalTo(dateIcon)
-            $0.leading.equalTo(dateIcon.snp.trailing).offset(Constants.Spacing.iconTextSpacing)
+            $0.leading.equalTo(dateIcon.snp.trailing).offset(5)
         }
         
         movieIcon.snp.makeConstraints {
-            $0.top.equalTo(dateIcon.snp.bottom).offset(Constants.Spacing.verticalSpacing)
+            $0.top.equalTo(dateIcon.snp.bottom).offset(12)
             $0.leading.equalTo(movieName.snp.leading)
-            $0.size.equalTo(Constants.Sizes.iconSize)
+            $0.size.equalTo(16)
         }
         
         genreView.snp.makeConstraints {
             $0.centerY.equalTo(movieIcon)
-            $0.leading.equalTo(movieIcon.snp.trailing).offset(Constants.Spacing.iconTextSpacing)
+            $0.leading.equalTo(movieIcon.snp.trailing).offset(5)
         }
         
         genreLabel.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview().inset(Constants.Spacing.genreVerticalPadding)
-            $0.leading.trailing.equalToSuperview().inset(Constants.Spacing.genrePadding)
+            $0.top.bottom.equalToSuperview().inset(3)
+            $0.leading.trailing.equalToSuperview().inset(16)
         }
         
         likeButton.snp.makeConstraints {
             $0.top.equalTo(movieImage)
-            $0.trailing.equalToSuperview().offset(Constants.Spacing.likeButtonTrailing.negative)
-            $0.size.equalTo(Constants.Sizes.likeButtonSize)
+            $0.trailing.equalToSuperview().offset(-6)
+            $0.size.equalTo(24)
         }
     }
     
     @objc func likeButtonTapped() {
         likeButton.toggleLike()
         delegate?.likeTapped(self)
-    }
-}
-
-// MARK: - Constants
-private extension MovieLargeCell {
-    enum Constants {
-        enum Sizes {
-            static let posterWidth: CGFloat = 120
-            static let iconSize: CGFloat = 16
-            static let likeButtonSize: CGFloat = 24
-            static let cornerRadius: CGFloat = 16
-            static let genreCornerRadius: CGFloat = 6
-        }
-        
-        enum Spacing {
-            static let bottomInset: CGFloat = 24
-            static let horizontalOffset: CGFloat = 15
-            static let likeButtonTrailing: CGFloat = 6
-            static let movieNameTrailing: CGFloat = 10
-            static let verticalSpacing: CGFloat = 12
-            static let iconTextSpacing: CGFloat = 5
-            static let genrePadding: CGFloat = 16
-            static let genreVerticalPadding: CGFloat = 3
-        }
     }
 }
