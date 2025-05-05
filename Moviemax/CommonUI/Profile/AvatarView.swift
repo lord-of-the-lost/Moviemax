@@ -11,6 +11,7 @@ import UIKit
 protocol AvatarViewDelegate: AnyObject {
     func avatarViewDidTapOnPhoto(_ avatarView: AvatarView)
 }
+
 final class AvatarView: UIView {
     
     // MARK: Properties
@@ -66,7 +67,7 @@ private extension AvatarView {
         photoImageView.addGestureRecognizer(tap)
         photoImageView.isUserInteractionEnabled = true
         pencilImageView.snp.makeConstraints {
-            $0.size.equalTo(Constants.pencilSize)
+            $0.size.equalTo(32)
             $0.bottom.right.equalTo(photoImageView)
         }
     }
@@ -74,13 +75,6 @@ private extension AvatarView {
     @objc
     func didTapPhoto() {
         delegate?.avatarViewDidTapOnPhoto(self)
-    }
-}
-
-//MARK: - Constants
-private extension AvatarView {
-    enum Constants {
-        static let pencilSize: CGFloat = 32
     }
 }
 
