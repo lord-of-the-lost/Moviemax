@@ -7,14 +7,11 @@
 
 import UIKit
 
-
 protocol AvatarViewDelegate: AnyObject {
     func avatarViewDidTapOnPhoto(_ avatarView: AvatarView)
 }
 
 final class AvatarView: UIView {
-    
-    // MARK: Properties
     weak var delegate: AvatarViewDelegate?
     
     private lazy var pencilImageView = UIImageView(image: UIImage(resource: .pencil))
@@ -23,13 +20,14 @@ final class AvatarView: UIView {
         let photoImageView = UIImageView(frame: .zero)
         photoImageView.contentMode = .scaleAspectFill
         photoImageView.clipsToBounds = true
+        photoImageView.isUserInteractionEnabled = true
         return photoImageView
     }()
     
-    // MARK: Init
     init(photoImage: UIImage, isEditable: Bool) {
         super.init(frame: .zero)
         setupUI(photoImage: photoImage, isEditable: isEditable)
+        setupGestures()
     }
     
     @available(*, unavailable)
@@ -63,17 +61,19 @@ private extension AvatarView {
     
     func setupPencilImageView() {
         addSubview(pencilImageView)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapPhoto))
-        photoImageView.addGestureRecognizer(tap)
-        photoImageView.isUserInteractionEnabled = true
+    
         pencilImageView.snp.makeConstraints {
             $0.size.equalTo(32)
             $0.bottom.right.equalTo(photoImageView)
         }
     }
     
-    @objc
-    func didTapPhoto() {
+    func setupGestures() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapPhoto))
+        photoImageView.addGestureRecognizer(tap)
+    }
+    
+    @objc func didTapPhoto() {
         delegate?.avatarViewDidTapOnPhoto(self)
     }
 }
