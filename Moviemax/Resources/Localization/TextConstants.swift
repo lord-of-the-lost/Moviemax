@@ -189,6 +189,8 @@ enum TextConstants {
         static let singUpButtonTitle = "signUp"
         static let accountLabel = "accountLabel"
         static let loginButtonTitle = "login"
+        static let registerError  = "registerError"
+        static let emailExistsError = "emailExistsError"
         
         enum FirstName {
             static let title = "firstName"

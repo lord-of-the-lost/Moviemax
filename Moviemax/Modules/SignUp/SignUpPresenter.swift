@@ -7,14 +7,31 @@
 
 import Foundation
 
+protocol SignUpPresenterProtocol {
+    func setupView(_ view: SignUpViewControllerProtocol)
+    func loginTapped()
+    func singUpTapped()
+}
+
 final class SignUpPresenter {
-    weak var view: SignUpViewController?
+    weak var view: SignUpViewControllerProtocol?
     private let router: SignUpRouter
     private let authService: AuthenticationService
     
     init(router: SignUpRouter, dependency: DI) {
         self.router = router
         self.authService = dependency.authService
+    }
+}
+
+// MARK: - SignUpPresenterProtocol
+extension SignUpPresenter: SignUpPresenterProtocol {
+    func setupView(_ view: SignUpViewControllerProtocol) {
+        self.view = view
+    }
+    
+    func loginTapped() {
+        router.showAuthFlow()
     }
     
     func singUpTapped() {
@@ -25,19 +42,28 @@ final class SignUpPresenter {
             let email = view.getEmail(),
             let password = view.getPassword(),
             let confirmedPassword = view.getConfirmedPassword() else {
-            view?.showAlert(title: Constants.errorTitle, message: Constants.emptyFieldsError)
+            view?.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Auth.Errors.emptyFieldsError.localized()
+            )
             return
         }
         
         // Проверка совпадения паролей
         guard password == confirmedPassword else {
-            view.showAlert(title: Constants.errorTitle, message: Constants.passwordsNotMatchError)
+            view.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.ChangePass.Errors.notMatch.localized()
+            )
             return
         }
         
         // Проверка валидности email
         guard isValidEmail(email) else {
-            view.showAlert(title: Constants.errorTitle, message: Constants.invalidEmailError)
+            view.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Auth.Errors.invalidEmailError.localized()
+            )
             return
         }
         
@@ -64,32 +90,25 @@ final class SignUpPresenter {
         case .success:
         router.navigateToMain()
         case .failure(.emailAlreadyExists):
-            view.showAlert(title: Constants.errorTitle, message: Constants.emailExistsError)
+            view.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.SignUp.emailExistsError.localized()
+            )
         case .failure:
-            view.showAlert(title: Constants.errorTitle, message: Constants.registerError)
+            view.showAlert(
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.SignUp.registerError.localized()
+            )
         }
-    }
-    
-    func loginTapped() {
-        router.showAuthFlow()
-    }
-    
-    // Вспомогательная функция для валидации email
-    private func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return emailPred.evaluate(with: email)
     }
 }
 
-// MARK: - Constants
+// MARK: - Private Methods
 private extension SignUpPresenter {
-    enum Constants {
-        static let errorTitle = "Ошибка"
-        static let emptyFieldsError = "Пожалуйста, заполните все поля"
-        static let passwordsNotMatchError = "Пароли не совпадают"
-        static let invalidEmailError = "Введите корректный email"
-        static let emailExistsError = "Пользователь с таким email уже существует"
-        static let registerError = "Произошла ошибка при регистрации"
+    /// Вспомогательная функция для валидации email
+    func isValidEmail(_ email: String) -> Bool {
+        let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let predicate = NSPredicate(format:"SELF MATCHES %@", regex)
+        return predicate.evaluate(with: email)
     }
 }

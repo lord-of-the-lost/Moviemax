@@ -133,6 +133,8 @@
 "accountLabel" = "Уже есть аккаунт?";
 "namePlaceholder" = "Введите имя";
 "surnamePlaceholder" = "Введите фамилию";
+"registerError" = "Произошла ошибка при регистрации";
+"emailExistsError" = "Пользователь с таким email уже существует";
 
 // Search
 "search" = "Поиск";

@@ -134,6 +134,8 @@
 "accountLabel" = "Already have an account?";
 "namePlaceholder" = "Enter your name";
 "surnamePlaceholder" = "Enter your last name";
+"registerError" = "An error occurred during registration";
+"emailExistsError" = "The user with this email already exists";
 
 // Search
 "search" = "Search";

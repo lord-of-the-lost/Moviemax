@@ -7,6 +7,15 @@
 
 import UIKit
 
+protocol SignUpViewControllerProtocol: AnyObject {
+    func getFirstName() -> String?
+    func getLastName() -> String?
+    func getEmail() -> String?
+    func getPassword() -> String?
+    func getConfirmedPassword() -> String?
+    func showAlert(title: String, message: String?)
+}
+
 final class SignUpViewController: BaseScrollViewController {
     private let presenter: SignUpPresenter
     private lazy var firstNameField = TitledTextField()
@@ -65,13 +74,15 @@ final class SignUpViewController: BaseScrollViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
+        presenter.setupView(self)
         setupView()
         setupConstraints()
         configureTextFields()
     }
-    
-    // MARK: - Public Methods
+}
+
+// MARK: - SignUpViewControllerProtocol
+extension SignUpViewController: SignUpViewControllerProtocol {
     func getFirstName() -> String? {
         firstNameField.getText()
     }
@@ -107,25 +118,6 @@ private extension SignUpViewController {
             passwordField,
             confirmPasswordField
         )
-    }
-    
-    func setupConstraints() {
-        formStackView.snp.makeConstraints {
-            $0.top.equalTo(contentView).inset(100)
-            $0.leading.trailing.equalTo(contentView).inset(30)
-        }
-        
-        signUpButton.snp.makeConstraints {
-            $0.top.equalTo(formStackView.snp.bottom).offset(40)
-            $0.leading.trailing.equalTo(contentView).inset(30)
-            $0.height.equalTo(50)
-        }
-        
-        loginStackView.snp.makeConstraints {
-            $0.top.greaterThanOrEqualTo(signUpButton.snp.bottom).offset(20)
-            $0.centerX.equalTo(contentView)
-            $0.bottom.equalTo(contentView).inset(40)
-        }
     }
     
     func configureTextFields() {
@@ -166,10 +158,29 @@ private extension SignUpViewController {
         confirmPasswordField.configure(
             with: ViewModel(
                 title: TextConstants.SignUp.ConfirmPassword.title.localized(),
-                placeholder:TextConstants.SignUp.ConfirmPassword.placeholder.localized(),
+                placeholder: TextConstants.SignUp.ConfirmPassword.placeholder.localized(),
                 type: .password
             )
         )
+    }
+    
+    func setupConstraints() {
+        formStackView.snp.makeConstraints {
+            $0.top.equalTo(contentView).inset(100)
+            $0.leading.trailing.equalTo(contentView).inset(30)
+        }
+        
+        signUpButton.snp.makeConstraints {
+            $0.top.equalTo(formStackView.snp.bottom).offset(40)
+            $0.leading.trailing.equalTo(contentView).inset(30)
+            $0.height.equalTo(50)
+        }
+        
+        loginStackView.snp.makeConstraints {
+            $0.top.greaterThanOrEqualTo(signUpButton.snp.bottom).offset(20)
+            $0.centerX.equalTo(contentView)
+            $0.bottom.equalTo(contentView).inset(40)
+        }
     }
     
     @objc func signUpButtonTapped() {

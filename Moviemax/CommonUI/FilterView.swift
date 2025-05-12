@@ -5,9 +5,7 @@
 //  Created by Penkov Alexander on 11.04.2025.
 //
 
-
 import UIKit
-import SnapKit
 
 final class FilterView: UIView {
     

@@ -5,14 +5,27 @@
 //  Created by Penkov Alexander on 12.04.2025.
 //
 
+protocol ChangePassPresenterProtocol {
+    func setupView(_ view: ChangePassViewControllerProtocol)
+    func backButtonTapped()
+    func changePassButtonAction()
+}
+
 final class ChangePassPresenter {
-    weak var view: ChangePassViewController?
+    weak var view: ChangePassViewControllerProtocol?
     private let router: ChangePassRouter
     private let authService: AuthenticationService
 
     init(router: ChangePassRouter, dependency: DI) {
         self.router = router
         self.authService = dependency.authService
+    }
+}
+
+// MARK: - ChangePassPresenterProtocol
+extension ChangePassPresenter: ChangePassPresenterProtocol {
+    func setupView(_ view: ChangePassViewControllerProtocol) {
+        self.view = view
     }
     
     func backButtonTapped() {
@@ -32,7 +45,7 @@ final class ChangePassPresenter {
         }
         
         guard let currentUser = authService.getCurrentUser() else {
-            view.showAlert(title: TextConstants.ChangePass.Errors.noUserTitle)
+            view.showAlert(title: TextConstants.ChangePass.Errors.noUserTitle.localized(), message: nil)
             return
         }
         
@@ -47,22 +60,22 @@ final class ChangePassPresenter {
         
         // Проверяем, что новый пароль и его подтверждение совпадают
         if newPass != confirmNewPass {
-            view.showAlert(title: TextConstants.ChangePass.Errors.notMatch.localized())
+            view.showAlert(title: TextConstants.ChangePass.Errors.notMatch.localized(), message: nil)
             return
         }
         
         // Проверяем, что новый пароль отличается от текущего
         if currentPass == newPass {
-            view.showAlert(title: TextConstants.ChangePass.Errors.passMatch.localized())
+            view.showAlert(title: TextConstants.ChangePass.Errors.passMatch.localized(), message: nil)
             return
         }
         
         // Обновляем пароль
         let result = authService.changePass(newPass: newPass)
         if result {
-            view.showAlert(title: TextConstants.ChangePass.Errors.success.localized())
+            view.showAlert(title: TextConstants.ChangePass.Errors.success.localized(), message: nil)
         } else {
-            view.showAlert(title: TextConstants.ChangePass.Errors.errorTitle.localized())
+            view.showAlert(title: TextConstants.ChangePass.Errors.errorTitle.localized(), message: nil)
         }
     }
 }

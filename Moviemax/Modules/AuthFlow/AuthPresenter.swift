@@ -7,14 +7,29 @@
 
 import UIKit
 
+protocol AuthPresenterProtocol {
+    func setupView(_ view: AuthViewControllerProtocol)
+    func forgotPasswordTapped()
+    func googleSignInTapped()
+    func signUpTapped()
+    func signInTapped()
+}
+
 final class AuthPresenter {
-    weak var view: AuthViewController?
+    weak var view: AuthViewControllerProtocol?
     private let router: AuthRouter
     private let authService: AuthenticationService
     
     init(router: AuthRouter, dependency: DI) {
         self.router = router
         self.authService = dependency.authService
+    }
+}
+
+//MARK: - AuthPresenterProtocol
+extension AuthPresenter: AuthPresenterProtocol {
+    func setupView(_ view: AuthViewControllerProtocol) {
+        self.view = view
     }
     
     func forgotPasswordTapped() {
@@ -45,9 +60,9 @@ final class AuthPresenter {
         // Проверка валидности email
         guard isValidEmail(email) else {
             view.showAlert(
-                    title: TextConstants.Auth.Errors.errorTitle.localized(),
-                    message: TextConstants.Auth.Errors.invalidEmailError.localized()
-                )
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Auth.Errors.invalidEmailError.localized()
+            )
             return
         }
         
@@ -77,11 +92,13 @@ final class AuthPresenter {
             )
         }
     }
-    
-    // Вспомогательная функция для валидации email
-    private func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return emailPred.evaluate(with: email)
+}
+
+//MARK: - Private Methods
+private extension AuthPresenter {
+    func isValidEmail(_ email: String) -> Bool {
+        let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let predicate = NSPredicate(format:"SELF MATCHES %@", regex)
+        return predicate.evaluate(with: email)
     }
 }

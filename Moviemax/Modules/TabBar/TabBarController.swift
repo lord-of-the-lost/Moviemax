@@ -7,13 +7,19 @@
 
 import UIKit
 
-final class TabBarController: UITabBarController  {
-    let presenter: TabBarPresenter
+protocol TabBarControllerProtocol: AnyObject {
+    var tabBar: UITabBar { get }
+    var selectedIndex: Int { get set }
     
-    init(presenter: TabBarPresenter) {
+    func setViewControllers(_ viewControllers: [UIViewController]?, animated: Bool)
+}
+
+final class TabBarController: UITabBarController  {
+    private let presenter: TabBarPresenterProtocol
+    
+    init(presenter: TabBarPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
-       
     }
     
     @available(*, unavailable)
@@ -23,7 +29,7 @@ final class TabBarController: UITabBarController  {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
+        presenter.setupView(self)
         presenter.viewDidLoad()
     }
     
@@ -33,3 +39,5 @@ final class TabBarController: UITabBarController  {
         tabBar.frame.origin.y = view.frame.height - 75
     }
 }
+
+extension TabBarController: TabBarControllerProtocol {}

@@ -7,8 +7,15 @@
 
 import UIKit
 
+protocol AuthViewControllerProtocol: AnyObject {
+    func getEmail() -> String?
+    func getPassword() -> String?
+    func isRememberMeChecked() -> Bool
+    func showAlert(title: String, message: String?)
+}
+
 final class AuthViewController: BaseScrollViewController {
-    private let presenter: AuthPresenter
+    private let presenter: AuthPresenterProtocol
     private lazy var emailField = TitledTextField()
     private lazy var passwordField = TitledTextField(isSecure: true)
     
@@ -121,7 +128,7 @@ final class AuthViewController: BaseScrollViewController {
         return stackView
     }()
     
-    init(presenter: AuthPresenter) {
+    init(presenter: AuthPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -133,13 +140,15 @@ final class AuthViewController: BaseScrollViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
+        presenter.setupView(self)
         setupView()
         setupConstraints()
         configureTextFields()
     }
-    
-    // MARK: - Public Methods
+}
+
+// MARK: - AuthViewControllerProtocol
+extension AuthViewController: AuthViewControllerProtocol {
     func getEmail() -> String? {
         emailField.getText()
     }
@@ -173,6 +182,26 @@ private extension AuthViewController {
         passwordOptionsStackView.addArrangedSubviews(rememberMeStackView, forgotPasswordButton)
         signUpStackView.addArrangedSubviews(accountLabel, signUpButton)
         formStackView.addArrangedSubviews(emailField, passwordField)
+    }
+    
+    func configureTextFields() {
+        typealias ViewModel = TitledTextField.TextFieldViewModel
+        
+        emailField.configure(
+            with: ViewModel(
+                title: TextConstants.Auth.Email.title.localized(),
+                placeholder: TextConstants.Auth.Email.placeholder.localized(),
+                type: .email
+            )
+        )
+        
+        passwordField.configure(
+            with: ViewModel(
+                title: TextConstants.Auth.Password.title.localized(),
+                placeholder: TextConstants.Auth.Password.placeholder.localized(),
+                type: .password
+            )
+        )
     }
     
     func setupConstraints() {
@@ -209,26 +238,6 @@ private extension AuthViewController {
             $0.centerX.equalTo(contentView)
             $0.bottom.equalTo(contentView).inset(40)
         }
-    }
-    
-    func configureTextFields() {
-        typealias ViewModel = TitledTextField.TextFieldViewModel
-        
-        emailField.configure(
-            with: ViewModel(
-                title: TextConstants.Auth.Email.title.localized(),
-                placeholder: TextConstants.Auth.Email.placeholder.localized(),
-                type: .email
-            )
-        )
-        
-        passwordField.configure(
-            with: ViewModel(
-                title: TextConstants.Auth.Password.title.localized(),
-                placeholder: TextConstants.Auth.Password.placeholder.localized(),
-                type: .password
-            )
-        )
     }
     
     @objc func forgotPasswordTapped() {

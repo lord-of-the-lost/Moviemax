@@ -8,10 +8,7 @@
 import UIKit
 
 final class FilterViewController: UIViewController {
-    
-    // MARK: Properties
     private let presenter: FilterPresenter
-    
     private lazy var filetView = FilterView()
     
     private lazy var blurView: UIVisualEffectView = {
@@ -21,7 +18,6 @@ final class FilterViewController: UIViewController {
         return view
     }()
     
-    // MARK: Init
     init(presenter: FilterPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -33,17 +29,16 @@ final class FilterViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        setupView()
         setupConstraints()
     }
 }
 
 // MARK: - Private methods
 private extension FilterViewController {
-    func setupUI() {
+    func setupView() {
         view.backgroundColor = .clear
         view.addSubview(blurView)
         view.addSubview(filetView)

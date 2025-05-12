@@ -6,7 +6,11 @@
 //
 
 import UIKit
-import SnapKit
+
+protocol FavoritesViewControllerProtocol: AnyObject {
+    func show(_ state: FavoritesState)
+    func showAlert(title: String, message: String?)
+}
 
 // MARK: - State
 enum FavoritesState {
@@ -15,7 +19,7 @@ enum FavoritesState {
 }
 
 final class FavoritesViewController: UIViewController {
-    private let presenter: FavoritesPresenter
+    private let presenter: FavoritesPresenterProtocol
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -64,9 +68,9 @@ final class FavoritesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        presenter.setupView(self)
+        setupView()
         setupConstraints()
-        presenter.view = self
         presenter.viewDidLoad()
     }
     
@@ -78,6 +82,11 @@ final class FavoritesViewController: UIViewController {
         updateLocalizedTexts()
     }
     
+
+}
+
+// MARK: - FavoritesViewControllerProtocol
+extension FavoritesViewController: FavoritesViewControllerProtocol {
     func show(_ state: FavoritesState) {
         switch state {
         case .empty:
@@ -121,7 +130,7 @@ extension FavoritesViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension FavoritesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        Constants.Constraints.cellHeight
+        184
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -140,23 +149,29 @@ extension FavoritesViewController: MovieLargeCellDelegate {
 
 // MARK: - Private Methods
 private extension FavoritesViewController {
-    func setupUI() {
+    func setupView() {
         navigationItem.title = TextConstants.Favorites.screenTitle.localized()
         view.backgroundColor = .appBackground
         view.addSubviews(tableView, emptyStateView)
         emptyStateView.addSubviews(emptyStateLabel, emptyStateDescription)
     }
     
+    func updateLocalizedTexts() {
+        navigationItem.title = TextConstants.Favorites.screenTitle.localized()
+        emptyStateDescription.text = TextConstants.Favorites.emptyStateDescription.localized()
+        emptyStateLabel.text = TextConstants.Favorites.emptyStateTitle.localized()
+    }
+    
     func setupConstraints() {
         tableView.snp.makeConstraints {
             $0.top.bottom.equalToSuperview()
-            $0.leading.equalTo(Constants.Constraints.contentInset)
-            $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
+            $0.leading.equalTo(22)
+            $0.trailing.equalTo(-22)
         }
         
         emptyStateView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(Constants.Constraints.contentInset)
+            $0.leading.trailing.equalToSuperview().inset(22)
         }
         
         emptyStateLabel.snp.makeConstraints {
@@ -165,26 +180,9 @@ private extension FavoritesViewController {
         }
         
         emptyStateDescription.snp.makeConstraints {
-            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(Constants.Constraints.emptyStateSpacing)
+            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
-        }
-    }
-    
-    func updateLocalizedTexts() {
-        navigationItem.title = TextConstants.Favorites.screenTitle.localized()
-        emptyStateDescription.text = TextConstants.Favorites.emptyStateDescription.localized()
-        emptyStateLabel.text = TextConstants.Favorites.emptyStateTitle.localized()
-    }
-}
-
-// MARK: - Constants
-private extension FavoritesViewController {
-    enum Constants {
-        enum Constraints {
-            static let cellHeight: CGFloat = 184
-            static let emptyStateSpacing: CGFloat = 16
-            static let contentInset: CGFloat = 22
         }
     }
 }

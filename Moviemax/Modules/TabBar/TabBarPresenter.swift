@@ -7,14 +7,26 @@
 
 import UIKit
 
+protocol TabBarPresenterProtocol {
+    func setupView(_ view: TabBarControllerProtocol)
+    func viewDidLoad()
+}
+
 final class TabBarPresenter {
-    weak var view: TabBarController?
+    weak var view: TabBarControllerProtocol?
     private let router: TabBarRouter
     private let dependency: DI
     
     init(router: TabBarRouter, dependency: DI) {
         self.router = router
         self.dependency = dependency
+    }
+}
+
+// MARK: - TabBarPresenterProtocol
+extension TabBarPresenter: TabBarPresenterProtocol {
+    func setupView(_ view: TabBarControllerProtocol) {
+        self.view = view
     }
     
     func viewDidLoad() {

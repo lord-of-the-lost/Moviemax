@@ -22,7 +22,8 @@ final class ChipViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
+        setupView()
+        setupConstrains()
     }
     
     @available(*, unavailable)
@@ -44,14 +45,13 @@ final class ChipViewCell: UICollectionViewCell {
 
 // MARK: - Private methods
 private extension ChipViewCell {
-   func setupUI() {
+   func setupView() {
        contentView.backgroundColor = .accent
        contentView.layer.cornerRadius = 16
        contentView.layer.borderWidth = 1
        contentView.layer.borderColor = UIColor.accent.cgColor
        contentView.layer.masksToBounds = true
        contentView.addSubview(label)
-       setupConstrains()
     }
     
     func setupConstrains() {

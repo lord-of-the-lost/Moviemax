@@ -7,13 +7,23 @@
 
 import UIKit
 
+protocol FavoritesPresenterProtocol {
+    var state: FavoritesState { get }
+    
+    func setupView(_ view: FavoritesViewControllerProtocol)
+    func viewDidLoad()
+    func viewWillAppear()
+    func didSelectMovie(at index: Int)
+    func likeButtonTapped(at index: Int)
+}
+
 final class FavoritesPresenter {
-    weak var view: FavoritesViewController?
+    weak var view: FavoritesViewControllerProtocol?
     private let router: FavoritesRouter
     private let movieRepository: MovieRepository
     private var favoriteMovies: [Movie] = []
     
-    var state: FavoritesState = .empty {
+    private(set) var state: FavoritesState = .empty {
         didSet {
             view?.show(state)
         }
@@ -22,6 +32,13 @@ final class FavoritesPresenter {
     init(router: FavoritesRouter, dependency: DI) {
         self.router = router
         self.movieRepository = dependency.movieRepository
+    }
+}
+
+// MARK: - FavoritesPresenterProtocol
+extension FavoritesPresenter: FavoritesPresenterProtocol {
+    func setupView(_ view: any FavoritesViewControllerProtocol) {
+        self.view = view
     }
     
     func viewDidLoad() {
@@ -48,7 +65,7 @@ final class FavoritesPresenter {
             loadFavoriteMovies()
         case .failure(let error):
             view?.showAlert(
-                title: "Ошибка",
+                title: TextConstants.ChangePass.Errors.errorTitle.localized(),
                 message: "\(TextConstants.Favorites.Errors.cantDeleteFromFavorites.localized()) \(error.localizedDescription)"
             )
         }
@@ -83,7 +100,7 @@ private extension FavoritesPresenter {
     }
     
     /// Загружает изображения для фильмов и обновляет UI
-    private func loadImagesForMovies(_ movies: [Movie]) {
+    func loadImagesForMovies(_ movies: [Movie]) {
         for (index, movie) in movies.enumerated() {
             guard !movie.poster.url.isEmpty else { continue }
             
