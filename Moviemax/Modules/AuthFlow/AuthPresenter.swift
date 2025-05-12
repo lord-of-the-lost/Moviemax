@@ -16,7 +16,7 @@ protocol AuthPresenterProtocol {
 }
 
 final class AuthPresenter {
-    weak var view: AuthViewControllerProtocol?
+    private weak var view: AuthViewControllerProtocol?
     private let router: AuthRouter
     private let authService: AuthenticationService
     

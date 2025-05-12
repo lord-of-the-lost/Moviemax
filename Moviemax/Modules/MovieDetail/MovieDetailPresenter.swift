@@ -43,8 +43,8 @@ final class MovieDetailPresenter {
             model = movie
         case .failure(let error):
             view?.showAlert(
-                title: "Ошибка",
-                message: "Не удалось обновить статус избранного: \(error.localizedDescription)"
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Favorites.Errors.couldntUpdateFavoritesStatus.localized() + error.localizedDescription
             )
         }
     }

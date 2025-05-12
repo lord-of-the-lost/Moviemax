@@ -7,6 +7,17 @@
 
 import UIKit
 
+protocol SeeAllPresenterProtocol {
+    var state: SeeAllState { get }
+    
+    func setupView(_ view: SeeAllViewControllerProtocol)
+    func viewDidLoad()
+    func viewWillAppear()
+    func didSelectMovie(at index: Int)
+    func backButtonTapped()
+    func likeButtonTapped(at index: Int)
+}
+
 // MARK: - State
 enum SeeAllState {
     case empty
@@ -15,7 +26,7 @@ enum SeeAllState {
 }
 
 final class SeeAllPresenter {
-    weak var view: SeeAllViewController?
+    private weak var view: SeeAllViewControllerProtocol?
     private let router: SeeAllRouter
     private let movieRepository: MovieRepository
     private var allMovies: [Movie] = []
@@ -30,6 +41,13 @@ final class SeeAllPresenter {
     init(router: SeeAllRouter, dependency: DI) {
         self.router = router
         self.movieRepository = dependency.movieRepository
+    }
+}
+
+// MARK: - SeeAllPresenterProtocol
+extension SeeAllPresenter: SeeAllPresenterProtocol {
+    func setupView(_ view: SeeAllViewControllerProtocol) {
+        self.view = view
     }
     
     func viewDidLoad() {
@@ -47,6 +65,10 @@ final class SeeAllPresenter {
     func didSelectMovie(at index: Int) {
         guard let movie = allMovies[safe: index] else { return }
         router.showMovieDetails(movie)
+    }
+    
+    func backButtonTapped() {
+        router.navigateToBack()
     }
     
     func likeButtonTapped(at index: Int) {
@@ -67,14 +89,10 @@ final class SeeAllPresenter {
             
         case .failure(let error):
             view?.showAlert(
-                title: "Ошибка",
-                message: "Не удалось обновить статус избранного: \(error.localizedDescription)"
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Favorites.Errors.couldntUpdateFavoritesStatus.localized() + error.localizedDescription
             )
         }
-    }
-    
-    func backButtonTapped() {
-        router.navigateToBack()
     }
 }
 
@@ -94,8 +112,8 @@ private extension SeeAllPresenter {
                 case .failure(let error):
                     self.state = .empty
                     self.view?.showAlert(
-                        title: "Ошибка",
-                        message: "Не удалось загрузить фильмы: \(error.localizedDescription)"
+                        title: TextConstants.Auth.Errors.errorTitle.localized(),
+                        message: TextConstants.SeeAll.couldntDownloadMovies.localized() + error.localizedDescription
                     )
                 }
             }

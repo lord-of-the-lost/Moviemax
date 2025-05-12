@@ -7,8 +7,16 @@
 
 import UIKit
 
+protocol SeeAllViewControllerProtocol: AnyObject {
+    func show(_ state: SeeAllState)
+    func hideActivityIndicator()
+    func showActivityIndicator()
+    func setupActivityIndicator()
+    func showAlert(title: String, message: String?)
+}
+
 final class SeeAllViewController: UIViewController {
-    private let presenter: SeeAllPresenter
+    private let presenter: SeeAllPresenterProtocol
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -71,8 +79,8 @@ final class SeeAllViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
-        setupUI()
+        presenter.setupView(self)
+        setupView()
         setupConstraints()
         setupNavigation()
         setupActivityIndicator()
@@ -87,7 +95,10 @@ final class SeeAllViewController: UIViewController {
         presenter.viewWillAppear()
         updateLocalizedTexts()
     }
-    
+}
+
+// MARK: - SeeAllViewControllerProtocol
+extension SeeAllViewController: SeeAllViewControllerProtocol {
     func show(_ state: SeeAllState) {
         switch state {
         case .empty:
@@ -153,7 +164,7 @@ extension SeeAllViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension SeeAllViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        Constants.Constraints.cellHeight
+        184
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -172,7 +183,7 @@ extension SeeAllViewController: MovieLargeCellDelegate {
 
 // MARK: - Private Methods
 private extension SeeAllViewController {
-    func setupUI() {
+    func setupView() {
         view.backgroundColor = .appBackground
         view.addSubviews(tableView, emptyStateView)
         emptyStateView.addSubviews(emptyStateLabel, emptyStateDescription)
@@ -182,13 +193,13 @@ private extension SeeAllViewController {
         tableView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(22)
             $0.bottom.equalToSuperview()
-            $0.leading.equalTo(Constants.Constraints.contentInset)
-            $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
+            $0.leading.equalTo(22)
+            $0.trailing.equalTo(-22)
         }
         
         emptyStateView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(Constants.Constraints.contentInset)
+            $0.leading.trailing.equalToSuperview().inset(22)
         }
         
         emptyStateLabel.snp.makeConstraints {
@@ -197,7 +208,7 @@ private extension SeeAllViewController {
         }
         
         emptyStateDescription.snp.makeConstraints {
-            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(Constants.Constraints.emptyStateSpacing)
+            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
@@ -217,24 +228,13 @@ private extension SeeAllViewController {
         ]
     }
     
-    @objc func backButtonTapped() {
-        presenter.backButtonTapped()
-    }
-    
     func updateLocalizedTexts() {
         self.title = TextConstants.SeeAll.screenTitle.localized()
         emptyStateLabel.text = TextConstants.SeeAll.emptyStateTitle.localized()
         emptyStateDescription.text = TextConstants.SeeAll.emptyStateDescription.localized()
     }
-}
-
-// MARK: - Constants
-private extension SeeAllViewController {
-    enum Constants {
-        enum Constraints {
-            static let cellHeight: CGFloat = 184
-            static let emptyStateSpacing: CGFloat = 16
-            static let contentInset: CGFloat = 22
-        }
+    
+    @objc func backButtonTapped() {
+        presenter.backButtonTapped()
     }
 }

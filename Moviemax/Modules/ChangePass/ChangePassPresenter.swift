@@ -12,7 +12,7 @@ protocol ChangePassPresenterProtocol {
 }
 
 final class ChangePassPresenter {
-    weak var view: ChangePassViewControllerProtocol?
+    private weak var view: ChangePassViewControllerProtocol?
     private let router: ChangePassRouter
     private let authService: AuthenticationService
 

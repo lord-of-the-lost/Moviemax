@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class ForgotPassViewController: UIViewController {
     private let presenter: ForgotPassPresenter

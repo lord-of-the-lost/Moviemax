@@ -6,20 +6,16 @@
 //
 
 import UIKit
-import SnapKit
 
 // MARK: - SearchFieldViewDelegate
 protocol SearchFieldViewDelegate: AnyObject {
+    func filterButtonTapped()
     func searchFieldTextChanged(_ searchField: SearchFieldView, text: String)
 }
 
 final class SearchFieldView: UIView {
-    
-    // MARK: - Public Properties
-    var rightButtonAction: (() -> Void)?
     weak var delegate: SearchFieldViewDelegate?
     
-    // MARK: - Private Properties
     private lazy var searchIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "magnifyingglass")
@@ -44,11 +40,11 @@ final class SearchFieldView: UIView {
         return view
     }()
     
-    private lazy var rightButton: UIButton = {
+    private lazy var filterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(resource: .filter), for: .normal)
         button.tintColor = .gray
-        button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -67,30 +63,25 @@ final class SearchFieldView: UIView {
         
     init() {
         super.init(frame: .zero)
-        setupUI()
+        setupView()
     }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
-    }
-    
+        
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupUI()
     }
-    
 }
 
 // MARK: - Private Methods
 private extension SearchFieldView {
-    private func setupUI() {
-        addSubview(searchTextField)
-        addSubview(searchIconImageView)
-        addSubview(clearButton)
-        addSubview(separatorView)
-        addSubview(rightButton)
+    func setupView() {
+        addSubviews(
+            searchTextField,
+            searchIconImageView,
+            clearButton,
+            separatorView,
+            filterButton
+        )
         
         searchTextField.snp.makeConstraints {
             $0.top.bottom.trailing.leading.equalToSuperview()
@@ -110,37 +101,37 @@ private extension SearchFieldView {
         
         separatorView.snp.makeConstraints {
             $0.centerY.equalTo(searchTextField)
-            $0.trailing.equalTo(rightButton.snp.leading).offset(-8)
+            $0.trailing.equalTo(filterButton.snp.leading).offset(-8)
             $0.width.equalTo(1)
             $0.height.equalTo(20)
         }
         
-        rightButton.snp.makeConstraints {
+        filterButton.snp.makeConstraints {
             $0.centerY.equalTo(searchTextField)
             $0.trailing.equalTo(searchTextField).offset(-16)
             $0.width.height.equalTo(20)
         }
     }
     
-    @objc private func clearButtonTapped() {
+    func updateClearButtonVisibility() {
+        let hasText = !(searchTextField.text?.isEmpty ?? true)
+        clearButton.isHidden = !hasText
+        separatorView.isHidden = !hasText
+    }
+    
+    @objc func clearButtonTapped() {
         searchTextField.text = ""
         searchTextField.resignFirstResponder()
         updateClearButtonVisibility()
         delegate?.searchFieldTextChanged(self, text: "")
     }
     
-    @objc private func rightButtonTapped() {
-        rightButtonAction?()
+    @objc func filterButtonTapped() {
+        delegate?.filterButtonTapped()
     }
     
-    @objc private func textFieldDidChange() {
+    @objc func textFieldDidChange() {
         updateClearButtonVisibility()
         delegate?.searchFieldTextChanged(self, text: searchTextField.text ?? "")
-    }
-    
-    private func updateClearButtonVisibility() {
-        let hasText = !(searchTextField.text?.isEmpty ?? true)
-        clearButton.isHidden = !hasText
-        separatorView.isHidden = !hasText
     }
 }

@@ -5,11 +5,9 @@
 //  Created by Николай Игнатов on 10.04.2025.
 //
 
-import Foundation
 import UIKit
 
 final class HomePresenter {
-    // MARK: - Properties
     weak var view: HomeViewController?
     
     // Кеш всех загруженных фильмов
@@ -70,8 +68,8 @@ final class HomePresenter {
             
         case .failure(let error):
             view?.showAlert(
-                title: "Ошибка",
-                message: "Не удалось обновить статус избранного: \(error.localizedDescription)"
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Favorites.Errors.couldntUpdateFavoritesStatus.localized() + error.localizedDescription
             )
         }
     }
@@ -114,7 +112,7 @@ final class HomePresenter {
         
         if filteredMovies.isEmpty {
             view?.showAlert(
-                title: "Информация",
+                title: TextConstants.Home.information.localized(),
                 message: "По выбранному жанру фильмы не найдены"
             )
             
@@ -161,8 +159,8 @@ private extension HomePresenter {
                 case .success(let movies):
                     if movies.isEmpty {
                         self.view?.showAlert(
-                            title: "Информация",
-                            message: "Не найдено ни одного фильма"
+                            title: TextConstants.Home.information.localized(),
+                            message: TextConstants.Home.noMoviesFound.localized()
                         )
                         return
                     }
@@ -183,8 +181,8 @@ private extension HomePresenter {
                     
                 case .failure(let error):
                     self.view?.showAlert(
-                        title: "Ошибка",
-                        message: "Не удалось загрузить фильмы: \(error.localizedDescription)"
+                        title: TextConstants.Auth.Errors.errorTitle.localized(),
+                        message: TextConstants.SeeAll.couldntDownloadMovies.localized() + error.localizedDescription
                     )
                 }
             }

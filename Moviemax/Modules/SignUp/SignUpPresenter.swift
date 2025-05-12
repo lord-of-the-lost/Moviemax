@@ -14,7 +14,7 @@ protocol SignUpPresenterProtocol {
 }
 
 final class SignUpPresenter {
-    weak var view: SignUpViewControllerProtocol?
+    private weak var view: SignUpViewControllerProtocol?
     private let router: SignUpRouter
     private let authService: AuthenticationService
     

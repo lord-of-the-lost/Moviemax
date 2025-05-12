@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol SettingsViewControllerProtocol: AnyObject {
+    func updateUserInfo(name: String, nickname: String)
+    func updateUserAvatar(image: UIImage)
+    func updateAppSettings(isDarkMode: Bool, language: AppLanguage)
+}
+
 final class SettingsViewController: UIViewController {
-    private let presenter: SettingsPresenter
+    private let presenter: SettingsPresenterProtocol
     
     private lazy var userImageView = AvatarView(photoImage: UIImage(), isEditable: false)
     
@@ -183,7 +189,7 @@ final class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
+        presenter.setupView(self)
         setupUI()
         setupConstraints()
         setupObservers()
@@ -193,6 +199,24 @@ final class SettingsViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.tabBarController?.tabBar.isHidden = false
         presenter.viewWillAppear()
+        updateLocalizedTexts()
+    }
+}
+
+// MARK: - SettingsViewControllerProtocol
+extension SettingsViewController: SettingsViewControllerProtocol {
+    func updateUserInfo(name: String, nickname: String) {
+        nameUserLabel.text = name
+        nicknameUserLabel.text = nickname
+    }
+    
+    func updateUserAvatar(image: UIImage) {
+        userImageView.updatePhoto(image: image)
+    }
+    
+    func updateAppSettings(isDarkMode: Bool, language: AppLanguage) {
+        darkModeSwitch.isOn = isDarkMode
+        languageSwitch.isOn = (language == .russian)
         updateLocalizedTexts()
     }
 }
@@ -419,31 +443,13 @@ private extension SettingsViewController {
         presenter.logOutTapped()
     }
     
-    @objc private func themeChanged(_ notification: Notification) {
+    @objc func themeChanged(_ notification: Notification) {
         guard let theme = notification.object as? AppTheme else { return }
         darkModeSwitch.isOn = (theme == .dark)
     }
     
-    @objc private func languageChanged(_ notification: Notification) {
+    @objc func languageChanged(_ notification: Notification) {
         guard let language = notification.object as? AppLanguage else { return }
-        languageSwitch.isOn = (language == .russian)
-        updateLocalizedTexts()
-    }
-}
-
-// MARK: - Public Methods
-extension SettingsViewController {
-    func updateUserInfo(name: String, nickname: String) {
-        nameUserLabel.text = name
-        nicknameUserLabel.text = nickname
-    }
-    
-    func updateUserAvatar(image: UIImage) {
-        userImageView.updatePhoto(image: image)
-    }
-    
-    func updateAppSettings(isDarkMode: Bool, language: AppLanguage) {
-        darkModeSwitch.isOn = isDarkMode
         languageSwitch.isOn = (language == .russian)
         updateLocalizedTexts()
     }

@@ -58,6 +58,8 @@
 "seeAll" = "See All";
 "boxOffice" = "Box Office";
 "category" = "Category";
+"noMoviesFound" = "No movies found";
+"information" = "Information";
 
 // EditPhotoView
 "editPhotoTitle" = "Change your picture";
@@ -114,6 +116,7 @@
 "minutes" = "Min.";
 "cantDownloadFavorites" = "Couldn't download favorite movies:";
 "cantDeleteFromFavorites" = "Couldn't delete movie from favorites:";
+"couldntUpdateFavoritesStatus" = "Couldn't update favorites status: ";
 
 // MovieDetail Module
 "movieCastTitle" = "Cast and Crew";
@@ -126,6 +129,7 @@
 "seeAllScreenTitle" = "Movies";
 "seeAllEmptyTitle" = "No Movies Yet";
 "seeAllEmptyDescription" = "All movies will appear here";
+"couldntDownloadMovies" = "Couldn't download movies: ";
 
 // ForgotPass Module
 "submitButtonTitle" = "Submit";

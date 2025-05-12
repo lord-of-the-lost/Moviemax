@@ -58,6 +58,8 @@
 "seeAll" = "Посмотреть все";
 "boxOffice" = "Витрина";
 "category" = "Категория";
+"noMoviesFound" = "Не найдено ни одного фильма";
+"information" = "Информация";
 
 // EditPhotoView
 "editPhotoTitle" = "Изменить фото профиля";
@@ -113,6 +115,7 @@
 "minutes" = "Мин.";
 "cantDownloadFavorites" = "Не удалось загрузить избранные фильмы:";
 "cantDeleteFromFavorites" = "Не удалось удалить фильм из избранного:";
+"couldntUpdateFavoritesStatus" = "Не удалось обновить статус избранного: ";
 
 // MovieDetail Module
 "movieCastTitle" = "Актёры";
@@ -125,6 +128,7 @@
 "seeAllScreenTitle" = "Фильмы";
 "seeAllEmptyTitle" = "Пока нет фильмов";
 "seeAllEmptyDescription" = "Все фильмы появятся здесь";
+"couldntDownloadMovies" = "Не удалось загрузить фильмы: ";
 
 // ForgotPass Module
 "submitButtonTitle" = "Отправить";

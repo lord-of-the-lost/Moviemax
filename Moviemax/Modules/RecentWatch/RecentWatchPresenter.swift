@@ -7,8 +7,23 @@
 
 import UIKit
 
+protocol RecentWatchPresenterProtocol {
+    var genres: [String] { get }
+    var state: RecentWatchState { get }
+    
+    func setupView(_ view: RecentWatchViewControllerProtocol)
+    func viewDidLoad()
+    func viewWillAppear()
+    func didSelectMovie(at index: Int)
+    func likeButtonTapped(at index: Int)
+    func removeFromRecentWatch(at index: Int)
+    func didSelectGenre(at index: Int, value: String)
+    func getSelectedGenre() -> String
+    func didSelectGenre(_ value: String)
+}
+
 final class RecentWatchPresenter {
-    weak var view: RecentWatchViewController?
+    private weak var view: RecentWatchViewControllerProtocol?
     private let router: RecentWatchRouter
     private let movieRepository: MovieRepository
     
@@ -24,7 +39,7 @@ final class RecentWatchPresenter {
     // Текущий выбранный жанр для фильтрации
     private var selectedGenre: String?
     
-    var state: RecentWatchState = .empty {
+    private(set) var state: RecentWatchState = .empty {
         didSet {
             view?.show(state)
         }
@@ -36,6 +51,13 @@ final class RecentWatchPresenter {
     init(router: RecentWatchRouter, dependency: DI) {
         self.router = router
         self.movieRepository = dependency.movieRepository
+    }
+}
+
+// MARK: - RecentWatchPresenterProtocol
+extension RecentWatchPresenter: RecentWatchPresenterProtocol {
+    func setupView(_ view: RecentWatchViewControllerProtocol) {
+        self.view = view
     }
     
     func viewDidLoad() {
@@ -71,8 +93,8 @@ final class RecentWatchPresenter {
             
         case .failure(let error):
             view?.showAlert(
-                title: "Ошибка",
-                message: "Не удалось обновить статус избранного: \(error.localizedDescription)"
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Favorites.Errors.couldntUpdateFavoritesStatus.localized() + error.localizedDescription
             )
         }
     }
@@ -88,18 +110,23 @@ final class RecentWatchPresenter {
             loadRecentWatchMovies()
         case .failure(let error):
             view?.showAlert(
-                title: "Ошибка",
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
                 message: "Не удалось удалить фильм из недавно просмотренных: \(error.localizedDescription)"
             )
         }
     }
     
-    // Метод для обработки выбора жанра по индексу
+    /// Метод для обработки выбора жанра по индексу
     func didSelectGenre(at index: Int, value: String) {
         didSelectGenre(value)
     }
     
-    // Метод для обработки выбора жанра по значению
+    /// Возвращает текущий выбранный жанр
+    func getSelectedGenre() -> String {
+        selectedGenre ?? TextConstants.Genres.all.localized()
+    }
+    
+    /// Метод для обработки выбора жанра по значению
     func didSelectGenre(_ value: String) {
         selectedGenre = value
         
@@ -116,7 +143,7 @@ final class RecentWatchPresenter {
         
         if recentMovies.isEmpty {
             view?.showAlert(
-                title: "Информация",
+                title: TextConstants.Home.information.localized(),
                 message: "По выбранному жанру фильмы не найдены"
             )
             
@@ -127,11 +154,6 @@ final class RecentWatchPresenter {
         
         // Обновляем только UI с отфильтрованными фильмами
         updateMovieViewModels()
-    }
-    
-    // Возвращает текущий выбранный жанр
-    func getSelectedGenre() -> String {
-        return selectedGenre ?? TextConstants.Genres.all.localized()
     }
 }
 
@@ -173,7 +195,7 @@ private extension RecentWatchPresenter {
         case .failure(let error):
             state = .empty
             view?.showAlert(
-                title: "Ошибка",
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
                 message: "Не удалось загрузить недавно просмотренные фильмы: \(error.localizedDescription)"
             )
         }
@@ -206,7 +228,7 @@ private extension RecentWatchPresenter {
                 
                 // Уведомляем пользователя, что фильтр был сброшен
                 view?.showAlert(
-                    title: "Информация",
+                    title: TextConstants.Home.information.localized(),
                     message: "Выбранная категория больше не доступна. Показаны все фильмы."
                 )
             }

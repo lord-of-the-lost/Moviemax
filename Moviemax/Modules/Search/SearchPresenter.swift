@@ -7,9 +7,20 @@
 
 import UIKit
 
+protocol SearchPresenterProtocol {
+    var state: SearchState { get }
+    
+    func setupView(_ view: SearchViewControllerProtocol)
+    func viewDidLoad()
+    func viewWillAppear()
+    func didSelectMovie(at index: Int)
+    func likeButtonTapped(at index: Int)
+    func filterButtonTapped()
+    func searchTextChanged(_ text: String)
+}
+
 final class SearchPresenter {
-    // MARK: - Properties
-    weak var view: SearchViewController?
+    private weak var view: SearchViewControllerProtocol?
     private let router: SearchRouter
     private let movieRepository: MovieRepository
     private let userService: UserService
@@ -39,6 +50,13 @@ final class SearchPresenter {
         self.router = router
         self.movieRepository = dependency.movieRepository
         self.userService = dependency.userService
+    }
+}
+
+// MARK: - SearchPresenterProtocol
+extension SearchPresenter: SearchPresenterProtocol {
+    func setupView(_ view: SearchViewControllerProtocol) {
+        self.view = view
     }
     
     func viewDidLoad() {
@@ -78,8 +96,8 @@ final class SearchPresenter {
             
         case .failure(let error):
             view?.showAlert(
-                title: "Ошибка",
-                message: "Не удалось обновить статус избранного: \(error.localizedDescription)"
+                title: TextConstants.Auth.Errors.errorTitle.localized(),
+                message: TextConstants.Favorites.Errors.couldntUpdateFavoritesStatus.localized() + error.localizedDescription
             )
         }
     }
@@ -112,7 +130,6 @@ final class SearchPresenter {
 
 // MARK: - Private Methods
 private extension SearchPresenter {
-    // Выполнение поиска фильмов
     func performSearch(query: String) {
         // Показываем индикатор загрузки
         view?.showLoadingIndicator()
@@ -128,7 +145,7 @@ private extension SearchPresenter {
                 case .failure(let error):
                     self.view?.hideLoadingIndicator()
                     self.view?.showAlert(
-                        title: "Ошибка",
+                        title:  TextConstants.Auth.Errors.errorTitle.localized(),
                         message: "Не удалось выполнить поиск: \(error.localizedDescription)"
                     )
                 }
@@ -154,7 +171,7 @@ private extension SearchPresenter {
         if validMovies.isEmpty {
             self.view?.hideLoadingIndicator()
             self.view?.showAlert(
-                title: "Поиск",
+                title: TextConstants.Search.screenTitle.localized(),
                 message: "По запросу '\(query)' не найдено подходящих фильмов"
             )
             self.state = .empty

@@ -7,8 +7,19 @@
 
 import UIKit
 
+protocol SettingsPresenterProtocol {
+    func setupView(_ view: SettingsViewControllerProtocol)
+    func viewWillAppear()
+    func logOutTapped()
+    func showProfileTapped()
+    func showChangePassTapped()
+    func showForgotPassTapped()
+    func toggleDarkMode(isEnabled: Bool)
+    func setLanguage(language: AppLanguage)
+}
+
 final class SettingsPresenter {
-    weak var view: SettingsViewController?
+    private weak var view: SettingsViewControllerProtocol?
     private let router: SettingsRouter
     private let authService: AuthenticationService
     private let userService: UserService
@@ -21,6 +32,13 @@ final class SettingsPresenter {
         self.userService = dependency.userService
         self.themeManager = dependency.themeManager
         self.localizationManager = dependency.localizationManager
+    }
+}
+
+// MARK: - SettingsPresenterProtocol
+extension SettingsPresenter: SettingsPresenterProtocol {
+    func setupView(_ view: SettingsViewControllerProtocol) {
+        self.view = view
     }
     
     func viewWillAppear() {

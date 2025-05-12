@@ -13,7 +13,7 @@ protocol TabBarPresenterProtocol {
 }
 
 final class TabBarPresenter {
-    weak var view: TabBarControllerProtocol?
+    private weak var view: TabBarControllerProtocol?
     private let router: TabBarRouter
     private let dependency: DI
     

@@ -7,6 +7,13 @@
 
 import UIKit
 
+protocol SearchViewControllerProtocol: AnyObject {
+    func show(_ state: SearchState)
+    func showLoadingIndicator()
+    func hideLoadingIndicator()
+    func showAlert(title: String, message: String?)
+}
+
 // MARK: - State
 enum SearchState {
     case empty
@@ -14,10 +21,9 @@ enum SearchState {
 }
 
 final class SearchViewController: UIViewController {
-    // MARK: Properties
-    private let presenter: SearchPresenter
+    private let presenter: SearchPresenterProtocol
     
-    private lazy var searhView: SearchFieldView = {
+    private lazy var searchView: SearchFieldView = {
         let view = SearchFieldView()
         view.delegate = self
         return view
@@ -67,7 +73,7 @@ final class SearchViewController: UIViewController {
     }()
     
     // MARK: Init
-    init(presenter: SearchPresenter) {
+    init(presenter: SearchPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -80,8 +86,9 @@ final class SearchViewController: UIViewController {
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
-        setupUI()
+        presenter.setupView(self)
+        setupView()
+        setupConstraints()
         presenter.viewDidLoad()
     }
     
@@ -91,7 +98,10 @@ final class SearchViewController: UIViewController {
         updateLocalizedTexts()
         presenter.viewWillAppear()
     }
+}
 
+// MARK: - SearchViewControllerProtocol
+extension SearchViewController: SearchViewControllerProtocol {
     func show(_ state: SearchState) {
         switch state {
         case .empty:
@@ -145,7 +155,7 @@ extension SearchViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        Constants.Constraints.cellHeight
+        184
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -164,6 +174,10 @@ extension SearchViewController: MovieLargeCellDelegate {
 
 // MARK: - SearchFieldViewDelegate
 extension SearchViewController: SearchFieldViewDelegate {
+    func filterButtonTapped() {
+        presenter.filterButtonTapped()
+    }
+    
     func searchFieldTextChanged(_ searchField: SearchFieldView, text: String) {
         presenter.searchTextChanged(text)
     }
@@ -171,36 +185,31 @@ extension SearchViewController: SearchFieldViewDelegate {
 
 // MARK: - Private methods
 private extension SearchViewController {
-    func setupUI() {
+    func setupView() {
         navigationItem.title = TextConstants.Search.screenTitle.localized()
         view.backgroundColor = .appBackground
-        view.addSubviews(searhView, tableView, emptyStateView, activityIndicator)
+        view.addSubviews(searchView, tableView, emptyStateView, activityIndicator)
         emptyStateView.addSubviews(emptyStateLabel, emptyStateDescription)
-        setupConstraints()
-        
-        searhView.rightButtonAction = { [weak self] in
-            self?.presenter.filterButtonTapped()
-        }
     }
     
     func setupConstraints() {
-        searhView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Constraints.smallOffset)
-            $0.leading.equalTo(Constants.Constraints.contentInset)
-            $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
-            $0.height.equalTo(Constants.Constraints.searchFieldHeight)
+        searchView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
+            $0.leading.equalTo(22)
+            $0.trailing.equalTo(-22)
+            $0.height.equalTo(52)
         }
         
         tableView.snp.makeConstraints {
-            $0.top.equalTo(searhView.snp.bottom).offset(Constants.Constraints.topOffset)
+            $0.top.equalTo(searchView.snp.bottom).offset(24)
             $0.bottom.equalToSuperview()
-            $0.leading.equalTo(Constants.Constraints.contentInset)
-            $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
+            $0.leading.equalTo(22)
+            $0.trailing.equalTo(-22)
         }
         
         emptyStateView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(Constants.Constraints.contentInset)
+            $0.leading.trailing.equalToSuperview().inset(22)
         }
         
         emptyStateLabel.snp.makeConstraints {
@@ -209,7 +218,7 @@ private extension SearchViewController {
         }
         
         emptyStateDescription.snp.makeConstraints {
-            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(Constants.Constraints.emptyStateSpacing)
+            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
@@ -223,20 +232,5 @@ private extension SearchViewController {
         navigationItem.title = TextConstants.Search.screenTitle.localized()
         emptyStateLabel.text = TextConstants.Search.emptyStateTitle.localized()
         emptyStateDescription.text = TextConstants.Search.emptyStateDescription.localized()
-    }
-}
-
-// MARK: - Constants
-private extension SearchViewController {
-    enum Constants {
-        enum Constraints {
-            static let searchFieldHeight: CGFloat = 52
-            static let cellHeight: CGFloat = 184
-            static let emptyStateSpacing: CGFloat = 16
-            static let contentInset: CGFloat = 22
-            static let chipsViewHeight: CGFloat = 34
-            static let topOffset: CGFloat = 24
-            static let smallOffset: CGFloat = 8
-        }
     }
 }

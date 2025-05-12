@@ -77,6 +77,8 @@ enum TextConstants {
         static let seeAllText = "seeAll"
         static let boxOfficeText = "boxOffice"
         static let category = "category"
+        static let noMoviesFound = "noMoviesFound"
+        static let information = "information"
     }
     
     enum EditPhotoView {
@@ -155,6 +157,7 @@ enum TextConstants {
         enum Errors {
             static let cantDownloadFavorites = "cantDownloadFavorites"
             static let cantDeleteFromFavorites = "cantDeleteFromFavorites"
+            static let couldntUpdateFavoritesStatus = "couldntUpdateFavoritesStatus"
         }
     }
     
@@ -170,6 +173,7 @@ enum TextConstants {
         static let screenTitle = "seeAllScreenTitle"
         static let emptyStateTitle = "seeAllEmptyTitle"
         static let emptyStateDescription = "seeAllEmptyDescription"
+        static let couldntDownloadMovies = "couldntDownloadMovies"
     }
     
     enum ForgotPass {

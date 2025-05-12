@@ -7,6 +7,12 @@
 
 import UIKit
 
+protocol RecentWatchViewControllerProtocol: AnyObject {
+    func show(_ state: RecentWatchState)
+    func updateGenres(_ genres: [String])
+    func showAlert(title: String, message: String?)
+}
+
 // MARK: - State
 enum RecentWatchState {
     case empty
@@ -14,8 +20,7 @@ enum RecentWatchState {
 }
 
 final class RecentWatchViewController: UIViewController {
-    // MARK: Properties
-    private let presenter: RecentWatchPresenter
+    private let presenter: RecentWatchPresenterProtocol
     
     private lazy var chipsView = ChipsView()
     
@@ -56,7 +61,7 @@ final class RecentWatchViewController: UIViewController {
     }()
     
     // MARK: Init
-    init(presenter: RecentWatchPresenter) {
+    init(presenter: RecentWatchPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -69,7 +74,7 @@ final class RecentWatchViewController: UIViewController {
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
+        presenter.setupView(self)
         setupUI()
         presenter.viewDidLoad()
         chipsView.delegate = self
@@ -83,7 +88,10 @@ final class RecentWatchViewController: UIViewController {
         presenter.viewWillAppear()
         updateLocalizedTexts()
     }
+}
 
+// MARK: - RecentWatchViewControllerProtocol
+extension RecentWatchViewController: RecentWatchViewControllerProtocol {
     func show(_ state: RecentWatchState) {
         switch state {
         case .empty:
@@ -142,7 +150,7 @@ extension RecentWatchViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension RecentWatchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        Constants.Constraints.cellHeight
+        184
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -168,6 +176,13 @@ extension RecentWatchViewController: MovieLargeCellDelegate {
     }
 }
 
+// MARK: - ChipsViewDelegate
+extension RecentWatchViewController: ChipsViewDelegate {
+    func chipsView(_ chipsView: ChipsView, didSelectItemAt index: Int, value: String) {
+        presenter.didSelectGenre(at: index, value: value)
+    }
+}
+
 // MARK: - Private methods
 private extension RecentWatchViewController {
     func setupUI() {
@@ -180,22 +195,22 @@ private extension RecentWatchViewController {
     
     func setupConstraints() {
         chipsView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Constraints.smallOffset)
-            $0.leading.equalTo(Constants.Constraints.contentInset)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
+            $0.leading.equalTo(22)
             $0.trailing.equalToSuperview()
-            $0.height.equalTo(Constants.Constraints.chipsViewHeight)
+            $0.height.equalTo(34)
         }
         
         tableView.snp.makeConstraints {
-            $0.top.equalTo(chipsView.snp.bottom).offset(Constants.Constraints.topOffset)
+            $0.top.equalTo(chipsView.snp.bottom).offset(24)
             $0.bottom.equalToSuperview()
-            $0.leading.equalTo(Constants.Constraints.contentInset)
-            $0.trailing.equalTo(Constants.Constraints.contentInset.negative)
+            $0.leading.equalTo(22)
+            $0.trailing.equalTo(-22)
         }
         
         emptyStateView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(Constants.Constraints.contentInset)
+            $0.leading.trailing.equalToSuperview().inset(22)
         }
         
         emptyStateLabel.snp.makeConstraints {
@@ -204,7 +219,7 @@ private extension RecentWatchViewController {
         }
         
         emptyStateDescription.snp.makeConstraints {
-            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(Constants.Constraints.emptyStateSpacing)
+            $0.top.equalTo(emptyStateLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
@@ -214,25 +229,5 @@ private extension RecentWatchViewController {
         navigationItem.title = TextConstants.RecentWatch.screenTitle.localized()
         emptyStateDescription.text = TextConstants.RecentWatch.emptyStateDescription.localized()
         emptyStateLabel.text = TextConstants.RecentWatch.emptyStateTitle.localized()
-    }
-}
-
-extension RecentWatchViewController: ChipsViewDelegate {
-    func chipsView(_ chipsView: ChipsView, didSelectItemAt index: Int, value: String) {
-        presenter.didSelectGenre(at: index, value: value)
-    }
-}
-
-// MARK: - Constants
-private extension RecentWatchViewController {
-    enum Constants {
-        enum Constraints {
-            static let cellHeight: CGFloat = 184
-            static let emptyStateSpacing: CGFloat = 16
-            static let contentInset: CGFloat = 22
-            static let chipsViewHeight: CGFloat = 34
-            static let topOffset: CGFloat = 24
-            static let smallOffset: CGFloat = 8
-        }
     }
 }

@@ -18,7 +18,7 @@ protocol FavoritesPresenterProtocol {
 }
 
 final class FavoritesPresenter {
-    weak var view: FavoritesViewControllerProtocol?
+    private weak var view: FavoritesViewControllerProtocol?
     private let router: FavoritesRouter
     private let movieRepository: MovieRepository
     private var favoriteMovies: [Movie] = []
