@@ -5,14 +5,27 @@
 //  Created by Penkov Alexander on 10.04.2025.
 //
 
+protocol ForgotPassPresenterProtocol {
+    func setupView(_ view: ForgotPassViewControllerProtocol)
+    func backButtonTapped()
+    func submitButtonAction()
+}
+
 final class ForgotPassPresenter {
-    weak var view: ForgotPassViewController?
+    private weak var view: ForgotPassViewControllerProtocol?
     private let router: ForgotPassRouter
     private let authService: AuthenticationService
 
     init(router: ForgotPassRouter, dependency: DI) {
         self.router = router
         self.authService = dependency.authService
+    }
+}
+
+// MARK: - ForgotPassPresenterProtocol
+extension ForgotPassPresenter: ForgotPassPresenterProtocol {
+    func setupView(_ view: ForgotPassViewControllerProtocol) {
+        self.view = view
     }
     
     func backButtonTapped() {
@@ -32,7 +45,7 @@ final class ForgotPassPresenter {
         guard
             let user = authService.getUserByEmail(email: email)
         else {
-            view.showAlert(title: TextConstants.ForgotPass.noUserTitle.localized())
+            view.showAlert(title: TextConstants.ForgotPass.noUserTitle.localized(), message: nil)
             return
         }
         

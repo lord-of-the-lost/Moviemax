@@ -6,18 +6,19 @@
 //
 
 import UIKit
-import SnapKit
 
+protocol OnboardingViewControllerProtocol: AnyObject {
+    func updateView(with model: PageModel)
+}
 
 final class OnboardingViewController: UIViewController {
+    private let presenter: OnboardingPresenterProtocol
     
-    // MARK: Properties
-    private let presenter: OnboardingPresenter
+    private lazy var swipeLeft = UISwipeGestureRecognizer()
+    private lazy var swipeRight = UISwipeGestureRecognizer()
     
     private lazy var backgroundImageView: UIImageView = {
-        let imageView = UIImageView(
-            image: UIImage()
-        )
+        let imageView = UIImageView(image: UIImage())
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
@@ -25,11 +26,10 @@ final class OnboardingViewController: UIViewController {
     private lazy var contentView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.cornerRadius = Constants.Constraints.cornerRadius
+        view.layer.cornerRadius = 16
         return view
     }()
     
- 
     private lazy var pageControl: UIPageControl = {
         let control = UIPageControl()
         control.numberOfPages = 3
@@ -41,21 +41,19 @@ final class OnboardingViewController: UIViewController {
     
     private lazy var largeTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = AppFont.plusJakartaBold.withSize(Constants.FontSizes.largeLabel)
+        label.font = AppFont.plusJakartaBold.withSize(24)
         label.textColor = .adaptiveTextMain
         label.textAlignment = .center
         label.numberOfLines = 2
-        label.text = ""
         return label
     }()
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = AppFont.plusJakartaRegular.withSize(Constants.FontSizes.label)
+        label.font = AppFont.plusJakartaRegular.withSize(14)
         label.textColor = .adaptiveTextSecondary
         label.textAlignment = .center
         label.numberOfLines = 3
-        label.text = ""
         return label
     }()
     
@@ -64,12 +62,8 @@ final class OnboardingViewController: UIViewController {
         button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    private lazy var swipeLeft = UISwipeGestureRecognizer()
-    private lazy var swipeRight = UISwipeGestureRecognizer()
 
-    //MARK: Init
-    init(presenter: OnboardingPresenter) {
+    init(presenter: OnboardingPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -79,19 +73,18 @@ final class OnboardingViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
-        setupUI()
+        presenter.setupView(self)
+        setupView()
+        setupConstraints()
         setupGestures()
         presenter.viewDidLoad()
     }
 }
 
-// MARK: - Methods
-extension OnboardingViewController {
-    
+// MARK: - OnboardingViewControllerProtocol
+extension OnboardingViewController: OnboardingViewControllerProtocol {
     func updateView(with model: PageModel) {
         pageControl.currentPage = model.id
         backgroundImageView.image = model.image
@@ -103,20 +96,7 @@ extension OnboardingViewController {
 
 // MARK: - Private methods
 private extension OnboardingViewController {
-    
-    @objc func nextButtonTapped() {
-        presenter.nextButtonTapped()
-    }
-    
-    @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
-        if gesture == swipeLeft {
-            presenter.nextButtonTapped()
-        } else {
-            presenter.prevButtonTapped()
-        }
-    }
-    
-    func setupUI() {
+    func setupView() {
         view.backgroundColor = .accent
         contentView.backgroundColor = .appBackground
        
@@ -132,94 +112,69 @@ private extension OnboardingViewController {
             descriptionLabel,
             nextButton
         )
-        
-        setupConstraints()
-    }
-    
-    func setupConstraints() {
-        backgroundImageView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide)
-        }
-        
-        contentView.snp.makeConstraints { make in
-            make.left
-                .equalToSuperview()
-                .offset(Constants.Constraints.labelOffsetInset)
-            make.right
-                .equalToSuperview()
-                .inset(Constants.Constraints.labelOffsetInset)
-            make.bottom
-                .equalTo(view.safeAreaLayoutGuide)
-                .inset(Constants.Constraints.safeAreaInset)
-            make.height
-                .equalTo(Constants.Constraints.contentViewHeight)
-        }
-        
-        pageControl.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top
-                .equalToSuperview()
-                .offset(Constants.Constraints.labelOffsetInset)
-            make.height.equalTo(Constants.Constraints.smallSpacing)
-            make.width.equalTo(Constants.Constraints.pageControlWidth)
-        }
-        
-        largeTitleLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(Constants.Constraints.labelOffsetInset)
-            make.right.equalToSuperview().inset(Constants.Constraints.labelOffsetInset)
-            make.height.equalTo(Constants.Constraints.largeTtitleHeight)
-            make.top.equalTo(pageControl.snp.bottom).offset(Constants.Constraints.labelOffsetInset)
-        }
-        
-        descriptionLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(Constants.Constraints.labelOffsetInset)
-            make.right.equalToSuperview().inset(Constants.Constraints.labelOffsetInset)
-            make.top.equalTo(largeTitleLabel.snp.bottom).offset(Constants.Constraints.smallSpacing)
-        }
-        
-        nextButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(Constants.Constraints.mediumSpacing)
-            make.top
-                .equalTo(descriptionLabel.snp.bottom)
-                .offset(Constants.Constraints.labelOffsetInset)
-            make.height.equalTo(Constants.Constraints.nextButtonHeight)
-            make.width.equalTo(Constants.Constraints.nextButtonWidth)
-        }
     }
     
     func setupGestures() {
-        swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
         swipeLeft.direction = .left
         view.addGestureRecognizer(swipeLeft)
         
-        swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
     }
-}
-
-// MARK: - Constants
-private extension OnboardingViewController {
-    enum Constants {
-        enum Constraints {
-            static let nextButtonHeight: CGFloat = 56
-            static let nextButtonWidth: CGFloat = 200
-            static let largeTtitleHeight: CGFloat = 64
-            static let labelOffsetInset: CGFloat = 24
-            static let smallSpacing: CGFloat = 8
-            static let mediumSpacing: CGFloat = 28
-            static let cornerRadius: CGFloat = 16
-            static let safeAreaInset: CGFloat = 20
-            static let contentViewHeight: CGFloat = 325
-            static let pageControlWidth: CGFloat = 100
+    
+    func setupConstraints() {
+        backgroundImageView.snp.makeConstraints {
+            $0.left.right.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide)
         }
         
-        enum FontSizes {
-            static let largeLabel: CGFloat = 24
-            static let label: CGFloat = 14
-            static let textView: CGFloat = 16
+        contentView.snp.makeConstraints {
+            $0.left.equalToSuperview().offset(24)
+            $0.right.equalToSuperview().inset(24)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.height.equalTo(325)
+        }
+        
+        pageControl.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().offset(24)
+            $0.height.equalTo(8)
+            $0.width.equalTo(100)
+        }
+        
+        largeTitleLabel.snp.makeConstraints {
+            $0.left.equalToSuperview().offset(24)
+            $0.right.equalToSuperview().inset(24)
+            $0.height.equalTo(64)
+            $0.top.equalTo(pageControl.snp.bottom).offset(24)
+        }
+        
+        descriptionLabel.snp.makeConstraints {
+            $0.left.equalToSuperview().offset(24)
+            $0.right.equalToSuperview().inset(24)
+            $0.top.equalTo(largeTitleLabel.snp.bottom).offset(8)
+        }
+        
+        nextButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(28)
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(24)
+            $0.height.equalTo(56)
+            $0.width.equalTo(200)
+        }
+    }
+    
+    @objc func nextButtonTapped() {
+        presenter.nextButtonTapped()
+    }
+    
+    @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+        if gesture == swipeLeft {
+            presenter.nextButtonTapped()
+        } else {
+            presenter.prevButtonTapped()
         }
     }
 }

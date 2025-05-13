@@ -7,8 +7,25 @@
 
 import Foundation
 
+protocol ProfilePresenterProtocol {
+    func setupView(_ view: ProfileViewControllerProtocol)
+    func showEditPhotoView()
+    func formatDateForDisplay(_ date: Date) -> String
+    func backButtonTapped()
+    func loadUserProfile()
+    func saveUserProfile(
+        firstName: String,
+        lastName: String,
+        email: String,
+        birthDate: String,
+        gender: User.Gender,
+        notes: String,
+        avatarData: Data?
+    )
+}
+
 final class ProfilePresenter {
-    weak var view: ProfileViewController?
+    private weak var view: ProfileViewControllerProtocol?
     private let router: ProfileRouter
     private let userService: UserService
     
@@ -29,6 +46,17 @@ final class ProfilePresenter {
     init(router: ProfileRouter, dependency: DI) {
         self.router = router
         self.userService = dependency.userService
+    }
+}
+
+// MARK: - ProfilePresenterProtocol
+extension ProfilePresenter: ProfilePresenterProtocol {
+    func setupView(_ view: ProfileViewControllerProtocol) {
+        self.view = view
+    }
+    
+    func showEditPhotoView() {
+        view?.showEditPhotoView()
     }
     
     func formatDateForDisplay(_ date: Date) -> String {
@@ -98,10 +126,6 @@ final class ProfilePresenter {
         case .failure:
             view?.showAlert(title: Constants.errorTitle, message: Constants.profileUpdateError)
         }
-    }
-    
-    func showEditPhotoView() {
-        view?.showEditPhotoView()
     }
 }
 

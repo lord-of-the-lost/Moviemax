@@ -7,8 +7,18 @@
 
 import UIKit
 
+protocol MovieDetailPresenterProtocol {
+    func setupView(_ view: MovieDetailViewControllerProtocol)
+    func backButtonTapped()
+    func viewDidLoad()
+    func openURLTapped()
+    func likeButtonTapped()
+    func getPersonsCount() -> Int
+    func getPersonViewModel(at index: Int) -> MovieCastCell.MovieCastCellViewModel
+}
+
 final class MovieDetailPresenter {
-    weak var view: MovieDetailViewController?
+    private weak var view: MovieDetailViewControllerProtocol?
     private let router: MovieDetailRouter
     private let movieRepository: MovieRepository
     private var model: Movie
@@ -17,6 +27,13 @@ final class MovieDetailPresenter {
         self.router = router
         self.model = model
         self.movieRepository = dependency.movieRepository
+    }
+}
+
+// MARK: - MovieDetailPresenterProtocol
+extension MovieDetailPresenter: MovieDetailPresenterProtocol {
+    func setupView(_ view: MovieDetailViewControllerProtocol) {
+        self.view = view
     }
     
     func backButtonTapped() {
@@ -50,7 +67,7 @@ final class MovieDetailPresenter {
     }
     
     func getPersonsCount() -> Int {
-        return model.persons.count
+        model.persons.count
     }
     
     func getPersonViewModel(at index: Int) -> MovieCastCell.MovieCastCellViewModel {
@@ -70,6 +87,7 @@ final class MovieDetailPresenter {
     }
 }
 
+// MARK: - Private Methods
 private extension MovieDetailPresenter {
     func setupView(with model: Movie) {
         map(model) { [weak self] viewModel in

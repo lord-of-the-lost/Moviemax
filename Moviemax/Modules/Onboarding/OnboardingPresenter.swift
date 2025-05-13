@@ -7,11 +7,18 @@
 
 import UIKit
 
+protocol OnboardingPresenterProtocol {
+    func setupView(_ view: OnboardingViewControllerProtocol)
+    func viewDidLoad()
+    func nextButtonTapped()
+    func prevButtonTapped()
+}
+
 final class OnboardingPresenter {
-    weak var view: OnboardingViewController?
+    private weak var view: OnboardingViewControllerProtocol?
     private let router: OnboardingRouter
     private let dependency: DI
-
+    
     private var currentPageIndex: Int = 0
     private var pageModels: [PageModel] = [
         PageModel(
@@ -41,12 +48,18 @@ final class OnboardingPresenter {
         self.router = router
         self.dependency = dependency
     }
+}
+
+// MARK: - OnboardingPresenterProtocol
+extension OnboardingPresenter: OnboardingPresenterProtocol {
+    func setupView(_ view: OnboardingViewControllerProtocol) {
+        self.view = view
+    }
     
     func viewDidLoad() {
         view?.updateView(with: pageModels[currentPageIndex])
     }
 
-    // TODO: Это для тестирования. Переделать когда онбординг будет сохраняться.
     func nextButtonTapped() {
         currentPageIndex += 1
         guard let model = pageModels[safe: currentPageIndex] else {

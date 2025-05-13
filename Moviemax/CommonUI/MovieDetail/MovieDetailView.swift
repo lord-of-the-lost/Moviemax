@@ -49,7 +49,7 @@ final class MovieDetailView: UIView {
 
 // MARK: - Private Methods
 private extension MovieDetailView {
-    private func setupUI() {
+    func setupUI() {
         addSubview(stackView)
         stackView.addArrangedSubview(detailImageView)
         stackView.addArrangedSubview(textLabel)

@@ -7,11 +7,20 @@
 
 import UIKit
 
+protocol HomeViewControllerProtocol: AnyObject {
+    func configure(with viewModel: HomeViewModel)
+    func updateUserHeader(with userHeader: UserHeaderView.UserHeaderViewModel)
+    func updateSliderSection(with sliderMovies: [PosterCell.PosterCellViewModel])
+    func updateBoxOfficeSection(with boxOfficeMovies: [MovieSmallCell.MovieSmallCellViewModel])
+    func updateBoxOfficeItem(at index: Int, with model: MovieSmallCell.MovieSmallCellViewModel)
+    func hideLoadingIndicator()
+    func showLoadingIndicator()
+    func showAlert(title: String, message: String?)
+}
+
 final class HomeViewController: BaseScrollViewController {
-    // MARK: - Properties
     private let presenter: HomePresenter
     private var viewModel: HomeViewModel?
-    
     private var didScrollToInitialIndex = false
 
     private lazy var userHeaderView = UserHeaderView()
@@ -99,7 +108,7 @@ final class HomeViewController: BaseScrollViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
+        presenter.setupView(self)
         setupActivityIndicator()
         showLoadingIndicator()
         setupView()
@@ -108,7 +117,8 @@ final class HomeViewController: BaseScrollViewController {
     }
 }
 
-extension HomeViewController {
+// MARK: - HomeViewControllerProtocol
+extension HomeViewController: HomeViewControllerProtocol {
     func configure(with viewModel: HomeViewModel) {
         self.viewModel = viewModel
         userHeaderView.configure(with: viewModel.userHeader)
@@ -253,8 +263,8 @@ private extension HomeViewController {
     
     func setupActivityIndicator() {
         view.addSubview(activityIndicator)
-        activityIndicator.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
     }
     
@@ -278,6 +288,12 @@ private extension HomeViewController {
     func scrollToInitialItem() {
         let targetIndex = IndexPath(item: 1, section: 0) // the second cell
         posterCollectionView.scrollToItem(at: targetIndex, at: .centeredHorizontally, animated: false)
+    }
+    
+    func updateLocalizedTexts() {
+        seeAllButton.setTitle(TextConstants.Home.seeAllText.localized(), for: .normal)
+        boxOfficeHeaderView.text = TextConstants.Home.boxOfficeText.localized()
+        categoryLabel.text = TextConstants.Home.category.localized()
     }
     
     func setupConstraints() {
@@ -321,11 +337,5 @@ private extension HomeViewController {
     
     @objc func seeAllButtonTapped() {
         presenter.showAllMovies()
-    }
-    
-    func updateLocalizedTexts() {
-        seeAllButton.setTitle(TextConstants.Home.seeAllText.localized(), for: .normal)
-        boxOfficeHeaderView.text = TextConstants.Home.boxOfficeText.localized()
-        categoryLabel.text = TextConstants.Home.category.localized()
     }
 }

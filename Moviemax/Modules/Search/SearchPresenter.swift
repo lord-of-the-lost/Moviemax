@@ -23,7 +23,6 @@ final class SearchPresenter {
     private weak var view: SearchViewControllerProtocol?
     private let router: SearchRouter
     private let movieRepository: MovieRepository
-    private let userService: UserService
     
     // Кеш всех найденных фильмов
     private var searchResults: [Movie] = []
@@ -49,7 +48,6 @@ final class SearchPresenter {
     init(router: SearchRouter, dependency: DI) {
         self.router = router
         self.movieRepository = dependency.movieRepository
-        self.userService = dependency.userService
     }
 }
 

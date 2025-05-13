@@ -7,8 +7,20 @@
 
 import UIKit
 
+protocol HomePresenterProtocol {
+    func setupView(_ view: HomeViewControllerProtocol)
+    func viewDidLoad()
+    func viewWillAppear()
+    func likeButtonTapped(at index: Int)
+    func didTapSliderMovie(at index: Int)
+    func didTapBoxOfficeMovie(at index: Int)
+    func showAllMovies()
+    func didSelectGenre(at index: Int, value: String)
+    func didSelectGenre(_ value: String)
+}
+
 final class HomePresenter {
-    weak var view: HomeViewController?
+    private weak var view: HomeViewControllerProtocol?
     
     // Кеш всех загруженных фильмов
     private var allMovies: [Movie] = []
@@ -31,6 +43,13 @@ final class HomePresenter {
         self.router = router
         self.movieRepository = dependency.movieRepository
         self.userService = dependency.userService
+    }
+}
+
+// MARK: - HomePresenterProtocol
+extension HomePresenter: HomePresenterProtocol {
+    func setupView(_ view: HomeViewControllerProtocol) {
+        self.view = view
     }
     
     func viewDidLoad() {

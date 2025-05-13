@@ -7,8 +7,13 @@
 
 import UIKit
 
+protocol MovieDetailViewControllerProtocol: AnyObject {
+    func configure(with model: MovieDetailModel)
+    func showAlert(title: String, message: String?)
+}
+
 final class MovieDetailViewController: UIViewController {
-    private let presenter: MovieDetailPresenter
+    private let presenter: MovieDetailPresenterProtocol
     
     private lazy var contentView = UIView()
     private lazy var movieRatingView = RatingView()
@@ -22,7 +27,7 @@ final class MovieDetailViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
-
+    
     private lazy var movieImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleToFill
@@ -47,7 +52,7 @@ final class MovieDetailViewController: UIViewController {
         label.textColor = .adaptiveTextMain
         return label
     }()
-        
+    
     private lazy var movieCastTitle: UILabel = {
         let label = UILabel()
         label.text = TextConstants.MovieDetail.movieCastTitle.localized()
@@ -70,7 +75,7 @@ final class MovieDetailViewController: UIViewController {
         collectionView.backgroundColor = .clear
         return collectionView
     }()
-        
+    
     private lazy var watchButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .appBackground
@@ -95,17 +100,17 @@ final class MovieDetailViewController: UIViewController {
         likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return likeButton
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
-        setupUI()
+        presenter.setupView(self)
+        setupView()
         setupConstraints()
         setupNavigation()
         presenter.viewDidLoad()
     }
     
-    init(presenter: MovieDetailPresenter) {
+    init(presenter: MovieDetailPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -114,7 +119,10 @@ final class MovieDetailViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+}
+
+// MARK: - MovieDetailViewControllerProtocol
+extension MovieDetailViewController: MovieDetailViewControllerProtocol {
     func configure(with model: MovieDetailModel) {
         movieImageView.image = model.image
         movieTitleLabel.text = model.title
@@ -130,7 +138,7 @@ final class MovieDetailViewController: UIViewController {
 
 // MARK: - Private Methods
 private extension MovieDetailViewController {
-    func setupUI() {
+    func setupView() {
         view.backgroundColor = .appBackground
         navigationController?.navigationBar.isHidden = false
         navigationController?.tabBarController?.tabBar.isHidden = true
@@ -152,7 +160,25 @@ private extension MovieDetailViewController {
         
         view.addSubview(watchButtonView)
         watchButtonView.addSubview(watchButton)
-        setupConstraints()
+    }
+    
+    func setupNavigation() {
+        self.title = TextConstants.MovieDetail.screenTitle.localized()
+        
+        backButton.snp.makeConstraints {
+            $0.size.equalTo(40)
+        }
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
+        likeButton.snp.makeConstraints {
+            $0.size.equalTo(40)
+        }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: likeButton)
+        
+        navigationController?.navigationBar.titleTextAttributes = [
+            .font: AppFont.montserratBold.withSize(18),
+            .foregroundColor: UIColor.adaptiveTextMain
+        ]
     }
     
     func setupConstraints() {
@@ -213,7 +239,7 @@ private extension MovieDetailViewController {
             $0.height.equalTo(16)
             $0.width.equalTo(104)
         }
-                
+        
         movieDescriptionTitle.snp.makeConstraints {
             $0.top.equalTo(movieRatingView.snp.bottom).offset(24)
             $0.left.equalToSuperview().offset(24)
@@ -248,29 +274,10 @@ private extension MovieDetailViewController {
         }
     }
     
-    func setupNavigation() {
-        self.title = TextConstants.MovieDetail.screenTitle.localized()
-                
-        backButton.snp.makeConstraints {
-            $0.size.equalTo(40)
-        }
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        
-        likeButton.snp.makeConstraints {
-            $0.size.equalTo(40)
-        }
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: likeButton)
-        
-        navigationController?.navigationBar.titleTextAttributes = [
-            .font: AppFont.montserratBold.withSize(18),
-            .foregroundColor: UIColor.adaptiveTextMain
-        ]
-    }
-    
     @objc func backButtonTapped() {
         presenter.backButtonTapped()
     }
-        
+    
     @objc func likeButtonTapped() {
         likeButton.toggleLike()
         presenter.likeButtonTapped()

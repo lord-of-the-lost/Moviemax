@@ -7,10 +7,10 @@
 
 import UIKit
 
+protocol LaunchViewControllerProtocol: AnyObject {}
+
 final class LaunchViewController: UIViewController {
-    
-    // MARK: Properties
-    private let presenter: LaunchPresenter
+    private let presenter: LaunchPresenterProtocol
     
     private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView(image: .logo)
@@ -27,7 +27,7 @@ final class LaunchViewController: UIViewController {
     }()
     
     //MARK: Init
-    init(presenter: LaunchPresenter) {
+    init(presenter: LaunchPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -39,74 +39,52 @@ final class LaunchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
-        setupUI()
+        presenter.setupView(self)
+        setupView()
+        setupConstraints()
     }
     
-    //MARK: Lifecycle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         rotateImage()
-        Timer.scheduledTimer(withTimeInterval: Constants.Animation.duration, repeats: false) { _ in
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
             self.presenter.viewDidFinishAnimate()
         }
     }
 }
 
+// MARK: - LaunchViewControllerProtocol
+extension LaunchViewController: LaunchViewControllerProtocol {}
+
 // MARK: - Private methods
 private extension LaunchViewController {
-    
     func rotateImage() {
         let rotation = CABasicAnimation(keyPath: "transform.rotation")
         rotation.fromValue = 0
         rotation.toValue = CGFloat.pi * 2
-        rotation.duration = Constants.Animation.duration
+        rotation.duration = 1
         rotation.repeatCount = .infinity
         loadingImageView.layer.add(rotation, forKey: "rotate")
     }
     
-    func setupUI() {
+    func setupView() {
         view.backgroundColor = .accent
         view.addSubviews(logoImageView, loadingImageView)
-        setupConstraints()
     }
     
     func setupConstraints() {
-        logoImageView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().multipliedBy(Constants.Constraints.Logo.multiplier)
-            make.height.equalTo(Constants.Constraints.Logo.height)
-            make.width.equalTo(Constants.Constraints.Logo.width)
+        logoImageView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview().multipliedBy(0.7)
+            $0.height.equalTo(136)
+            $0.width.equalTo(165)
         }
         
-        loadingImageView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(Constants.Constraints.Loading.offset)
-            make.height.equalTo(Constants.Constraints.Loading.height)
-            make.width.equalTo(Constants.Constraints.Loading.width)
-        }
-    }
-}
-
-// MARK: - Constants
-private extension LaunchViewController {
-    enum Constants {
-        enum Animation {
-            static let duration: TimeInterval = 1
-        }
-        enum Constraints {
-            enum Logo {
-                static let multiplier: CGFloat = 0.7
-                
-                static let height: CGFloat = 136
-                static let width: CGFloat = 165
-            }
-            enum Loading {
-                static let offset: CGFloat = 150
-                
-                static let height: CGFloat = 70
-                static let width: CGFloat = 70
-            }
+        loadingImageView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview().offset(150)
+            $0.height.equalTo(70)
+            $0.width.equalTo(70)
         }
     }
 }

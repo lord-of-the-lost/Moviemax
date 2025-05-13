@@ -7,10 +7,22 @@
 
 import UIKit
 
+protocol ProfileViewControllerProtocol: AnyObject {
+    func setupUserAvatar(data: Data)
+    func showEditPhotoView()
+    func showAlert(title: String, message: String?)
+    func updateUserData(
+        firstName: String,
+        lastName: String,
+        email: String,
+        birthDate: String,
+        gender: User.Gender,
+        notes: String
+    )
+}
+
 final class ProfileViewController: UIViewController {
-    
-    // MARK: - Properties
-    private let presenter: ProfilePresenter
+    private let presenter: ProfilePresenterProtocol
     
     private lazy var scrollView = UIScrollView()
     private lazy var contentView = UIView()
@@ -46,7 +58,6 @@ final class ProfileViewController: UIViewController {
         type: .textView
     )
     
-    // TODO: Get the gender from the model
     private lazy var genderSelectorView = GenderSelectorView(selectedGender: .male)
     
     private lazy var saveButton: CommonButton = {
@@ -58,7 +69,7 @@ final class ProfileViewController: UIViewController {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = Constants.Constraints.stackViewSpacing
+        stackView.spacing = 16
         return stackView
     }()
     
@@ -117,7 +128,7 @@ final class ProfileViewController: UIViewController {
     }()
         
     //MARK: Init
-    init(presenter: ProfilePresenter) {
+    init(presenter: ProfilePresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
         profilePhotoView.delegate = self
@@ -131,15 +142,15 @@ final class ProfileViewController: UIViewController {
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
+        presenter.setupView(self)
         setupUI()
         setupConstraints()
         presenter.loadUserProfile()
     }
 }
 
-// MARK: - Public Methods
-extension ProfileViewController {
+// MARK: - ProfileViewControllerProtocol
+extension ProfileViewController: ProfileViewControllerProtocol {
     func updateUserData(
         firstName: String,
         lastName: String,
@@ -294,73 +305,73 @@ private extension ProfileViewController {
     }
     
     func setupConstraints() {
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        scrollView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
-        contentView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-            make.width.equalToSuperview()
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
         }
         
-        stackView.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(Constants.Constraints.stackViewOffsetInset)
-            make.right.equalToSuperview().inset(Constants.Constraints.stackViewOffsetInset)
-            make.top.bottom.equalToSuperview()
+        stackView.snp.makeConstraints {
+            $0.left.equalToSuperview().offset(24)
+            $0.right.equalToSuperview().inset(24)
+            $0.top.bottom.equalToSuperview()
         }
         
-        profilePhotoContainerView.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.photoSize)
+        profilePhotoContainerView.snp.makeConstraints {
+            $0.height.equalTo(100)
         }
         
-        profilePhotoView.snp.makeConstraints { make in
-            make.size.equalTo(Constants.Constraints.photoSize)
-            make.center.equalToSuperview()
+        profilePhotoView.snp.makeConstraints {
+            $0.size.equalTo(100)
+            $0.center.equalToSuperview()
         }
         
-        firstNameTextField.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        firstNameTextField.snp.makeConstraints {
+            $0.height.equalTo(82)
         }
         
-        lastNameTextField.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        lastNameTextField.snp.makeConstraints {
+            $0.height.equalTo(82)
         }
         
-        emailTextField.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        emailTextField.snp.makeConstraints {
+            $0.height.equalTo(82)
         }
         
-        dateOfBirthPicker.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        dateOfBirthPicker.snp.makeConstraints {
+            $0.height.equalTo(82)
         }
         
-        genderSelectorView.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.textFieldHeight)
+        genderSelectorView.snp.makeConstraints {
+            $0.height.equalTo(82)
         }
         
-        locationTextView.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.locationTextViewHeight)
+        locationTextView.snp.makeConstraints {
+            $0.height.equalTo(162)
         }
         
-        saveButton.snp.makeConstraints { make in
-            make.height.equalTo(Constants.Constraints.saveButtonHeight)
+        saveButton.snp.makeConstraints {
+            $0.height.equalTo(56)
         }
         
-        datePickerContainer.snp.makeConstraints { make in
-            make.left.right.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(Constants.Constraints.datePickerContainerHeight)
+        datePickerContainer.snp.makeConstraints {
+            $0.left.right.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo(300)
         }
         
-        datePickerToolbar.snp.makeConstraints { make in
-            make.left.top.right.equalToSuperview()
-            make.height.equalTo(Constants.Constraints.datePickerToolbarHeight)
+        datePickerToolbar.snp.makeConstraints {
+            $0.left.top.right.equalToSuperview()
+            $0.height.equalTo(44)
         }
         
-        datePicker.snp.makeConstraints { make in
-            make.left.right.equalToSuperview()
-            make.top.equalTo(datePickerToolbar.snp.bottom)
-            make.bottom.equalToSuperview()
+        datePicker.snp.makeConstraints {
+            $0.left.right.equalToSuperview()
+            $0.top.equalTo(datePickerToolbar.snp.bottom)
+            $0.bottom.equalToSuperview()
         }
     }
     
@@ -405,22 +416,5 @@ private extension ProfileViewController {
     
     @objc func backButtonTapped() {
         presenter.backButtonTapped()
-    }
-}
-
-// MARK: - Constants
-private extension ProfileViewController {
-    enum Constants {
-        enum Constraints {
-            static let stackViewSpacing: CGFloat = 16
-            static let stackViewOffsetInset: CGFloat = 24
-            static let textFieldHeight: CGFloat = 82
-            static let locationTextViewHeight: CGFloat = 162
-            static let saveButtonHeight: CGFloat = 56
-            static let photoSize: CGFloat = 100
-            static let pickerHeight: CGFloat = 216
-            static let datePickerContainerHeight: CGFloat = 300
-            static let datePickerToolbarHeight: CGFloat = 44
-        }
     }
 }

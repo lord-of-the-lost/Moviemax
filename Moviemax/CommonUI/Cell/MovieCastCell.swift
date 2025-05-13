@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class MovieCastCell: UICollectionViewCell {
     static let identifier = MovieCastCell.description()
@@ -41,7 +40,7 @@ final class MovieCastCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
+        setupView()
         setupConstraints()
     }
     
@@ -65,62 +64,13 @@ extension MovieCastCell {
         let castName: String
         let castDescription: String
     }
-    
-    // TODO: выпилить
-    static let mockData: [MovieCastCellViewModel] = [
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        ),
-        MovieCastCellViewModel(
-            castImage: UIImage(resource: .avatar),
-            castName: "Jon Watts",
-            castDescription: "Directors"
-        )
-    ]
 }
 
 // MARK: - Private Methods
 private extension MovieCastCell {
-    func setupUI() {
+    func setupView() {
         contentView.backgroundColor = .clear
-        castImage.layer.cornerRadius = Constants.cornerRadius
+        castImage.layer.cornerRadius = 20
         contentView.addSubviews(
             castImage,
             castName,
@@ -130,33 +80,23 @@ private extension MovieCastCell {
     
     func setupConstraints() {
         castImage.snp.makeConstraints {
-            $0.size.equalTo(Constants.imageSize)
-            $0.leading.equalToSuperview().offset(Constants.horizontalOffset)
+            $0.size.equalTo(40)
+            $0.leading.equalToSuperview().offset(8)
             $0.centerY.equalToSuperview()
         }
         
         castName.snp.makeConstraints {
-            $0.left.equalTo(castImage.snp.right).offset(Constants.horizontalOffset)
+            $0.left.equalTo(castImage.snp.right).offset(8)
             $0.right.equalToSuperview()
             $0.top.equalTo(castImage.snp.top)
             $0.height.equalTo(castImage.snp.height).dividedBy(2)
         }
         
         castDescription.snp.makeConstraints {
-            $0.left.equalTo(castImage.snp.right).offset(Constants.horizontalOffset)
+            $0.left.equalTo(castImage.snp.right).offset(8)
             $0.right.equalToSuperview()
             $0.bottom.equalTo(castImage.snp.bottom)
             $0.height.equalTo(castImage.snp.height).dividedBy(2)
         }
-    }
-}
-
-// MARK: - Constants
-private extension MovieCastCell {
-    enum Constants {
-        static let imageSize: CGFloat = 40
-        static let cornerRadius: CGFloat = 20
-        static let horizontalOffset: CGFloat = 8
-        static let verticalOffset: CGFloat = 4
     }
 }

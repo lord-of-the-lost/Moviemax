@@ -7,8 +7,13 @@
 
 import UIKit
 
+protocol ForgotPassViewControllerProtocol: AnyObject {
+    func getEmail() -> String?
+    func showAlert(title: String, message: String?)
+}
+
 final class ForgotPassViewController: UIViewController {
-    private let presenter: ForgotPassPresenter
+    private let presenter: ForgotPassPresenterProtocol
     
     private lazy var backButton: UIButton = {
         let button = UIButton()
@@ -25,7 +30,7 @@ final class ForgotPassViewController: UIViewController {
     
     private lazy var emailField = TitledTextField()
     
-    init(presenter: ForgotPassPresenter) {
+    init(presenter: ForgotPassPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -37,14 +42,16 @@ final class ForgotPassViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.view = self
-        setupUI()
+        presenter.setupView(self)
+        setupView()
         setupConstraints()
         setupNavigation()
         configureTextFields()
     }
-    
-    // MARK: - Public Methods
+}
+
+// MARK: - ForgotPassViewControllerProtocol
+extension ForgotPassViewController: ForgotPassViewControllerProtocol {
     func getEmail() -> String? {
         emailField.getText()
     }
@@ -52,7 +59,7 @@ final class ForgotPassViewController: UIViewController {
 
 // MARK: - Private Methods
 private extension ForgotPassViewController {
-    func setupUI() {
+    func setupView() {
         navigationItem.title = TextConstants.ForgotPass.screenTitle.localized()
         view.backgroundColor = .appBackground
         view.addSubviews(emailField, submitButton)

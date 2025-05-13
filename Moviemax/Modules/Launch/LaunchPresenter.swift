@@ -5,15 +5,24 @@
 //  Created by Volchanka on 10.04.2025.
 //
 
+protocol LaunchPresenterProtocol {
+    func setupView(_ view: LaunchViewControllerProtocol)
+    func viewDidFinishAnimate()
+}
+
 final class LaunchPresenter {
-    
-    weak var view: LaunchViewController?
+    private weak var view: LaunchViewControllerProtocol?
     private let router: LaunchRouter
-    private let dependency: DI
     
-    init(router: LaunchRouter, dependency: DI) {
+    init(router: LaunchRouter) {
         self.router = router
-        self.dependency = dependency
+    }
+}
+
+// MARK: - LaunchPresenterProtocol
+extension LaunchPresenter: LaunchPresenterProtocol {
+    func setupView(_ view: LaunchViewControllerProtocol) {
+        self.view = view
     }
     
     func viewDidFinishAnimate() {
