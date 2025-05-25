@@ -25,11 +25,13 @@ final class NetworkService {
     //5QVH807-GAP49T6-QY0P863-EQW1F83
     //F6QX0P1-FQTMPFY-PWNT126-KXFHWZK
     //KNWPBBJ-ZE1MWWK-P1P35CB-DSXZDQJ
-    private let imageCacheService: ImageCacheService
     
-    init(imageCacheService: ImageCacheService) {
-        self.imageCacheService = imageCacheService
-    }
+    private lazy var urlSessionForImages: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .returnCacheDataElseLoad
+        config.urlCache = URLCache(memoryCapacity: 50_000_000, diskCapacity: 100_000_000)
+        return URLSession(configuration: config)
+    }()
     
     /// Перечисление типов жанров для API
     enum GenreType: String {
@@ -209,20 +211,20 @@ final class NetworkService {
             return
         }
         
-        if let cachedData = imageCacheService.getImageFromCache(for: url) {
-            DispatchQueue.main.async { completion(.success(cachedData)) }
-            return
-        }
-        
-        performDataRequest(urlString: urlString) { [weak self] result in
-            switch result {
-            case .success(let data):
-                self?.imageCacheService.cacheImage(data, for: url)
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
+        let request = URLRequest(url: url)
+        urlSessionForImages.dataTask(with: request) { data, response, error in
+            guard error == nil else {
+                DispatchQueue.main.async { completion(.failure(.requestFailed)) }
+                return
             }
-        }
+            
+            guard let data = data else {
+                DispatchQueue.main.async { completion(.failure(.invalidData)) }
+                return
+            }
+            
+            DispatchQueue.main.async { completion(.success(data)) }
+        }.resume()
     }
 }
 
